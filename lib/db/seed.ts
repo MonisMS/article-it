@@ -53,7 +53,7 @@ const SOURCES = [
   { name: "Martin Fowler",      url: "https://martinfowler.com/feed.atom",                topics: ["devops", "open-source", "javascript"] },
   { name: "The New Stack",      url: "https://thenewstack.io/feed/",                      topics: ["devops", "open-source", "startups"] },
   // Finance
-  { name: "Investopedia",       url: "https://www.investopedia.com/feedbuilder/feed/getfeed/?feedName=rss_headline", topics: ["finance"] },
+  { name: "Investopedia",       url: "https://www.investopedia.com/news/rss.aspx",                topics: ["finance"] },
   // Marketing
   { name: "Moz Blog",           url: "https://moz.com/blog/feed",                         topics: ["marketing"] },
   { name: "Neil Patel Blog",    url: "https://neilpatel.com/blog/feed/",                  topics: ["marketing", "startups"] },
@@ -65,7 +65,7 @@ const SOURCES = [
   { name: "New Scientist",      url: "https://www.newscientist.com/feed/home/",           topics: ["science"] },
   // Open Source
   { name: "GitHub Blog",        url: "https://github.blog/feed/",                         topics: ["open-source", "devops", "ai-ml"] },
-  { name: "Linux Foundation",   url: "https://www.linuxfoundation.org/blog/feed/",        topics: ["open-source", "devops"] },
+  { name: "Linux Foundation",   url: "https://www.linuxfoundation.org/feed/",            topics: ["open-source", "devops"] },
 ]
 
 async function seed() {

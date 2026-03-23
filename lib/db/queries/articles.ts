@@ -1,0 +1,113 @@
+import { db } from "@/lib/db"
+import { articles, articleTopics, userTopics, topics, rssSources } from "@/lib/db/schema"
+import { eq, inArray, desc, and, sql } from "drizzle-orm"
+
+export type ArticleWithMeta = Awaited<ReturnType<typeof getArticlesForUser>>[number]
+
+export async function getArticlesForUser(
+  userId: string,
+  topicSlug?: string,
+  page = 0
+) {
+  const limit = 20
+  const offset = page * limit
+
+  // 1. Get user's followed topic IDs
+  const followed = await db
+    .select({ topicId: userTopics.topicId })
+    .from(userTopics)
+    .where(eq(userTopics.userId, userId))
+
+  if (followed.length === 0) return []
+
+  const userTopicIds = followed.map((f) => f.topicId)
+
+  // 2. Resolve filter topic IDs
+  let filterTopicIds = userTopicIds
+  let primaryTopicId: string | undefined
+
+  if (topicSlug) {
+    const topic = await db.query.topics.findFirst({
+      where: eq(topics.slug, topicSlug),
+    })
+    if (!topic || !userTopicIds.includes(topic.id)) return []
+    filterTopicIds = [topic.id]
+    primaryTopicId = topic.id
+  }
+
+  // 3. Single query — articles that have at least one matching topic
+  //    using EXISTS so we don't pull thousands of IDs into memory
+  const rows = await db
+    .select({
+      id: articles.id,
+      title: articles.title,
+      url: articles.url,
+      description: articles.description,
+      imageUrl: articles.imageUrl,
+      publishedAt: articles.publishedAt,
+      sourceName: rssSources.name,
+    })
+    .from(articles)
+    .innerJoin(rssSources, eq(rssSources.id, articles.sourceId))
+    .where(
+      sql`EXISTS (
+        SELECT 1 FROM ${articleTopics}
+        WHERE ${articleTopics.articleId} = ${articles.id}
+        AND   ${articleTopics.topicId}   IN ${sql.raw(
+          `('${filterTopicIds.join("','")}')`
+        )}
+      )`
+    )
+    .orderBy(desc(articles.publishedAt))
+    .limit(limit)
+    .offset(offset)
+
+  if (rows.length === 0) return []
+
+  // 4. Fetch topics for those articles in one query
+  const articleIds = rows.map((r) => r.id)
+  const tagRows = await db
+    .select({
+      articleId: articleTopics.articleId,
+      topicId:   topics.id,
+      topicName: topics.name,
+      topicIcon: topics.icon,
+      topicSlug: topics.slug,
+    })
+    .from(articleTopics)
+    .innerJoin(topics, eq(topics.id, articleTopics.topicId))
+    .where(inArray(articleTopics.articleId, articleIds))
+
+  // Build a map articleId → topics[]
+  const topicMap = new Map<string, { id: string; name: string; icon: string | null; slug: string }[]>()
+  for (const row of tagRows) {
+    if (!topicMap.has(row.articleId)) topicMap.set(row.articleId, [])
+    topicMap.get(row.articleId)!.push({
+      id: row.topicId,
+      name: row.topicName,
+      icon: row.topicIcon,
+      slug: row.topicSlug,
+    })
+  }
+
+  // 5. Merge — put the active filter topic first so the card always shows the right badge
+  return rows.map((row) => {
+    const allTopics = topicMap.get(row.id) ?? []
+    const sorted = primaryTopicId
+      ? [
+          ...allTopics.filter((t) => t.id === primaryTopicId),
+          ...allTopics.filter((t) => t.id !== primaryTopicId),
+        ]
+      : allTopics
+    return { ...row, source: { name: row.sourceName }, articleTopics: sorted }
+  })
+}
+
+export async function getUserTopicsWithMeta(userId: string) {
+  return db.query.userTopics.findMany({
+    where: eq(userTopics.userId, userId),
+    with: {
+      topic: { columns: { id: true, name: true, slug: true, icon: true } },
+    },
+  })
+}

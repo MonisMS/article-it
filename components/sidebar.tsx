@@ -1,0 +1,76 @@
+"use client"
+
+import Link from "next/link"
+import { usePathname, useRouter } from "next/navigation"
+import { BookOpen, LayoutDashboard, Bookmark, Settings, LogOut, Compass } from "lucide-react"
+import { signOut } from "@/lib/auth-client"
+
+const NAV = [
+  { href: "/dashboard", icon: LayoutDashboard, label: "Feed" },
+  { href: "/discover",  icon: Compass,         label: "Discover" },
+  { href: "/bookmarks", icon: Bookmark,         label: "Bookmarks" },
+  { href: "/settings",  icon: Settings,         label: "Settings" },
+]
+
+type Props = {
+  user: { name: string; email: string }
+}
+
+export function Sidebar({ user }: Props) {
+  const pathname = usePathname()
+  const router = useRouter()
+
+  async function handleSignOut() {
+    await signOut()
+    router.push("/")
+    router.refresh()
+  }
+
+  return (
+    <aside className="flex h-full w-60 flex-col border-r border-zinc-100 bg-white px-3 py-5">
+      {/* Logo */}
+      <Link href="/dashboard" className="flex items-center gap-2 px-3 mb-8 font-semibold text-zinc-900">
+        <span className="flex items-center justify-center w-7 h-7 rounded-md bg-zinc-900 text-white flex-shrink-0">
+          <BookOpen className="w-3.5 h-3.5" />
+        </span>
+        ArticleIt
+      </Link>
+
+      {/* Navigation */}
+      <nav className="flex-1 flex flex-col gap-0.5">
+        {NAV.map(({ href, icon: Icon, label }) => {
+          const active = pathname === href
+          return (
+            <Link
+              key={href}
+              href={href}
+              className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors
+                ${active
+                  ? "bg-zinc-100 text-zinc-900"
+                  : "text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900"
+                }`}
+            >
+              <Icon className="w-4 h-4 flex-shrink-0" />
+              {label}
+            </Link>
+          )
+        })}
+      </nav>
+
+      {/* User + Sign out */}
+      <div className="border-t border-zinc-100 pt-4 mt-4">
+        <div className="px-3 mb-2">
+          <p className="text-sm font-medium text-zinc-900 truncate">{user.name}</p>
+          <p className="text-xs text-zinc-400 truncate">{user.email}</p>
+        </div>
+        <button
+          onClick={handleSignOut}
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900 transition-colors"
+        >
+          <LogOut className="w-4 h-4 flex-shrink-0" />
+          Sign out
+        </button>
+      </div>
+    </aside>
+  )
+}
