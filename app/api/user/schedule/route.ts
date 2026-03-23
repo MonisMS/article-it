@@ -3,7 +3,7 @@ import { headers } from "next/headers"
 import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { digestSchedules, userTopics } from "@/lib/db/schema"
-import { eq } from "drizzle-orm"
+import { eq, and } from "drizzle-orm"
 import { z } from "zod"
 
 const schema = z.object({
@@ -11,9 +11,10 @@ const schema = z.object({
   dayOfWeek: z.number().min(0).max(6).nullable(),
   hour: z.number().min(0).max(23),
   timezone: z.string().min(1),
+  // Optional: if provided, update only this topic's schedule. Otherwise update all.
+  topicId: z.string().optional(),
 })
 
-// POST — create/update digest schedule for all user topics
 export async function POST(req: Request) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) return NextResponse.json({ data: null, error: "Unauthorized" }, { status: 401 })
@@ -25,24 +26,26 @@ export async function POST(req: Request) {
   }
 
   const userId = session.user.id
-  const { frequency, dayOfWeek, hour, timezone } = parsed.data
+  const { frequency, dayOfWeek, hour, timezone, topicId } = parsed.data
 
-  // Get all topics this user follows
-  const followed = await db.query.userTopics.findMany({
-    where: eq(userTopics.userId, userId),
-  })
-
-  if (followed.length === 0) {
-    return NextResponse.json({ data: null, error: "No topics followed" }, { status: 400 })
+  // Determine which topic IDs to upsert
+  let topicIds: string[]
+  if (topicId) {
+    topicIds = [topicId]
+  } else {
+    const followed = await db.query.userTopics.findMany({ where: eq(userTopics.userId, userId) })
+    if (followed.length === 0) {
+      return NextResponse.json({ data: null, error: "No topics followed" }, { status: 400 })
+    }
+    topicIds = followed.map((f) => f.topicId)
   }
 
-  // Upsert one schedule per topic
-  for (const { topicId } of followed) {
+  for (const tid of topicIds) {
     await db
       .insert(digestSchedules)
       .values({
         userId,
-        topicId,
+        topicId: tid,
         frequency,
         dayOfWeek: frequency === "weekly" ? dayOfWeek : null,
         hour,
@@ -51,9 +54,36 @@ export async function POST(req: Request) {
       })
       .onConflictDoUpdate({
         target: [digestSchedules.userId, digestSchedules.topicId],
-        set: { frequency, dayOfWeek: frequency === "weekly" ? dayOfWeek : null, hour, timezone, isActive: true },
+        set: {
+          frequency,
+          dayOfWeek: frequency === "weekly" ? dayOfWeek : null,
+          hour,
+          timezone,
+          isActive: true,
+          updatedAt: new Date(),
+        },
       })
   }
+
+  return NextResponse.json({ data: { ok: true }, error: null })
+}
+
+const deleteSchema = z.object({ topicId: z.string().min(1) })
+
+export async function DELETE(req: Request) {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) return NextResponse.json({ data: null, error: "Unauthorized" }, { status: 401 })
+
+  const body = await req.json()
+  const parsed = deleteSchema.safeParse(body)
+  if (!parsed.success) {
+    return NextResponse.json({ data: null, error: parsed.error.issues[0].message }, { status: 400 })
+  }
+
+  const { topicId } = parsed.data
+  await db
+    .delete(digestSchedules)
+    .where(and(eq(digestSchedules.userId, session.user.id), eq(digestSchedules.topicId, topicId)))
 
   return NextResponse.json({ data: { ok: true }, error: null })
 }

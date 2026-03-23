@@ -1,5 +1,6 @@
 import Link from "next/link"
-import { ExternalLink, Bookmark } from "lucide-react"
+import { ExternalLink } from "lucide-react"
+import { BookmarkButton } from "@/components/bookmark-button"
 
 type Topic = { id: string; name: string; icon: string | null; slug: string }
 
@@ -10,7 +11,8 @@ export type ArticleCardData = {
   description: string | null
   publishedAt: Date | null
   source: { name: string }
-  articleTopics: Topic[]  // first item is always the active filter topic
+  articleTopics: Topic[]
+  isBookmarked?: boolean
 }
 
 function timeAgo(date: Date | null): string {
@@ -27,8 +29,7 @@ export function ArticleCard({ article }: { article: ArticleCardData }) {
   const primaryTopic = article.articleTopics[0]
 
   return (
-    <div className="group flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-4 hover:border-zinc-300 hover:shadow-sm transition-all">
-      {/* Topic badge */}
+    <div className="group flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-4 hover:border-zinc-300 hover:shadow-md transition-all">
       {primaryTopic && (
         <div className="flex items-center gap-1.5">
           <span className="text-sm">{primaryTopic.icon}</span>
@@ -36,7 +37,6 @@ export function ArticleCard({ article }: { article: ArticleCardData }) {
         </div>
       )}
 
-      {/* Title */}
       <Link
         href={article.url}
         target="_blank"
@@ -46,14 +46,12 @@ export function ArticleCard({ article }: { article: ArticleCardData }) {
         {article.title}
       </Link>
 
-      {/* Description */}
       {article.description && (
         <p className="text-sm text-zinc-500 leading-relaxed line-clamp-2">
           {article.description}
         </p>
       )}
 
-      {/* Footer */}
       <div className="flex items-center justify-between mt-auto pt-1">
         <div className="flex items-center gap-2 text-xs text-zinc-400">
           <span className="font-medium text-zinc-500">{article.source.name}</span>
@@ -66,12 +64,10 @@ export function ArticleCard({ article }: { article: ArticleCardData }) {
         </div>
 
         <div className="flex items-center gap-1">
-          <button
-            className="flex items-center justify-center w-7 h-7 rounded-md text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 transition-colors"
-            title="Bookmark"
-          >
-            <Bookmark className="w-3.5 h-3.5" />
-          </button>
+          <BookmarkButton
+            articleId={article.id}
+            initialBookmarked={article.isBookmarked ?? false}
+          />
           <Link
             href={article.url}
             target="_blank"

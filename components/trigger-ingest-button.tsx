@@ -2,26 +2,34 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { Loader2, RefreshCw } from "lucide-react"
+import { Loader2, RefreshCw, LogIn } from "lucide-react"
 
 export function TriggerIngestButton() {
   const router = useRouter()
-  const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle")
+  const [status, setStatus] = useState<"idle" | "loading" | "done" | "error" | "unauth">("idle")
 
   async function handleClick() {
     setStatus("loading")
     try {
-      // keepalive: true ensures the request survives page navigation
-      const res = await fetch("/api/ingest", {
-        method: "POST",
-        keepalive: true,
-      })
-      if (!res.ok) throw new Error("failed")
+      const res = await fetch("/api/ingest", { method: "POST" })
+      if (res.status === 401) { setStatus("unauth"); return }
+      if (!res.ok) { setStatus("error"); return }
       setStatus("done")
       router.refresh()
     } catch {
       setStatus("error")
     }
+  }
+
+  if (status === "unauth") {
+    return (
+      <a
+        href="/sign-in"
+        className="mt-4 flex items-center gap-2 rounded-lg border border-zinc-200 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors"
+      >
+        <LogIn className="w-4 h-4" /> Session expired — sign in again
+      </a>
+    )
   }
 
   if (status === "done") {
@@ -30,8 +38,7 @@ export function TriggerIngestButton() {
         onClick={() => router.refresh()}
         className="mt-4 flex items-center gap-2 rounded-lg border border-zinc-200 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors"
       >
-        <RefreshCw className="w-4 h-4" />
-        Refresh feed
+        <RefreshCw className="w-4 h-4" /> Refresh feed
       </button>
     )
   }
@@ -43,9 +50,7 @@ export function TriggerIngestButton() {
       className="mt-4 flex items-center gap-2 rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
     >
       {status === "loading" && <Loader2 className="w-4 h-4 animate-spin" />}
-      {status === "error" && "Retry"}
-      {status === "loading" && "Fetching articles…"}
-      {status === "idle" && "Fetch articles now"}
+      {status === "loading" ? "Fetching articles…" : status === "error" ? "Failed — retry" : "Fetch articles now"}
     </button>
   )
 }

@@ -28,8 +28,7 @@ export function TopicFilter({ topics }: { topics: Topic[] }) {
     <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
       <button
         onClick={() => select("all")}
-        className={`flex-shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors
-          ${active === "all"
+        className={`flex-shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all active:scale-95 ${active === "all"
             ? "bg-zinc-900 text-white"
             : "bg-white border border-zinc-200 text-zinc-600 hover:border-zinc-300"
           }`}
@@ -40,8 +39,7 @@ export function TopicFilter({ topics }: { topics: Topic[] }) {
         <button
           key={t.slug}
           onClick={() => select(t.slug)}
-          className={`flex-shrink-0 flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors
-            ${active === t.slug
+          className={`flex-shrink-0 flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all active:scale-95 ${active === t.slug
               ? "bg-zinc-900 text-white"
               : "bg-white border border-zinc-200 text-zinc-600 hover:border-zinc-300"
             }`}

@@ -1,5 +1,5 @@
 import { db } from "@/lib/db"
-import { articles, articleTopics, userTopics, topics, rssSources } from "@/lib/db/schema"
+import { articles, articleTopics, userTopics, topics, rssSources, bookmarks } from "@/lib/db/schema"
 import { eq, inArray, desc, and, sql } from "drizzle-orm"
 
 export type ArticleWithMeta = Awaited<ReturnType<typeof getArticlesForUser>>[number]
@@ -101,6 +101,54 @@ export async function getArticlesForUser(
       : allTopics
     return { ...row, source: { name: row.sourceName }, articleTopics: sorted }
   })
+}
+
+export async function getArticlesByTopicSlug(topicSlug: string, page = 0) {
+  const limit = 20
+  const offset = page * limit
+
+  const topic = await db.query.topics.findFirst({ where: eq(topics.slug, topicSlug) })
+  if (!topic) return { topic: null, articles: [] }
+
+  const rows = await db
+    .select({
+      id: articles.id,
+      title: articles.title,
+      url: articles.url,
+      description: articles.description,
+      imageUrl: articles.imageUrl,
+      publishedAt: articles.publishedAt,
+      sourceName: rssSources.name,
+    })
+    .from(articles)
+    .innerJoin(rssSources, eq(rssSources.id, articles.sourceId))
+    .where(
+      sql`EXISTS (
+        SELECT 1 FROM ${articleTopics}
+        WHERE ${articleTopics.articleId} = ${articles.id}
+        AND   ${articleTopics.topicId} = ${topic.id}
+      )`
+    )
+    .orderBy(desc(articles.publishedAt))
+    .limit(limit)
+    .offset(offset)
+
+  return {
+    topic,
+    articles: rows.map((r) => ({
+      ...r,
+      source: { name: r.sourceName },
+      articleTopics: [{ id: topic.id, name: topic.name, icon: topic.icon, slug: topic.slug }],
+    })),
+  }
+}
+
+export async function getBookmarkedArticleIds(userId: string): Promise<Set<string>> {
+  const rows = await db
+    .select({ articleId: bookmarks.articleId })
+    .from(bookmarks)
+    .where(eq(bookmarks.userId, userId))
+  return new Set(rows.map((r) => r.articleId))
 }
 
 export async function getUserTopicsWithMeta(userId: string) {
