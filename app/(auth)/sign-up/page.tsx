@@ -29,7 +29,7 @@ export default function SignUpPage() {
       return
     }
 
-    router.push("/onboarding")
+    router.push("/verify-email")
   }
 
   return (

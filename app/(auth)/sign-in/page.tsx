@@ -1,13 +1,15 @@
 "use client"
 
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { BookOpen, Loader2 } from "lucide-react"
 import { signIn } from "@/lib/auth-client"
 
-export default function SignInPage() {
+function SignInForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const justReset = searchParams.get("reset") === "1"
   const [form, setForm] = useState({ email: "", password: "" })
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
@@ -80,6 +82,12 @@ export default function SignInPage() {
             </p>
           </div>
 
+          {justReset && (
+            <div className="mb-6 rounded-lg bg-green-50 border border-green-100 px-4 py-3 text-sm text-green-700">
+              Password updated. Sign in with your new password.
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label
@@ -108,6 +116,9 @@ export default function SignInPage() {
                 >
                   Password
                 </label>
+                <Link href="/forgot-password" className="text-xs text-zinc-500 hover:text-zinc-800 transition-colors">
+                  Forgot password?
+                </Link>
               </div>
               <input
                 id="password"
@@ -149,5 +160,13 @@ export default function SignInPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense>
+      <SignInForm />
+    </Suspense>
   )
 }

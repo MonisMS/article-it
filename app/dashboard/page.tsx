@@ -13,7 +13,12 @@ type Props = {
 }
 
 export default async function DashboardPage({ searchParams }: Props) {
-  const session = await auth.api.getSession({ headers: await headers() })
+  let session
+  try {
+    session = await auth.api.getSession({ headers: await headers() })
+  } catch {
+    redirect("/sign-in")
+  }
   if (!session) redirect("/sign-in")
 
   const { topic, page: pageParam } = await searchParams

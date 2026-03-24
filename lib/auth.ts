@@ -7,6 +7,11 @@ import {
   account,
   verification,
 } from "@/lib/db/schema/auth"
+import { resend } from "@/lib/resend"
+import { buildVerificationEmail } from "@/lib/email/verification-template"
+import { buildResetPasswordEmail } from "@/lib/email/reset-password-template"
+
+const FROM = "ArticleIt <noreply@articleit.com>"
 
 export const auth = betterAuth({
   baseURL: process.env.NEXT_PUBLIC_APP_URL,
@@ -25,6 +30,19 @@ export const auth = betterAuth({
 
   emailAndPassword: {
     enabled: true,
+    sendResetPassword: async ({ user: u, url }) => {
+      const { subject, html } = buildResetPasswordEmail({ name: u.name, url })
+      await resend.emails.send({ from: FROM, to: u.email, subject, html })
+    },
+  },
+
+  emailVerification: {
+    sendOnSignUp: true,
+    callbackURL: "/onboarding",
+    sendVerificationEmail: async ({ user: u, url }) => {
+      const { subject, html } = buildVerificationEmail({ name: u.name, url })
+      await resend.emails.send({ from: FROM, to: u.email, subject, html })
+    },
   },
 
   // Tell Better Auth about the extra `plan` field we added to the user table

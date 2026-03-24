@@ -9,7 +9,12 @@ import { SettingsSchedules } from "@/components/settings-schedules"
 import { SettingsAccount } from "@/components/settings-account"
 
 export default async function SettingsPage() {
-  const session = await auth.api.getSession({ headers: await headers() })
+  let session
+  try {
+    session = await auth.api.getSession({ headers: await headers() })
+  } catch {
+    redirect("/sign-in")
+  }
   if (!session) redirect("/sign-in")
 
   const userId = session.user.id

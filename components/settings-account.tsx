@@ -1,7 +1,9 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Loader2, Pencil, Check, X } from "lucide-react"
+import { signOut } from "@/lib/auth-client"
 
 type Props = {
   name: string
@@ -10,10 +12,13 @@ type Props = {
 }
 
 export function SettingsAccount({ name, email, plan }: Props) {
+  const router = useRouter()
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState(name)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   async function save() {
     if (!draft.trim() || draft === name) { setEditing(false); return }
@@ -32,9 +37,17 @@ export function SettingsAccount({ name, email, plan }: Props) {
     setEditing(false)
   }
 
+  async function deleteAccount() {
+    setDeleting(true)
+    await fetch("/api/user/account", { method: "DELETE" })
+    await signOut()
+    router.push("/")
+  }
+
   const isPro = plan === "pro"
 
   return (
+    <>
     <div className="rounded-xl border border-zinc-200 bg-white divide-y divide-zinc-100">
       {/* Name row */}
       <div className="flex items-center justify-between px-5 py-4">
@@ -100,5 +113,43 @@ export function SettingsAccount({ name, email, plan }: Props) {
         </div>
       </div>
     </div>
+
+    {/* Danger zone */}
+
+    <div className="mt-8 rounded-xl border border-red-100 bg-white">
+      <div className="flex items-center justify-between px-5 py-4">
+        <div>
+          <p className="text-sm font-medium text-zinc-900">Delete account</p>
+          <p className="text-xs text-zinc-400 mt-0.5">Permanently deletes your account and all data.</p>
+        </div>
+        {confirmDelete ? (
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-zinc-500 hidden sm:block">Are you sure?</span>
+            <button
+              onClick={deleteAccount}
+              disabled={deleting}
+              className="flex items-center gap-1.5 rounded-md bg-red-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-700 disabled:opacity-60 transition-colors"
+            >
+              {deleting && <Loader2 className="w-3 h-3 animate-spin" />}
+              {deleting ? "Deleting…" : "Yes, delete"}
+            </button>
+            <button
+              onClick={() => setConfirmDelete(false)}
+              className="rounded-md border border-zinc-200 px-3 py-1.5 text-xs font-medium text-zinc-600 hover:bg-zinc-50 transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setConfirmDelete(true)}
+            className="rounded-md border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 transition-colors"
+          >
+            Delete account
+          </button>
+        )}
+      </div>
+    </div>
+    </>
   )
 }

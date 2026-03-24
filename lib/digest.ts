@@ -1,8 +1,9 @@
 import { db } from "@/lib/db"
 import { digestSchedules, digestLogs, digestLogArticles, articles, articleTopics } from "@/lib/db/schema"
-import { and, eq, gte, inArray, desc, or, sql } from "drizzle-orm"
+import { and, eq, gte, desc, sql } from "drizzle-orm"
 import { resend } from "@/lib/resend"
 import { buildDigestEmail } from "@/lib/email/digest-template"
+import { signUnsubscribeToken } from "@/lib/unsubscribe-token"
 import { createId } from "@paralleldrive/cuid2"
 
 export async function runDigests() {
@@ -121,7 +122,7 @@ async function sendDigest(
       publishedAt: r.publishedAt,
     })),
     dashboardUrl: `${appUrl}/dashboard?topic=${schedule.topic.slug}`,
-    unsubscribeUrl: `${appUrl}/settings`,
+    unsubscribeUrl: `${appUrl}/unsubscribe?id=${schedule.id}&sig=${signUnsubscribeToken(schedule.id)}`,
   })
 
   await resend.emails.send({

@@ -4,7 +4,12 @@ import { Sidebar } from "@/components/sidebar"
 import { Nav } from "@/components/nav"
 
 export default async function DiscoverLayout({ children }: { children: React.ReactNode }) {
-  const session = await auth.api.getSession({ headers: await headers() })
+  let session
+  try {
+    session = await auth.api.getSession({ headers: await headers() })
+  } catch {
+    session = null
+  }
 
   if (session) {
     return (

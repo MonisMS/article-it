@@ -9,7 +9,12 @@ import { ArticleCard, type ArticleCardData } from "@/components/article-card"
 import { Bookmark, Compass } from "lucide-react"
 
 export default async function BookmarksPage() {
-  const session = await auth.api.getSession({ headers: await headers() })
+  let session
+  try {
+    session = await auth.api.getSession({ headers: await headers() })
+  } catch {
+    redirect("/sign-in")
+  }
   if (!session) redirect("/sign-in")
 
   const rows = await db.query.bookmarks.findMany({
