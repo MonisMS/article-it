@@ -126,7 +126,7 @@ async function sendDigest(
   })
 
   await resend.emails.send({
-    from: "ArticleIt <digest@articleit.com>",
+    from: "ArticleIt <digest@m0nis.com>",
     to: schedule.user.email,
     subject,
     html,
