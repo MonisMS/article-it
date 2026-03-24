@@ -178,6 +178,28 @@ export const bookmarks = pgTable(
 )
 
 // ---------------------------------------------------------------------------
+// READ ARTICLES
+// Tracks which articles a user has marked as read.
+// ---------------------------------------------------------------------------
+
+export const readArticles = pgTable(
+  "read_articles",
+  {
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    articleId: text("article_id")
+      .notNull()
+      .references(() => articles.id, { onDelete: "cascade" }),
+    readAt: timestamp("read_at").notNull().defaultNow(),
+  },
+  (t) => [
+    primaryKey({ columns: [t.userId, t.articleId] }),
+    index("read_articles_user_id_idx").on(t.userId),
+  ]
+)
+
+// ---------------------------------------------------------------------------
 // DIGEST SCHEDULES
 // One schedule per user per topic.
 // e.g. User wants JavaScript digest every Sunday at 9am UTC.
@@ -288,7 +310,13 @@ export const articlesRelations = relations(articles, ({ one, many }) => ({
   source: one(rssSources, { fields: [articles.sourceId], references: [rssSources.id] }),
   articleTopics: many(articleTopics),
   bookmarks: many(bookmarks),
+  readArticles: many(readArticles),
   digestLogArticles: many(digestLogArticles),
+}))
+
+export const readArticlesRelations = relations(readArticles, ({ one }) => ({
+  user: one(user, { fields: [readArticles.userId], references: [user.id] }),
+  article: one(articles, { fields: [readArticles.articleId], references: [articles.id] }),
 }))
 
 export const articleTopicsRelations = relations(articleTopics, ({ one }) => ({

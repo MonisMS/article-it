@@ -1,5 +1,5 @@
 import { db } from "@/lib/db"
-import { articles, articleTopics, userTopics, topics, rssSources, bookmarks } from "@/lib/db/schema"
+import { articles, articleTopics, userTopics, topics, rssSources, bookmarks, readArticles } from "@/lib/db/schema"
 import { eq, inArray, desc, and, sql } from "drizzle-orm"
 
 export type ArticleWithMeta = Awaited<ReturnType<typeof getArticlesForUser>>[number]
@@ -148,6 +148,14 @@ export async function getBookmarkedArticleIds(userId: string): Promise<Set<strin
     .select({ articleId: bookmarks.articleId })
     .from(bookmarks)
     .where(eq(bookmarks.userId, userId))
+  return new Set(rows.map((r) => r.articleId))
+}
+
+export async function getReadArticleIds(userId: string): Promise<Set<string>> {
+  const rows = await db
+    .select({ articleId: readArticles.articleId })
+    .from(readArticles)
+    .where(eq(readArticles.userId, userId))
   return new Set(rows.map((r) => r.articleId))
 }
 

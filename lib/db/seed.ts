@@ -53,19 +53,47 @@ const SOURCES = [
   { name: "Martin Fowler",      url: "https://martinfowler.com/feed.atom",                topics: ["devops", "open-source", "javascript"] },
   { name: "The New Stack",      url: "https://thenewstack.io/feed/",                      topics: ["devops", "open-source", "startups"] },
   // Finance
-  { name: "Investopedia",       url: "https://www.investopedia.com/news/rss.aspx",                topics: ["finance"] },
+  { name: "Investopedia",           url: "https://www.investopedia.com/news/rss.aspx",              topics: ["finance"] },
+  { name: "MarketWatch Top Stories",url: "https://feeds.marketwatch.com/marketwatch/topstories/",   topics: ["finance", "startups"] },
+  { name: "Yahoo Finance",          url: "https://finance.yahoo.com/news/rssindex",                 topics: ["finance"] },
+  { name: "Reuters Business",       url: "https://feeds.reuters.com/reuters/businessNews",          topics: ["finance", "startups"] },
   // Marketing
-  { name: "Moz Blog",           url: "https://moz.com/blog/feed",                         topics: ["marketing"] },
-  { name: "Neil Patel Blog",    url: "https://neilpatel.com/blog/feed/",                  topics: ["marketing", "startups"] },
+  { name: "Moz Blog",               url: "https://moz.com/blog/feed",                              topics: ["marketing"] },
+  { name: "Neil Patel Blog",        url: "https://neilpatel.com/blog/feed/",                       topics: ["marketing", "startups"] },
+  { name: "HubSpot Marketing Blog", url: "https://blog.hubspot.com/marketing/rss.xml",             topics: ["marketing"] },
+  { name: "Search Engine Journal",  url: "https://www.searchenginejournal.com/feed/",              topics: ["marketing"] },
+  { name: "Ahrefs Blog",            url: "https://ahrefs.com/blog/rss",                            topics: ["marketing"] },
   // Product
-  { name: "Product Hunt",       url: "https://www.producthunt.com/feed",                  topics: ["product", "startups"] },
-  { name: "Lenny's Newsletter", url: "https://www.lennysnewsletter.com/feed",             topics: ["product", "startups"] },
+  { name: "Product Hunt",           url: "https://www.producthunt.com/feed",                       topics: ["product", "startups"] },
+  { name: "Lenny's Newsletter",     url: "https://www.lennysnewsletter.com/feed",                  topics: ["product", "startups"] },
+  { name: "Mind the Product",       url: "https://www.mindtheproduct.com/feed/",                   topics: ["product"] },
+  { name: "First Round Review",     url: "https://review.firstround.com/feed.xml",                 topics: ["product", "startups"] },
   // Science
-  { name: "NASA News",          url: "https://www.nasa.gov/rss/dyn/breaking_news.rss",    topics: ["science"] },
-  { name: "New Scientist",      url: "https://www.newscientist.com/feed/home/",           topics: ["science"] },
+  { name: "NASA News",              url: "https://www.nasa.gov/rss/dyn/breaking_news.rss",         topics: ["science"] },
+  { name: "New Scientist",          url: "https://www.newscientist.com/feed/home/",                topics: ["science"] },
+  { name: "Science Daily",          url: "https://www.sciencedaily.com/rss/all.xml",               topics: ["science"] },
+  { name: "Ars Technica Science",   url: "https://feeds.arstechnica.com/arstechnica/science",      topics: ["science", "ai-ml"] },
+  // Design
+  { name: "Nielsen Norman Group",   url: "https://www.nngroup.com/feed/rss/",                      topics: ["design", "product"] },
+  { name: "Figma Blog",             url: "https://www.figma.com/blog/rss/",                        topics: ["design"] },
+  // DevOps
+  { name: "Kubernetes Blog",        url: "https://kubernetes.io/feed.xml",                         topics: ["devops", "open-source"] },
+  { name: "InfoQ",                  url: "https://www.infoq.com/feed/",                            topics: ["devops", "javascript", "ai-ml"] },
   // Open Source
-  { name: "GitHub Blog",        url: "https://github.blog/feed/",                         topics: ["open-source", "devops", "ai-ml"] },
-  { name: "Linux Foundation",   url: "https://www.linuxfoundation.org/feed/",            topics: ["open-source", "devops"] },
+  { name: "GitHub Blog",            url: "https://github.blog/feed/",                              topics: ["open-source", "devops", "ai-ml"] },
+  { name: "Linux Foundation",       url: "https://www.linuxfoundation.org/feed/",                  topics: ["open-source", "devops"] },
+  { name: "Opensource.com",         url: "https://opensource.com/feed",                            topics: ["open-source"] },
+  // AI (more)
+  { name: "DeepMind Blog",          url: "https://deepmind.google/blog/rss.xml",                   topics: ["ai-ml", "science"] },
+  { name: "OpenAI News",            url: "https://openai.com/blog/rss.xml",                        topics: ["ai-ml", "startups"] },
+  { name: "Towards Data Science",   url: "https://towardsdatascience.com/feed",                    topics: ["ai-ml"] },
+  // React / JS (more)
+  { name: "Kent C. Dodds",          url: "https://kentcdodds.com/blog/rss.xml",                    topics: ["react", "javascript"] },
+  { name: "web.dev",                url: "https://web.dev/feeds/all.xml",                          topics: ["javascript", "react"] },
+  { name: "Total TypeScript",       url: "https://www.totaltypescript.com/rss.xml",                topics: ["javascript", "react"] },
+  // Startups (more)
+  { name: "Fast Company",           url: "https://www.fastcompany.com/feed",                       topics: ["startups", "product", "design"] },
+  { name: "Inc. Magazine",          url: "https://www.inc.com/rss/",                               topics: ["startups", "marketing"] },
 ]
 
 async function seed() {

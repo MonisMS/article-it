@@ -9,6 +9,12 @@ jobs:
   digest:
     runs-on: ubuntu-latest
     steps:
+      - name: Skip if not deployed yet
+        if: ${{ secrets.APP_URL == '' }}
+        run: |
+          echo "APP_URL secret not set — app not deployed yet, skipping."
+          exit 0
+
       - name: Trigger digest
         run: |
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" \

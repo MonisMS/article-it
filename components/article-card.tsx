@@ -1,7 +1,11 @@
+"use client"
+
+import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { ExternalLink } from "lucide-react"
 import { BookmarkButton } from "@/components/bookmark-button"
+import { ReadButton } from "@/components/read-button"
 
 type Topic = { id: string; name: string; icon: string | null; slug: string }
 
@@ -15,6 +19,7 @@ export type ArticleCardData = {
   source: { name: string }
   articleTopics: Topic[]
   isBookmarked?: boolean
+  isRead?: boolean
 }
 
 function timeAgo(date: Date | null): string {
@@ -29,9 +34,11 @@ function timeAgo(date: Date | null): string {
 
 export function ArticleCard({ article }: { article: ArticleCardData }) {
   const primaryTopic = article.articleTopics[0]
+  const [read, setRead] = useState(article.isRead ?? false)
 
   return (
-    <div className="group flex flex-col rounded-xl border border-zinc-200 bg-white hover:border-zinc-300 hover:shadow-md transition-all overflow-hidden">
+    <div className={`group flex flex-col rounded-xl border bg-white hover:shadow-md transition-all overflow-hidden
+      ${read ? "border-zinc-100 opacity-50 hover:opacity-80" : "border-zinc-200 hover:border-zinc-300"}`}>
       {/* Cover image */}
       {article.imageUrl && (
         <div className="relative w-full h-40 bg-zinc-100 flex-shrink-0">
@@ -81,6 +88,11 @@ export function ArticleCard({ article }: { article: ArticleCardData }) {
           </div>
 
           <div className="flex items-center gap-1">
+            <ReadButton
+              articleId={article.id}
+              initialRead={read}
+              onToggle={setRead}
+            />
             <BookmarkButton
               articleId={article.id}
               initialBookmarked={article.isBookmarked ?? false}

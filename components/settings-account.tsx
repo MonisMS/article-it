@@ -39,9 +39,21 @@ export function SettingsAccount({ name, email, plan }: Props) {
 
   async function deleteAccount() {
     setDeleting(true)
-    await fetch("/api/user/account", { method: "DELETE" })
-    await signOut()
-    router.push("/")
+    try {
+      const res = await fetch("/api/user/account", { method: "DELETE" })
+      const { error } = await res.json()
+      if (error) {
+        console.error("[deleteAccount]", error)
+        setDeleting(false)
+        setConfirmDelete(false)
+        return
+      }
+      await signOut()
+      router.push("/")
+    } catch {
+      setDeleting(false)
+      setConfirmDelete(false)
+    }
   }
 
   const isPro = plan === "pro"

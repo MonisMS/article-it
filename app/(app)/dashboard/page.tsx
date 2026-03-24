@@ -2,7 +2,7 @@ import { Suspense } from "react"
 import { redirect } from "next/navigation"
 import { headers } from "next/headers"
 import { auth } from "@/lib/auth"
-import { getArticlesForUser, getUserTopicsWithMeta, getBookmarkedArticleIds } from "@/lib/db/queries/articles"
+import { getArticlesForUser, getUserTopicsWithMeta, getBookmarkedArticleIds, getReadArticleIds } from "@/lib/db/queries/articles"
 import { ArticleCard, type ArticleCardData } from "@/components/article-card"
 import { TopicFilter } from "@/components/topic-filter"
 import { Rss } from "lucide-react"
@@ -24,16 +24,18 @@ export default async function DashboardPage({ searchParams }: Props) {
   const { topic, page: pageParam } = await searchParams
   const page = Math.max(0, Number(pageParam ?? 0))
 
-  const [userTopics, articleRows, bookmarkedIds] = await Promise.all([
+  const [userTopics, articleRows, bookmarkedIds, readIds] = await Promise.all([
     getUserTopicsWithMeta(session.user.id),
     getArticlesForUser(session.user.id, topic, page),
     getBookmarkedArticleIds(session.user.id),
+    getReadArticleIds(session.user.id),
   ])
 
   const topics = userTopics.map((ut) => ut.topic)
   const articles = articleRows.map((a) => ({
     ...a,
     isBookmarked: bookmarkedIds.has(a.id),
+    isRead: readIds.has(a.id),
   }))
 
   return (
