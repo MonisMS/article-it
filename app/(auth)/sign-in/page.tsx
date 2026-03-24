@@ -25,7 +25,8 @@ function SignInForm() {
     })
 
     if (error) {
-      setError(error.message ?? "Invalid email or password.")
+      const isServerError = error.status === 500 || (error as { statusCode?: number }).statusCode === 500
+      setError(isServerError ? "Server error. Please try again in a moment." : (error.message ?? "Invalid email or password."))
       setLoading(false)
       return
     }

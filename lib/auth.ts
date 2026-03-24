@@ -31,8 +31,12 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     sendResetPassword: async ({ user: u, url }) => {
+      if (process.env.NODE_ENV === "development") {
+        console.log("\n[auth:dev] Password reset URL (use this if email doesn't arrive):\n", url, "\n")
+      }
       const { subject, html } = buildResetPasswordEmail({ name: u.name, url })
-      await resend.emails.send({ from: FROM, to: u.email, subject, html })
+      const { error } = await resend.emails.send({ from: FROM, to: u.email, subject, html })
+      if (error) console.error("[auth] Failed to send reset password email:", error)
     },
   },
 
@@ -40,8 +44,19 @@ export const auth = betterAuth({
     sendOnSignUp: true,
     callbackURL: "/onboarding",
     sendVerificationEmail: async ({ user: u, url }) => {
+      if (process.env.NODE_ENV === "development") {
+        console.log("\n[auth:dev] Email verification URL (use this if email doesn't arrive):\n", url, "\n")
+      }
       const { subject, html } = buildVerificationEmail({ name: u.name, url })
-      await resend.emails.send({ from: FROM, to: u.email, subject, html })
+      const { error } = await resend.emails.send({ from: FROM, to: u.email, subject, html })
+      if (error) console.error("[auth] Failed to send verification email:", error)
+    },
+  },
+
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 5 * 60, // cache session in cookie for 5 minutes — avoids DB hit on every page load
     },
   },
 
