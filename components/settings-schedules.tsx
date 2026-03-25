@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { Plus, Trash2, Loader2, ChevronDown } from "lucide-react"
+import { DigestPreviewModal } from "@/components/digest-preview-modal"
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 const HOURS = Array.from({ length: 24 }, (_, i) => {
@@ -326,6 +327,7 @@ export function SettingsSchedules({
                   >
                     <span>{t.icon}</span>
                     {t.name}
+                    <DigestPreviewModal topicId={t.id} topicName={t.name} topicIcon={t.icon} />
                     <button
                       onClick={() => unassignTopic(slot.id, t.id)}
                       className="flex items-center justify-center w-4 h-4 rounded-full bg-zinc-300/60 hover:bg-zinc-300 transition-colors ml-0.5"

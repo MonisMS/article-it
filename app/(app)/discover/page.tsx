@@ -92,6 +92,16 @@ export default async function DiscoverPage({ searchParams }: Props) {
           </Link>
         ))}
       </div>
+
+      <div className="mt-10 rounded-xl border border-dashed border-zinc-200 px-6 py-5 flex items-center justify-between gap-4">
+        <p className="text-sm text-zinc-500">Don&apos;t see a topic you care about?</p>
+        <Link
+          href="/suggest"
+          className="text-sm font-medium text-zinc-900 hover:underline underline-offset-2 flex-shrink-0"
+        >
+          Suggest one →
+        </Link>
+      </div>
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation"
 import { headers } from "next/headers"
 import { auth } from "@/lib/auth"
+import { isAdmin } from "@/lib/admin"
 import { Sidebar } from "@/components/sidebar"
 import { MobileNav } from "@/components/mobile-nav"
 
@@ -17,7 +18,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     <div className="flex h-screen overflow-hidden bg-zinc-50">
       {/* Sidebar — desktop only */}
       <div className="hidden md:flex flex-shrink-0">
-        <Sidebar user={{ name: session.user.name, email: session.user.email }} />
+        <Sidebar
+          user={{ name: session.user.name, email: session.user.email }}
+          isAdmin={isAdmin(session.user.email)}
+        />
       </div>
 
       {/* Main scrollable content — extra bottom padding on mobile for the nav bar */}

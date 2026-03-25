@@ -2,21 +2,23 @@
 
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { BookOpen, LayoutDashboard, Bookmark, Settings, LogOut, Compass } from "lucide-react"
+import { BookOpen, LayoutDashboard, Bookmark, Settings, LogOut, Compass, History, Lightbulb, ShieldCheck } from "lucide-react"
 import { signOut } from "@/lib/auth-client"
 
 const NAV = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Feed" },
   { href: "/discover",  icon: Compass,         label: "Discover" },
   { href: "/bookmarks", icon: Bookmark,         label: "Bookmarks" },
+  { href: "/history",   icon: History,          label: "History" },
   { href: "/settings",  icon: Settings,         label: "Settings" },
 ]
 
 type Props = {
   user: { name: string; email: string }
+  isAdmin?: boolean
 }
 
-export function Sidebar({ user }: Props) {
+export function Sidebar({ user, isAdmin }: Props) {
   const pathname = usePathname()
   const router = useRouter()
 
@@ -57,9 +59,35 @@ export function Sidebar({ user }: Props) {
         })}
       </nav>
 
-      {/* User + Sign out */}
-      <div className="border-t border-zinc-100 pt-4 mt-4">
-        <div className="px-3 mb-2">
+      {/* Footer links */}
+      <div className="border-t border-zinc-100 pt-4 mt-4 flex flex-col gap-0.5">
+        <Link
+          href="/suggest"
+          className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+            pathname === "/suggest"
+              ? "bg-zinc-100 text-zinc-900"
+              : "text-zinc-400 hover:bg-zinc-50 hover:text-zinc-700"
+          }`}
+        >
+          <Lightbulb className="w-4 h-4 flex-shrink-0" />
+          Suggest a topic
+        </Link>
+
+        {isAdmin && (
+          <Link
+            href="/admin"
+            className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+              pathname.startsWith("/admin")
+                ? "bg-amber-50 text-amber-700"
+                : "text-amber-600 hover:bg-amber-50 hover:text-amber-700"
+            }`}
+          >
+            <ShieldCheck className="w-4 h-4 flex-shrink-0" />
+            Admin
+          </Link>
+        )}
+
+        <div className="px-3 mt-2 mb-1">
           <p className="text-sm font-medium text-zinc-900 truncate">{user.name}</p>
           <p className="text-xs text-zinc-400 truncate">{user.email}</p>
         </div>
