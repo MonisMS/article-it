@@ -1,41 +1,63 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* ── Fonts ───────────────────────────────────────────────────── */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  /* ── Brand / Accent ──────────────────────────────────────────── *
-   * Replace these hex values with your palette.                    *
-   * Usage: bg-brand, text-brand, border-brand                      *
-   * ─────────────────────────────────────────────────────────────── */
-  --color-brand:          #18181b; /* primary action / CTA           */
-  --color-brand-hover:    #3f3f46; /* hover state on brand elements  */
-  --color-brand-fg:       #ffffff; /* text/icon on top of brand bg   */
-
-  /* ── Backgrounds ─────────────────────────────────────────────── */
-  --color-bg:             #fafafa; /* page background                */
-  --color-surface:        #ffffff; /* card / panel background        */
-  --color-surface-raised: #f4f4f5; /* slightly elevated surface      */
-  --color-overlay:        #f4f4f5; /* hover overlay on interactive   */
-
-  /* ── Borders ─────────────────────────────────────────────────── */
-  --color-border:         #e4e4e7; /* default border                 */
-  --color-border-strong:  #d4d4d8; /* stronger border / divider      */
-
-  /* ── Text ────────────────────────────────────────────────────── */
-  --color-text:           #18181b; /* primary text                   */
-  --color-text-muted:     #71717a; /* secondary / supporting text    */
-  --color-text-subtle:    #a1a1aa; /* placeholder / disabled         */
-
-  /* ── Feedback ────────────────────────────────────────────────── */
+  /* ── App UI palette (light) ───────────────────────────────────── */
+  --color-brand:          #18181b;
+  --color-brand-hover:    #3f3f46;
+  --color-brand-fg:       #ffffff;
+  --color-bg:             #fafafa;
+  --color-surface:        #ffffff;
+  --color-surface-raised: #f4f4f5;
+  --color-overlay:        #f4f4f5;
+  --color-border:         #e4e4e7;
+  --color-border-strong:  #d4d4d8;
+  --color-text:           #18181b;
+  --color-text-muted:     #71717a;
+  --color-text-subtle:    #a1a1aa;
   --color-success:        #16a34a;
   --color-success-bg:     #f0fdf4;
   --color-error:          #dc2626;
   --color-error-bg:       #fef2f2;
   --color-warning:        #d97706;
   --color-warning-bg:     #fffbeb;
+
+  /* ── Landing page dark palette ────────────────────────────────── *
+   * Prefix: lp-*  Usage: bg-lp-bg, text-lp-text, etc.             *
+   * ─────────────────────────────────────────────────────────────── */
+  --color-lp-bg:            #0D1117;
+  --color-lp-surface:       #161C26;
+  --color-lp-elevated:      #1E2533;
+  --color-lp-border:        #1E2A3A;
+  --color-lp-border-strong: #2D3B4F;
+  --color-lp-text:          #F0EDE6;
+  --color-lp-text-muted:    #B8C0CC;
+  --color-lp-text-subtle:   #6B7585;
+  --color-lp-accent:        #E8A838;
+  --color-lp-accent-hover:  #F0BC5E;
+  --color-lp-accent-muted:  #2A3547;
 }
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+}
+.animate-marquee-slow {
+  animation: marquee 40s linear infinite;
+}
+
+@keyframes aurora-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1) translate(0, 0); }
+  33%       { opacity: 0.6; transform: scale(1.08) translate(2%, -3%); }
+  66%       { opacity: 0.5; transform: scale(0.95) translate(-2%, 2%); }
+}
+.animate-aurora { animation: aurora-pulse 8s ease-in-out infinite; }
+.animate-aurora-slow { animation: aurora-pulse 12s ease-in-out infinite reverse; }
