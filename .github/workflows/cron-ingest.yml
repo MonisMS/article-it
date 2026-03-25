@@ -18,11 +18,11 @@ jobs:
             echo "APP_URL secret not set — skipping."
             exit 0
           fi
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+          STATUS=$(curl -sSL -o /dev/null -w "%{http_code}" \
             -X GET "$APP_URL/api/cron/ingest" \
             -H "Authorization: Bearer $CRON_SECRET")
           echo "Response status: $STATUS"
-          if [ "$STATUS" != "200" ]; then
+          if [ "${STATUS:0:1}" != "2" ]; then
             echo "Ingest failed with status $STATUS"
             exit 1
           fi
