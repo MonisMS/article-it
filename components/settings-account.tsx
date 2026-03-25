@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { Loader2, Pencil, Check, X } from "lucide-react"
 import { signOut } from "@/lib/auth-client"
 
@@ -118,9 +119,9 @@ export function SettingsAccount({ name, email, plan }: Props) {
             {isPro ? "Pro" : "Free"}
           </span>
           {!isPro && (
-            <button className="text-xs font-medium text-violet-600 hover:text-violet-800 transition-colors">
+            <Link href="/upgrade" className="text-xs font-medium text-violet-600 hover:text-violet-800 transition-colors">
               Upgrade to Pro →
-            </button>
+            </Link>
           )}
         </div>
       </div>

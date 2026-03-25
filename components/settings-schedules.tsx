@@ -10,12 +10,44 @@ const HOURS = Array.from({ length: 24 }, (_, i) => {
   return { value: i, label }
 })
 
+const TIMEZONES = [
+  "Pacific/Honolulu",
+  "America/Anchorage",
+  "America/Los_Angeles",
+  "America/Denver",
+  "America/Chicago",
+  "America/New_York",
+  "America/Sao_Paulo",
+  "Europe/London",
+  "Europe/Paris",
+  "Europe/Helsinki",
+  "Europe/Istanbul",
+  "Asia/Dubai",
+  "Asia/Karachi",
+  "Asia/Kolkata",
+  "Asia/Dhaka",
+  "Asia/Bangkok",
+  "Asia/Singapore",
+  "Asia/Tokyo",
+  "Australia/Sydney",
+  "Pacific/Auckland",
+]
+
+function detectTimezone(): string {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone
+  } catch {
+    return "UTC"
+  }
+}
+
 type Topic = { id: string; name: string; icon: string | null }
 type ScheduleRow = {
   topicId: string
   frequency: string
   dayOfWeek: number | null
   hour: number
+  timezone: string
   isActive: boolean
 }
 type Slot = {
@@ -23,9 +55,11 @@ type Slot = {
   frequency: "daily" | "weekly"
   dayOfWeek: number
   hour: number
+  timezone: string
   topicIds: string[]
   saving: boolean
   saved: boolean
+  error: string | null
 }
 
 function inferSlots(schedules: ScheduleRow[]): Slot[] {
@@ -39,9 +73,11 @@ function inferSlots(schedules: ScheduleRow[]): Slot[] {
         frequency: (s.frequency as "daily" | "weekly") ?? "weekly",
         dayOfWeek: s.dayOfWeek ?? 0,
         hour: s.hour,
+        timezone: s.timezone || detectTimezone(),
         topicIds: [],
         saving: false,
         saved: false,
+        error: null,
       })
     }
     map.get(key)!.topicIds.push(s.topicId)
@@ -61,70 +97,99 @@ export function SettingsSchedules({
   const [slots, setSlots] = useState<Slot[]>(() => inferSlots(initialSchedules))
   const [showTopicPicker, setShowTopicPicker] = useState<string | null>(null)
 
-  // topics not assigned to any slot
   const scheduledTopicIds = new Set(slots.flatMap((s) => s.topicIds))
   const unscheduled = topics.filter((t) => !scheduledTopicIds.has(t.id))
 
   function addSlot() {
     setSlots((prev) => [
       ...prev,
-      { id: `slot-${nextId++}`, frequency: "weekly", dayOfWeek: 1, hour: 9, topicIds: [], saving: false, saved: false },
+      {
+        id: `slot-${nextId++}`,
+        frequency: "weekly",
+        dayOfWeek: 1,
+        hour: 9,
+        timezone: detectTimezone(),
+        topicIds: [],
+        saving: false,
+        saved: false,
+        error: null,
+      },
     ])
   }
 
-  function removeSlot(slotId: string) {
+  async function removeSlot(slotId: string) {
     const slot = slots.find((s) => s.id === slotId)
     if (!slot) return
-    // delete schedules for topics in this slot
-    for (const topicId of slot.topicIds) {
-      fetch("/api/user/schedule", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topicId }),
-      }).catch(() => {})
-    }
+
     setSlots((prev) => prev.filter((s) => s.id !== slotId))
+
+    const results = await Promise.all(
+      slot.topicIds.map((topicId) =>
+        fetch("/api/user/schedule", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ topicId }),
+        }).then((r) => r.ok)
+      )
+    )
+
+    if (results.some((ok) => !ok)) {
+      // Restore slot if any deletion failed
+      setSlots((prev) => [
+        ...prev,
+        { ...slot, error: "Failed to delete schedule. Please try again." },
+      ])
+    }
   }
 
-  function updateSlot(slotId: string, patch: Partial<Omit<Slot, "id" | "saving" | "saved">>) {
+  function updateSlot(slotId: string, patch: Partial<Omit<Slot, "id" | "saving" | "saved" | "error">>) {
     setSlots((prev) =>
-      prev.map((s) => (s.id === slotId ? { ...s, ...patch, saved: false } : s))
+      prev.map((s) => (s.id === slotId ? { ...s, ...patch, saved: false, error: null } : s))
     )
   }
 
   function assignTopic(slotId: string, topicId: string) {
     setSlots((prev) =>
       prev.map((s) => {
-        if (s.id === slotId) return { ...s, topicIds: [...s.topicIds, topicId], saved: false }
-        // remove from other slots
+        if (s.id === slotId) return { ...s, topicIds: [...s.topicIds, topicId], saved: false, error: null }
         return { ...s, topicIds: s.topicIds.filter((id) => id !== topicId) }
       })
     )
     setShowTopicPicker(null)
   }
 
-  function unassignTopic(slotId: string, topicId: string) {
+  async function unassignTopic(slotId: string, topicId: string) {
     setSlots((prev) =>
       prev.map((s) =>
-        s.id === slotId ? { ...s, topicIds: s.topicIds.filter((id) => id !== topicId), saved: false } : s
+        s.id === slotId ? { ...s, topicIds: s.topicIds.filter((id) => id !== topicId), saved: false, error: null } : s
       )
     )
-    // remove schedule from DB
-    fetch("/api/user/schedule", {
+
+    const res = await fetch("/api/user/schedule", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ topicId }),
-    }).catch(() => {})
+    })
+
+    if (!res.ok) {
+      // Restore topic if deletion failed
+      setSlots((prev) =>
+        prev.map((s) =>
+          s.id === slotId
+            ? { ...s, topicIds: [...s.topicIds, topicId], error: "Failed to remove topic. Please try again." }
+            : s
+        )
+      )
+    }
   }
 
   async function saveSlot(slotId: string) {
     const slot = slots.find((s) => s.id === slotId)
     if (!slot || slot.topicIds.length === 0) return
 
-    setSlots((prev) => prev.map((s) => (s.id === slotId ? { ...s, saving: true } : s)))
+    setSlots((prev) => prev.map((s) => (s.id === slotId ? { ...s, saving: true, error: null } : s)))
 
-    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone
-    await Promise.all(
+    const results = await Promise.all(
       slot.topicIds.map((topicId) =>
         fetch("/api/user/schedule", {
           method: "POST",
@@ -133,15 +198,21 @@ export function SettingsSchedules({
             frequency: slot.frequency,
             dayOfWeek: slot.frequency === "weekly" ? slot.dayOfWeek : null,
             hour: slot.hour,
-            timezone: tz,
+            timezone: slot.timezone,
             topicId,
           }),
-        })
+        }).then((r) => r.ok)
       )
     )
 
+    const allOk = results.every(Boolean)
+
     setSlots((prev) =>
-      prev.map((s) => (s.id === slotId ? { ...s, saving: false, saved: true } : s))
+      prev.map((s) =>
+        s.id === slotId
+          ? { ...s, saving: false, saved: allOk, error: allOk ? null : "Failed to save schedule. Please try again." }
+          : s
+      )
     )
   }
 
@@ -149,9 +220,9 @@ export function SettingsSchedules({
     <div className="space-y-4">
       {slots.map((slot) => {
         const slotTopics = topics.filter((t) => slot.topicIds.includes(t.id))
-        const addableTopics = topics.filter(
-          (t) => !scheduledTopicIds.has(t.id) || slot.topicIds.includes(t.id)
-        ).filter((t) => !slot.topicIds.includes(t.id))
+        const addableTopics = topics
+          .filter((t) => !scheduledTopicIds.has(t.id) || slot.topicIds.includes(t.id))
+          .filter((t) => !slot.topicIds.includes(t.id))
 
         return (
           <div key={slot.id} className="rounded-xl border border-zinc-200 bg-white p-5">
@@ -221,6 +292,24 @@ export function SettingsSchedules({
                 >
                   {HOURS.map(({ value, label }) => (
                     <option key={value} value={value}>{label}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Timezone */}
+              <div>
+                <label className="block text-xs font-medium text-zinc-400 mb-2">Timezone</label>
+                <select
+                  value={slot.timezone}
+                  onChange={(e) => updateSlot(slot.id, { timezone: e.target.value })}
+                  className="rounded-lg border border-zinc-200 px-2.5 py-1.5 text-xs text-zinc-900 outline-none focus:border-zinc-400 transition-colors"
+                >
+                  {/* Keep detected/stored tz even if not in list */}
+                  {!TIMEZONES.includes(slot.timezone) && (
+                    <option value={slot.timezone}>{slot.timezone}</option>
+                  )}
+                  {TIMEZONES.map((tz) => (
+                    <option key={tz} value={tz}>{tz}</option>
                   ))}
                 </select>
               </div>
@@ -295,6 +384,7 @@ export function SettingsSchedules({
                 {slot.saving ? "Saving…" : "Save schedule"}
               </button>
               {slot.saved && <span className="text-xs text-emerald-600 font-medium">Saved ✓</span>}
+              {slot.error && <span className="text-xs text-red-500">{slot.error}</span>}
             </div>
           </div>
         )

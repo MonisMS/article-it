@@ -2,7 +2,7 @@ import { Suspense } from "react"
 import { redirect } from "next/navigation"
 import { headers } from "next/headers"
 import { auth } from "@/lib/auth"
-import { getArticlesForUser, getUserTopicsWithMeta, getBookmarkedArticleIds, getReadArticleIds } from "@/lib/db/queries/articles"
+import { getArticlesForUser, getArticlesCountForUser, getUserTopicsWithMeta, getBookmarkedArticleIds, getReadArticleIds } from "@/lib/db/queries/articles"
 import { ArticleCard, type ArticleCardData } from "@/components/article-card"
 import { TopicFilter } from "@/components/topic-filter"
 import { Rss } from "lucide-react"
@@ -24,9 +24,10 @@ export default async function DashboardPage({ searchParams }: Props) {
   const { topic, page: pageParam } = await searchParams
   const page = Math.max(0, Number(pageParam ?? 0))
 
-  const [userTopics, articleRows, bookmarkedIds, readIds] = await Promise.all([
+  const [userTopics, articleRows, totalCount, bookmarkedIds, readIds] = await Promise.all([
     getUserTopicsWithMeta(session.user.id),
     getArticlesForUser(session.user.id, topic, page),
+    getArticlesCountForUser(session.user.id, topic),
     getBookmarkedArticleIds(session.user.id),
     getReadArticleIds(session.user.id),
   ])
@@ -74,10 +75,12 @@ export default async function DashboardPage({ searchParams }: Props) {
             >
               ← Previous
             </a>
-            <span className="text-sm text-zinc-400">Page {page + 1}</span>
+            <span className="text-sm text-zinc-400">
+              Page {page + 1} of {Math.max(1, Math.ceil(totalCount / 20))}
+            </span>
             <a
               href={`/dashboard?${topic ? `topic=${topic}&` : ""}page=${page + 1}`}
-              className={`rounded-lg border border-zinc-200 px-4 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-50 transition-colors ${articles.length < 20 ? "pointer-events-none opacity-30" : ""}`}
+              className={`rounded-lg border border-zinc-200 px-4 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-50 transition-colors ${(page + 1) * 20 >= totalCount ? "pointer-events-none opacity-30" : ""}`}
             >
               Next →
             </a>

@@ -71,6 +71,7 @@ export default async function SettingsPage() {
               frequency: s.frequency,
               dayOfWeek: s.dayOfWeek,
               hour: s.hour,
+              timezone: s.timezone,
               isActive: s.isActive,
             }))}
           />

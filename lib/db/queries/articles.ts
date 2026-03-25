@@ -1,6 +1,6 @@
 import { db } from "@/lib/db"
 import { articles, articleTopics, userTopics, topics, rssSources, bookmarks, readArticles } from "@/lib/db/schema"
-import { eq, inArray, desc, and, sql } from "drizzle-orm"
+import { eq, inArray, desc, sql } from "drizzle-orm"
 
 export type ArticleWithMeta = Awaited<ReturnType<typeof getArticlesForUser>>[number]
 
@@ -141,6 +141,37 @@ export async function getArticlesByTopicSlug(topicSlug: string, page = 0) {
       articleTopics: [{ id: topic.id, name: topic.name, icon: topic.icon, slug: topic.slug }],
     })),
   }
+}
+
+export async function getArticlesCountForUser(userId: string, topicSlug?: string): Promise<number> {
+  const followed = await db
+    .select({ topicId: userTopics.topicId })
+    .from(userTopics)
+    .where(eq(userTopics.userId, userId))
+
+  if (followed.length === 0) return 0
+
+  const userTopicIds = followed.map((f) => f.topicId)
+  let filterTopicIds = userTopicIds
+
+  if (topicSlug) {
+    const topic = await db.query.topics.findFirst({ where: eq(topics.slug, topicSlug) })
+    if (!topic || !userTopicIds.includes(topic.id)) return 0
+    filterTopicIds = [topic.id]
+  }
+
+  const [result] = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(articles)
+    .where(
+      sql`EXISTS (
+        SELECT 1 FROM ${articleTopics}
+        WHERE ${articleTopics.articleId} = ${articles.id}
+        AND   ${articleTopics.topicId} IN ${sql.raw(`('${filterTopicIds.join("','")}')`)}
+      )`
+    )
+
+  return Number(result?.count ?? 0)
 }
 
 export async function getBookmarkedArticleIds(userId: string): Promise<Set<string>> {
