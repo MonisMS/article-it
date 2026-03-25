@@ -16,6 +16,7 @@ jobs:
           exit 0
 
       - name: Trigger digest
+        if: ${{ secrets.APP_URL != '' }}
         run: |
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
             -X GET "${{ secrets.APP_URL }}/api/cron/digest" \

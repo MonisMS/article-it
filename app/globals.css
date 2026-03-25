@@ -1,8 +1,40 @@
 @import "tailwindcss";
 
 @theme inline {
+  /* ── Fonts ───────────────────────────────────────────────────── */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* ── Brand / Accent ──────────────────────────────────────────── *
+   * Replace these hex values with your palette.                    *
+   * Usage: bg-brand, text-brand, border-brand                      *
+   * ─────────────────────────────────────────────────────────────── */
+  --color-brand:          #18181b; /* primary action / CTA           */
+  --color-brand-hover:    #3f3f46; /* hover state on brand elements  */
+  --color-brand-fg:       #ffffff; /* text/icon on top of brand bg   */
+
+  /* ── Backgrounds ─────────────────────────────────────────────── */
+  --color-bg:             #fafafa; /* page background                */
+  --color-surface:        #ffffff; /* card / panel background        */
+  --color-surface-raised: #f4f4f5; /* slightly elevated surface      */
+  --color-overlay:        #f4f4f5; /* hover overlay on interactive   */
+
+  /* ── Borders ─────────────────────────────────────────────────── */
+  --color-border:         #e4e4e7; /* default border                 */
+  --color-border-strong:  #d4d4d8; /* stronger border / divider      */
+
+  /* ── Text ────────────────────────────────────────────────────── */
+  --color-text:           #18181b; /* primary text                   */
+  --color-text-muted:     #71717a; /* secondary / supporting text    */
+  --color-text-subtle:    #a1a1aa; /* placeholder / disabled         */
+
+  /* ── Feedback ────────────────────────────────────────────────── */
+  --color-success:        #16a34a;
+  --color-success-bg:     #f0fdf4;
+  --color-error:          #dc2626;
+  --color-error-bg:       #fef2f2;
+  --color-warning:        #d97706;
+  --color-warning-bg:     #fffbeb;
 }
 
 .no-scrollbar::-webkit-scrollbar { display: none; }

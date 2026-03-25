@@ -4,6 +4,9 @@ import { auth } from "@/lib/auth"
 import { isAdmin } from "@/lib/admin"
 import { Sidebar } from "@/components/sidebar"
 import { MobileNav } from "@/components/mobile-nav"
+import { db } from "@/lib/db"
+import { userTopics } from "@/lib/db/schema"
+import { eq } from "drizzle-orm"
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   let session
@@ -13,6 +16,13 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     redirect("/sign-in")
   }
   if (!session) redirect("/sign-in")
+
+  // Onboarding gate — if user has no topics they haven't finished onboarding
+  const firstTopic = await db.query.userTopics.findFirst({
+    where: eq(userTopics.userId, session.user.id),
+    columns: { userId: true },
+  })
+  if (!firstTopic) redirect("/onboarding")
 
   return (
     <div className="flex h-screen overflow-hidden bg-zinc-50">
