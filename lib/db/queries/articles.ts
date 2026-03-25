@@ -190,6 +190,58 @@ export async function getReadArticleIds(userId: string): Promise<Set<string>> {
   return new Set(rows.map((r) => r.articleId))
 }
 
+export async function searchArticles(query: string, page = 0) {
+  const limit = 20
+  const offset = page * limit
+
+  const tsQuery = sql`plainto_tsquery('english', ${query})`
+  const tsVector = sql`to_tsvector('english', coalesce(${articles.title}, '') || ' ' || coalesce(${articles.description}, ''))`
+
+  const rows = await db
+    .select({
+      id:          articles.id,
+      title:       articles.title,
+      url:         articles.url,
+      description: articles.description,
+      imageUrl:    articles.imageUrl,
+      publishedAt: articles.publishedAt,
+      sourceName:  rssSources.name,
+    })
+    .from(articles)
+    .innerJoin(rssSources, eq(rssSources.id, articles.sourceId))
+    .where(sql`${tsVector} @@ ${tsQuery}`)
+    .orderBy(desc(sql`ts_rank(${tsVector}, ${tsQuery})`))
+    .limit(limit)
+    .offset(offset)
+
+  if (rows.length === 0) return []
+
+  const articleIds = rows.map((r) => r.id)
+  const tagRows = await db
+    .select({
+      articleId: articleTopics.articleId,
+      topicId:   topics.id,
+      topicName: topics.name,
+      topicIcon: topics.icon,
+      topicSlug: topics.slug,
+    })
+    .from(articleTopics)
+    .innerJoin(topics, eq(topics.id, articleTopics.topicId))
+    .where(inArray(articleTopics.articleId, articleIds))
+
+  const topicMap = new Map<string, { id: string; name: string; icon: string | null; slug: string }[]>()
+  for (const row of tagRows) {
+    if (!topicMap.has(row.articleId)) topicMap.set(row.articleId, [])
+    topicMap.get(row.articleId)!.push({ id: row.topicId, name: row.topicName, icon: row.topicIcon, slug: row.topicSlug })
+  }
+
+  return rows.map((row) => ({
+    ...row,
+    source: { name: row.sourceName },
+    articleTopics: topicMap.get(row.id) ?? [],
+  }))
+}
+
 export async function getUserTopicsWithMeta(userId: string) {
   return db.query.userTopics.findMany({
     where: eq(userTopics.userId, userId),

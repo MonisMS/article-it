@@ -94,6 +94,100 @@ const SOURCES = [
   // Startups (more)
   { name: "Fast Company",           url: "https://www.fastcompany.com/feed",                       topics: ["startups", "product", "design"] },
   { name: "Inc. Magazine",          url: "https://www.inc.com/rss/",                               topics: ["startups", "marketing"] },
+
+  // ── Reddit ────────────────────────────────────────────────────────────────
+  // Public RSS feeds, no auth. Using top.rss?t=day for quality pre-filtering.
+  { name: "Reddit r/programming",       url: "https://www.reddit.com/r/programming/top.rss?t=day",     topics: ["javascript", "devops", "open-source"] },
+  { name: "Reddit r/javascript",        url: "https://www.reddit.com/r/javascript/top.rss?t=day",      topics: ["javascript"] },
+  { name: "Reddit r/MachineLearning",   url: "https://www.reddit.com/r/MachineLearning/top.rss?t=day", topics: ["ai-ml", "science"] },
+  { name: "Reddit r/Python",            url: "https://www.reddit.com/r/Python/top.rss?t=day",          topics: ["ai-ml", "open-source"] },
+  { name: "Reddit r/devops",            url: "https://www.reddit.com/r/devops/top.rss?t=day",          topics: ["devops"] },
+  { name: "Reddit r/netsec",            url: "https://www.reddit.com/r/netsec/top.rss?t=day",          topics: ["cybersecurity"] },
+  { name: "Reddit r/startups",          url: "https://www.reddit.com/r/startups/top.rss?t=day",        topics: ["startups"] },
+  { name: "Reddit r/investing",         url: "https://www.reddit.com/r/investing/top.rss?t=day",       topics: ["finance"] },
+  { name: "Reddit r/science",           url: "https://www.reddit.com/r/science/top.rss?t=day",         topics: ["science"] },
+  { name: "Reddit r/webdev",            url: "https://www.reddit.com/r/webdev/top.rss?t=day",          topics: ["javascript", "react", "design"] },
+
+  // ── YouTube ───────────────────────────────────────────────────────────────
+  // Atom feeds via youtube.com/feeds/videos.xml?channel_id=...
+  // Thumbnails are extracted from media:group (handled in lib/ingestion.ts).
+  { name: "YouTube – Fireship",           url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCsBjURrPoezykLs9EqgamOA", topics: ["javascript", "react"] },
+  { name: "YouTube – Theo",               url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCqr-7GDVTsdNBCeufvERYuw", topics: ["javascript", "react"] },
+  { name: "YouTube – ThePrimeagen",       url: "https://www.youtube.com/feeds/videos.xml?channel_id=UC8ENHE5xdFSwx71u3fDH5Xw", topics: ["javascript", "open-source"] },
+  { name: "YouTube – Traversy Media",     url: "https://www.youtube.com/feeds/videos.xml?channel_id=UC29ju8bIPH5as8OGnQzwJyA", topics: ["javascript", "react"] },
+  { name: "YouTube – Web Dev Simplified", url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCFbNIlppjAuEX4znoulh0Cw", topics: ["javascript", "react"] },
+  { name: "YouTube – Kevin Powell",       url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCJZv4d5rbIKd4QHMPkcABCw", topics: ["design", "javascript"] },
+  { name: "YouTube – Two Minute Papers",  url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCbfYPyITQ-7l4upoX8nvctg", topics: ["ai-ml", "science"] },
+  { name: "YouTube – Yannic Kilcher",     url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCZHmQk67mSJgfCCTn7xBfew", topics: ["ai-ml"] },
+  { name: "YouTube – TechWorld w/ Nana",  url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCdngmbVKX1Tgre699-XLlUA", topics: ["devops"] },
+  { name: "YouTube – John Hammond",       url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCVeW9qkBjo3zosnqUbG7CFw", topics: ["cybersecurity"] },
+  { name: "YouTube – Veritasium",         url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCHnyfMqiRRG1u-2MsSQLbXA", topics: ["science"] },
+  { name: "YouTube – Kurzgesagt",         url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCsXVk37bltHxD1rDPwtNM8Q", topics: ["science"] },
+  { name: "YouTube – Plain Bagel",        url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCFCEuCsyWP0YkP3CZ3Mr01Q", topics: ["finance"] },
+
+  // ── Hacker News extras ────────────────────────────────────────────────────
+  // Via hnrss.org (wraps Algolia HN API as RSS). Already have /frontpage.
+  { name: "HN Best",     url: "https://hnrss.org/best",              topics: ["startups", "open-source", "ai-ml"] },
+  { name: "HN Show HN",  url: "https://hnrss.org/show?points=50",    topics: ["startups", "open-source", "javascript"] },
+  { name: "HN Ask HN",   url: "https://hnrss.org/ask?points=30",     topics: ["startups", "product"] },
+  { name: "HN Launches", url: "https://hnrss.org/launches",          topics: ["startups", "product"] },
+
+  // ── Medium publications ───────────────────────────────────────────────────
+  // Using curated publication feeds rather than raw tag feeds for quality.
+  { name: "JavaScript in Plain English", url: "https://javascript.plainenglish.io/feed",       topics: ["javascript", "react"] },
+  { name: "AI in Plain English",         url: "https://ai.plainenglish.io/feed",               topics: ["ai-ml"] },
+  { name: "Python in Plain English",     url: "https://python.plainenglish.io/feed",           topics: ["ai-ml", "open-source"] },
+  { name: "The Startup (Medium)",        url: "https://medium.com/feed/the-startup",           topics: ["startups", "product"] },
+  { name: "SWLH (Medium)",               url: "https://medium.com/feed/swlh",                  topics: ["startups", "marketing"] },
+  { name: "UX Planet",                   url: "https://medium.com/feed/ux-planet",             topics: ["design", "product"] },
+  { name: "Google Cloud Blog (Medium)",  url: "https://medium.com/feed/google-cloud",          topics: ["devops", "open-source"] },
+  { name: "Analytics Vidhya",            url: "https://medium.com/feed/analytics-vidhya",      topics: ["ai-ml"] },
+  { name: "DataDrivenInvestor",          url: "https://medium.com/feed/datadriveninvestor",    topics: ["finance", "startups"] },
+  { name: "Medium Cybersecurity",        url: "https://medium.com/feed/tag/cybersecurity",     topics: ["cybersecurity"] },
+
+  // ── Substack newsletters ──────────────────────────────────────────────────
+  { name: "The Pragmatic Engineer",  url: "https://newsletter.pragmaticengineer.com/feed",    topics: ["devops", "startups", "javascript"] },
+  { name: "ByteByteGo Newsletter",   url: "https://blog.bytebytego.com/feed",                 topics: ["devops", "javascript", "startups"] },
+  { name: "This Week In React",      url: "https://substack.thisweekinreact.com/feed",        topics: ["react", "javascript"] },
+  { name: "AlphaSignal AI",          url: "https://alphasignal.substack.com/feed",            topics: ["ai-ml"] },
+  { name: "Decoding ML",             url: "https://decodingml.substack.com/feed",             topics: ["ai-ml"] },
+  { name: "Exponential View",        url: "https://exponentialview.co/feed",                  topics: ["ai-ml", "startups"] },
+  { name: "Noahpinion",              url: "https://noahpinion.blog/feed",                     topics: ["finance", "startups"] },
+  { name: "DevOps Bulletin",         url: "https://devopsbulletin.substack.com/feed",         topics: ["devops"] },
+  { name: "Growth Unhinged",         url: "https://www.growthunhinged.com/feed",              topics: ["product", "marketing"] },
+  { name: "Not Boring",              url: "https://www.notboring.co/feed",                    topics: ["startups"] },
+
+  // ── Dev.to tag feeds ──────────────────────────────────────────────────────
+  // Topic-specific feeds alongside the existing global dev.to/feed.
+  { name: "Dev.to JavaScript", url: "https://dev.to/feed/tag/javascript",     topics: ["javascript"] },
+  { name: "Dev.to React",      url: "https://dev.to/feed/tag/react",          topics: ["react", "javascript"] },
+  { name: "Dev.to AI/ML",      url: "https://dev.to/feed/tag/machinelearning", topics: ["ai-ml"] },
+  { name: "Dev.to DevOps",     url: "https://dev.to/feed/tag/devops",         topics: ["devops"] },
+  { name: "Dev.to Python",     url: "https://dev.to/feed/tag/python",         topics: ["ai-ml", "open-source"] },
+
+  // ── Lobste.rs ─────────────────────────────────────────────────────────────
+  // Invite-only link aggregator — high signal-to-noise ratio.
+  { name: "Lobste.rs JavaScript", url: "https://lobste.rs/t/javascript.rss", topics: ["javascript", "react"] },
+  { name: "Lobste.rs AI",         url: "https://lobste.rs/t/ai.rss",         topics: ["ai-ml"] },
+  { name: "Lobste.rs Security",   url: "https://lobste.rs/t/security.rss",   topics: ["cybersecurity"] },
+  { name: "Lobste.rs DevOps",     url: "https://lobste.rs/t/devops.rss",     topics: ["devops", "open-source"] },
+  { name: "Lobste.rs Python",     url: "https://lobste.rs/t/python.rss",     topics: ["ai-ml", "open-source"] },
+
+  // ── TLDR Newsletter ───────────────────────────────────────────────────────
+  // Daily curated digest per topic — each feed item = one day's newsletter.
+  { name: "TLDR AI",       url: "https://tldr.tech/api/rss/ai",       topics: ["ai-ml"] },
+  { name: "TLDR Dev",      url: "https://tldr.tech/api/rss/dev",      topics: ["javascript", "react", "devops"] },
+  { name: "TLDR DevOps",   url: "https://tldr.tech/api/rss/devops",   topics: ["devops"] },
+  { name: "TLDR InfoSec",  url: "https://tldr.tech/api/rss/infosec",  topics: ["cybersecurity"] },
+  { name: "TLDR Tech",     url: "https://tldr.tech/api/rss/tech",     topics: ["startups", "ai-ml"] },
+  { name: "TLDR Founders", url: "https://tldr.tech/api/rss/founders", topics: ["startups", "product"] },
+  { name: "TLDR Marketing",url: "https://tldr.tech/api/rss/marketing",topics: ["marketing"] },
+
+  // ── Changelog ─────────────────────────────────────────────────────────────
+  { name: "Changelog News",       url: "https://changelog.com/news/feed",         topics: ["javascript", "open-source", "devops", "startups"] },
+  { name: "JS Party (Changelog)", url: "https://changelog.com/jsparty/feed",      topics: ["javascript", "react"] },
+  { name: "Ship It (Changelog)",  url: "https://changelog.com/shipit/feed",       topics: ["devops"] },
+  { name: "Practical AI",         url: "https://changelog.com/practicalai/feed",  topics: ["ai-ml"] },
 ]
 
 async function seed() {

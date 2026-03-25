@@ -5,6 +5,40 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## What This Is
 ArticleIt — a personalized article aggregator. RSS feeds are ingested into Postgres every 6 hours. Users pick topics, get a personalized feed, and receive scheduled email digests via Resend.
 
+---
+
+## Version 2 — Planned
+
+### Resource optimisation (cron frequency)
+Current cron schedules are too aggressive for the free tier as user count grows:
+- **Ingest** — change from every 6h to once daily (or every 2 days). Articles don't need to be that fresh. Edit `.github/workflows/cron-ingest.yml` cron expression: `0 6 * * *` = once daily at 6am UTC.
+- **Digest** — running every 1h (24×/day) is wasteful. Most users pick 9am or similar fixed times. Consider reducing to every 2h or 4h, or switching to a smarter schedule that only runs during peak hours (6am–10pm UTC). Edit `.github/workflows/cron-digest.yml`.
+
+### New content sources
+Expand beyond RSS feeds to pull content from:
+- Reddit (subreddit feeds — Reddit exposes RSS at `reddit.com/r/topic.rss`)
+- Twitter/X (needs API v2, paid tier — revisit when monetised)
+- Hacker News (already has RSS — low hanging fruit, add to seed)
+- YouTube channel feeds (RSS supported natively)
+- Newsletter archives (Substack exposes RSS)
+
+This will require sourcing changes in `lib/ingestion.ts` and potentially new source types in the schema.
+
+### Full UI revamp
+Current UI is functional but minimal. v2 should include:
+- Proper design system / component library decision
+- Article reading experience improvements
+- Better mobile layout (current bottom nav gets cramped at 5 items)
+- Dark mode
+- Landing page refresh once there's more to show
+
+### Other v2 items
+- Google / GitHub OAuth login (Better Auth supports it — add providers in `lib/auth.ts`)
+- Forget password page UX — currently no keyboard submit on the form
+- Pro plan implementation — `plan` field + `ADMIN_EMAIL` guard already in place, just needs Stripe + feature gating
+- Article deduplication across sources (same article from two feeds gets stored once)
+- Neon storage monitoring — articles table will grow fast; add a cleanup job to delete articles older than 90 days with no bookmarks
+
 ## Commands
 ```bash
 pnpm dev              # Dev server (localhost:3000)
@@ -36,7 +70,15 @@ app/
     dashboard/    → /dashboard
     discover/     → /discover
     bookmarks/    → /bookmarks
+    history/      → /history (digest send history)
     settings/     → /settings
+    suggest/      → /suggest (topic suggestions)
+    upgrade/      → /upgrade (coming soon page)
+    admin/        → /admin/* (ADMIN_EMAIL only — 404 for everyone else)
+      topics/     → /admin/topics
+      sources/    → /admin/sources
+      assignments/→ /admin/assignments
+      suggestions/→ /admin/suggestions
   (auth)/         ← public auth pages (sign-in, sign-up, etc.)
   api/            ← API routes
   page.tsx        ← landing page
@@ -101,6 +143,16 @@ After any schema change, run `pnpm db:push` (with the **direct** Neon connection
 | `/api/user/account` | session | Delete account (DELETE) |
 | `/api/user/profile` | session | Update display name (PATCH) |
 | `/api/bookmarks` | session | Bookmarks (GET/POST) |
+| `/api/topics/suggest` | session | Submit topic suggestion (POST) |
+| `/api/user/digest-preview` | session | Preview digest email HTML (POST) |
+| `/api/user/digest-history/[logId]` | session | Articles in a past digest (GET) |
+| `/api/admin/topics` | ADMIN_EMAIL | Create topic (POST) |
+| `/api/admin/topics/[id]` | ADMIN_EMAIL | Toggle active / update topic (PATCH) |
+| `/api/admin/sources` | ADMIN_EMAIL | Create RSS source (POST) |
+| `/api/admin/sources/[id]` | ADMIN_EMAIL | Toggle active (PATCH) |
+| `/api/admin/assignments` | ADMIN_EMAIL | Assign/unassign source↔topic (POST/DELETE) |
+| `/api/admin/suggestions/[id]/approve` | ADMIN_EMAIL | Approve suggestion → creates topic (POST) |
+| `/api/admin/suggestions/[id]/reject` | ADMIN_EMAIL | Reject suggestion (POST) |
 
 All routes return `{ data, error }`. All user input is validated with Zod inline in the route file.
 
@@ -129,7 +181,8 @@ RESEND_API_KEY=         # Resend API key; emails send from noreply@m0nis.com / d
 BETTER_AUTH_SECRET=     # ≥32 char secret; also used as HMAC key for unsubscribe tokens — never rotate without a plan
 NEXT_PUBLIC_APP_URL=    # Exact origin, no trailing slash (http://localhost:3000 in dev)
 CRON_SECRET=            # Bearer token checked by /api/cron/* routes
-NODE_OPTIONS=--no-network-family-autoselection   # WSL2 fix for Node v20 fetch AggregateError
+ADMIN_EMAIL=            # Email address that gets access to /admin panel — checked against session.user.email
+NODE_OPTIONS=--no-network-family-autoselection   # WSL2 fix for Node v20 fetch AggregateError — local dev only, do not set in Vercel
 ```
 
 ---

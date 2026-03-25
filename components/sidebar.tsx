@@ -4,6 +4,7 @@ import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { BookOpen, LayoutDashboard, Bookmark, Settings, LogOut, Compass, History, Lightbulb, ShieldCheck } from "lucide-react"
 import { signOut } from "@/lib/auth-client"
+import { SearchBar } from "@/components/search-bar"
 
 const NAV = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Feed" },
@@ -37,6 +38,11 @@ export function Sidebar({ user, isAdmin }: Props) {
         </span>
         ArticleIt
       </Link>
+
+      {/* Search */}
+      <div className="mb-3 px-0">
+        <SearchBar />
+      </div>
 
       {/* Navigation */}
       <nav className="flex-1 flex flex-col gap-0.5">

@@ -9,6 +9,9 @@ const SOURCE_TIMEOUT_MS = 8_000 // abandon a source after 8 seconds
 const parser = new Parser({
   timeout: SOURCE_TIMEOUT_MS,
   headers: { "User-Agent": "ArticleIt/1.0 RSS Reader" },
+  customFields: {
+    item: ["media:group"],
+  },
 })
 
 type Source = typeof rssSources.$inferSelect & {
@@ -65,7 +68,7 @@ async function ingestSource(source: Source): Promise<number> {
 
     const title       = item.title?.trim() || "Untitled"
     const description = (item.contentSnippet || item.summary || "").slice(0, 500)
-    const imageUrl    = extractImage(item)
+    const imageUrl    = extractImage(item as unknown as Parser.Item & { [key: string]: unknown })
     const publishedAt = parseDate(item.pubDate || item.isoDate)
 
     // onConflictDoNothing = silent dedup by unique URL
@@ -106,6 +109,12 @@ function parseDate(dateStr?: string): Date {
 function extractImage(
   item: Parser.Item & { enclosure?: { url?: string }; [key: string]: unknown }
 ): string | null {
+  // YouTube: thumbnail lives in media:group > media:thumbnail
+  const mediaGroup = item["media:group"] as Record<string, unknown> | undefined
+  if (mediaGroup) {
+    const thumbs = mediaGroup["media:thumbnail"] as Array<{ $: { url: string } }> | undefined
+    if (thumbs?.[0]?.["$"]?.url) return thumbs[0]["$"].url
+  }
   if (item.enclosure?.url) return item.enclosure.url
   const content = (item["content:encoded"] as string | undefined) || item.content || ""
   const match = content.match(/<img[^>]+src=["']([^"']+)["']/i)
