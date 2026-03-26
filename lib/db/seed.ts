@@ -188,6 +188,29 @@ const SOURCES = [
   { name: "JS Party (Changelog)", url: "https://changelog.com/jsparty/feed",      topics: ["javascript", "react"] },
   { name: "Ship It (Changelog)",  url: "https://changelog.com/shipit/feed",       topics: ["devops"] },
   { name: "Practical AI",         url: "https://changelog.com/practicalai/feed",  topics: ["ai-ml"] },
+
+  // ── GitHub Releases ───────────────────────────────────────────────────────
+  // Atom feeds for key OSS repos. Format: github.com/{owner}/{repo}/releases.atom
+  // Tagged to relevant topics so they surface in existing user feeds automatically.
+  // JS / React ecosystem
+  { name: "Releases – React",       url: "https://github.com/facebook/react/releases.atom",           topics: ["react", "javascript"] },
+  { name: "Releases – Next.js",     url: "https://github.com/vercel/next.js/releases.atom",           topics: ["react", "javascript"] },
+  { name: "Releases – TypeScript",  url: "https://github.com/microsoft/TypeScript/releases.atom",     topics: ["javascript"] },
+  { name: "Releases – Vite",        url: "https://github.com/vitejs/vite/releases.atom",              topics: ["javascript"] },
+  { name: "Releases – Tailwind CSS",url: "https://github.com/tailwindlabs/tailwindcss/releases.atom", topics: ["javascript", "design"] },
+  { name: "Releases – Drizzle ORM", url: "https://github.com/drizzle-team/drizzle-orm/releases.atom", topics: ["javascript", "open-source"] },
+  { name: "Releases – ESLint",      url: "https://github.com/eslint/eslint/releases.atom",            topics: ["javascript"] },
+  // Runtimes
+  { name: "Releases – Node.js",     url: "https://github.com/nodejs/node/releases.atom",              topics: ["javascript", "open-source"] },
+  { name: "Releases – Bun",         url: "https://github.com/oven-sh/bun/releases.atom",              topics: ["javascript", "open-source"] },
+  { name: "Releases – Deno",        url: "https://github.com/denoland/deno/releases.atom",            topics: ["javascript", "open-source"] },
+  // AI / ML
+  { name: "Releases – Ollama",      url: "https://github.com/ollama/ollama/releases.atom",            topics: ["ai-ml", "open-source"] },
+  { name: "Releases – LangChain",   url: "https://github.com/langchain-ai/langchain/releases.atom",   topics: ["ai-ml"] },
+  // DevOps
+  { name: "Releases – Docker Compose", url: "https://github.com/docker/compose/releases.atom",        topics: ["devops", "open-source"] },
+  { name: "Releases – Kubernetes",  url: "https://github.com/kubernetes/kubernetes/releases.atom",    topics: ["devops", "open-source"] },
+  { name: "Releases – Terraform",   url: "https://github.com/hashicorp/terraform/releases.atom",      topics: ["devops", "open-source"] },
 ]
 
 async function seed() {
