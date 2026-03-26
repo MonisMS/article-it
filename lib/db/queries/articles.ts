@@ -250,6 +250,80 @@ export async function searchArticles(query: string, page = 0) {
 }
 
 /**
+ * Returns the top 5 unread articles for the user, ranked by the same
+ * quality-blended recency score as the main feed.
+ * These form the "Today's queue" — a bounded, completable reading set.
+ */
+export async function getDailyQueue(userId: string): Promise<ArticleWithMeta[]> {
+  const followed = await db
+    .select({ topicId: userTopics.topicId })
+    .from(userTopics)
+    .where(eq(userTopics.userId, userId))
+
+  if (followed.length === 0) return []
+
+  const userTopicIds = followed.map((f) => f.topicId)
+
+  const rows = await db
+    .select({
+      id: articles.id,
+      title: articles.title,
+      url: articles.url,
+      description: articles.description,
+      imageUrl: articles.imageUrl,
+      publishedAt: articles.publishedAt,
+      sourceName: rssSources.name,
+    })
+    .from(articles)
+    .innerJoin(rssSources, eq(rssSources.id, articles.sourceId))
+    .where(
+      sql`EXISTS (
+        SELECT 1 FROM ${articleTopics}
+        WHERE ${articleTopics.articleId} = ${articles.id}
+        AND   ${articleTopics.topicId}   IN ${sql.raw(`('${userTopicIds.join("','")}')`)}
+      )
+      AND NOT EXISTS (
+        SELECT 1 FROM ${readArticles}
+        WHERE ${readArticles.articleId} = ${articles.id}
+        AND   ${readArticles.userId}    = ${userId}
+      )`
+    )
+    .orderBy(
+      desc(
+        sql`${articles.publishedAt} + (COALESCE(${rssSources.qualityScore}, 0.5) * INTERVAL '12 hours')`
+      )
+    )
+    .limit(5)
+
+  if (rows.length === 0) return []
+
+  const articleIds = rows.map((r) => r.id)
+  const tagRows = await db
+    .select({
+      articleId: articleTopics.articleId,
+      topicId:   topics.id,
+      topicName: topics.name,
+      topicIcon: topics.icon,
+      topicSlug: topics.slug,
+    })
+    .from(articleTopics)
+    .innerJoin(topics, eq(topics.id, articleTopics.topicId))
+    .where(inArray(articleTopics.articleId, articleIds))
+
+  const topicMap = new Map<string, { id: string; name: string; icon: string | null; slug: string }[]>()
+  for (const row of tagRows) {
+    if (!topicMap.has(row.articleId)) topicMap.set(row.articleId, [])
+    topicMap.get(row.articleId)!.push({ id: row.topicId, name: row.topicName, icon: row.topicIcon, slug: row.topicSlug })
+  }
+
+  return rows.map((row) => ({
+    ...row,
+    source: { name: row.sourceName },
+    articleTopics: topicMap.get(row.id) ?? [],
+  }))
+}
+
+/**
  * Returns true if the user has ever received a successfully sent digest.
  * Used to decide whether to show the first-digest preview on the dashboard.
  */

@@ -2,10 +2,11 @@ import { Suspense } from "react"
 import { redirect } from "next/navigation"
 import { headers } from "next/headers"
 import { auth } from "@/lib/auth"
-import { getArticlesForUser, getArticlesCountForUser, getUserTopicsWithMeta, getBookmarkedArticleIds, getReadArticleIds, hasReceivedDigest } from "@/lib/db/queries/articles"
+import { getArticlesForUser, getArticlesCountForUser, getUserTopicsWithMeta, getBookmarkedArticleIds, getReadArticleIds, hasReceivedDigest, getDailyQueue } from "@/lib/db/queries/articles"
 import { ArticleCard, type ArticleCardData } from "@/components/article-card"
 import { TopicFilter } from "@/components/topic-filter"
 import { DigestPreview } from "@/components/digest-preview"
+import { DailyQueue } from "@/components/daily-queue"
 import { Rss } from "lucide-react"
 import { TriggerIngestButton } from "@/components/trigger-ingest-button"
 import Link from "next/link"
@@ -26,13 +27,15 @@ export default async function DashboardPage({ searchParams }: Props) {
   const { topic, page: pageParam } = await searchParams
   const page = Math.max(0, Number(pageParam ?? 0))
 
-  const [userTopics, articleRows, totalCount, bookmarkedIds, readIds, digestReceived] = await Promise.all([
+  const [userTopics, articleRows, totalCount, bookmarkedIds, readIds, digestReceived, queueRows] = await Promise.all([
     getUserTopicsWithMeta(session.user.id),
     getArticlesForUser(session.user.id, topic, page),
     getArticlesCountForUser(session.user.id, topic),
     getBookmarkedArticleIds(session.user.id),
     getReadArticleIds(session.user.id),
     hasReceivedDigest(session.user.id),
+    // Only fetch the queue on page 0 with no topic filter — it's always cross-topic
+    !topic && page === 0 ? getDailyQueue(session.user.id) : Promise.resolve([]),
   ])
 
   const topics = userTopics.map((ut) => ut.topic)
@@ -40,6 +43,11 @@ export default async function DashboardPage({ searchParams }: Props) {
     ...a,
     isBookmarked: bookmarkedIds.has(a.id),
     isRead: readIds.has(a.id),
+  }))
+  const queueArticles = queueRows.map((a) => ({
+    ...a,
+    isBookmarked: bookmarkedIds.has(a.id),
+    isRead: false, // queue only contains unread articles
   }))
 
   const totalPages = Math.max(1, Math.ceil(totalCount / 20))
@@ -67,6 +75,10 @@ export default async function DashboardPage({ searchParams }: Props) {
               <TopicFilter topics={topics} />
             </Suspense>
           </div>
+        )}
+
+        {topics.length > 0 && totalCount > 0 && !topic && page === 0 && (
+          <DailyQueue initialArticles={queueArticles} />
         )}
 
         {!digestReceived && articles.length > 0 && !topic && page === 0 && (

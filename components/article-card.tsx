@@ -31,7 +31,13 @@ function timeAgo(date: Date | null): string {
   return `${Math.floor(hours / 24)}d ago`
 }
 
-export function ArticleCard({ article }: { article: ArticleCardData }) {
+export function ArticleCard({
+  article,
+  onReadChange,
+}: {
+  article: ArticleCardData
+  onReadChange?: (articleId: string, isRead: boolean) => void
+}) {
   const primaryTopic = article.articleTopics[0]
   const [read, setRead] = useState(article.isRead ?? false)
   const [imgError, setImgError] = useState(false)
@@ -100,7 +106,10 @@ export function ArticleCard({ article }: { article: ArticleCardData }) {
             <ReadButton
               articleId={article.id}
               initialRead={read}
-              onToggle={setRead}
+              onToggle={(isRead) => {
+                setRead(isRead)
+                onReadChange?.(article.id, isRead)
+              }}
             />
             <BookmarkButton
               articleId={article.id}
