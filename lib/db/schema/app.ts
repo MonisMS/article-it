@@ -5,6 +5,7 @@ import {
   integer,
   pgTable,
   primaryKey,
+  real,
   text,
   timestamp,
   unique,
@@ -62,6 +63,10 @@ export const rssSources = pgTable("rss_sources", {
   url: text("url").notNull().unique(), // the RSS feed URL
   isActive: boolean("is_active").notNull().default(true),
   lastFetchedAt: timestamp("last_fetched_at"), // null = never fetched
+  // Aggregated engagement signal: blend of read rate + bookmark rate across users.
+  // Starts at 0.5 (neutral). Updated weekly by /api/cron/quality.
+  // Used to give high-trust sources a slight ranking boost over pure recency.
+  qualityScore: real("quality_score").notNull().default(0.5),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 })
 

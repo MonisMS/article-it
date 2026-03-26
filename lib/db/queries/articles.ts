@@ -58,7 +58,14 @@ export async function getArticlesForUser(
         )}
       )`
     )
-    .orderBy(desc(articles.publishedAt))
+    // Blend recency with source quality: high-quality sources get up to +12h
+    // virtual freshness so they surface slightly above same-age lower-trust sources.
+    // All sources default to 0.5 (neutral, +6h) until the quality cron runs.
+    .orderBy(
+      desc(
+        sql`${articles.publishedAt} + (COALESCE(${rssSources.qualityScore}, 0.5) * INTERVAL '12 hours')`
+      )
+    )
     .limit(limit)
     .offset(offset)
 

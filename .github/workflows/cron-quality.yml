@@ -1,0 +1,28 @@
+name: Source Quality Scores
+
+on:
+  schedule:
+    - cron: "0 4 * * 0" # Sunday 04:00 UTC — after cleanup (03:00), weekly
+  workflow_dispatch: # allow manual trigger from GitHub UI
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update source quality scores
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          if [ -z "$APP_URL" ]; then
+            echo "APP_URL secret not set — skipping."
+            exit 0
+          fi
+          STATUS=$(curl -sSL -o /dev/null -w "%{http_code}" \
+            -X GET "$APP_URL/api/cron/quality" \
+            -H "Authorization: Bearer $CRON_SECRET")
+          echo "Response status: $STATUS"
+          if [ "${STATUS:0:1}" != "2" ]; then
+            echo "Quality score update failed with status $STATUS"
+            exit 1
+          fi
