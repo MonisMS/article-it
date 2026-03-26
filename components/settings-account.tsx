@@ -133,7 +133,7 @@ export function SettingsAccount({ name, email, plan }: Props) {
             <button
               onClick={deleteAccount}
               disabled={deleting}
-              className="flex items-center gap-1.5 rounded-full bg-red-600 px-5 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-60 transition-colors"
+              className="flex items-center gap-1.5 rounded-full bg-error px-5 py-2 text-sm font-medium text-white hover:opacity-90 disabled:opacity-60 transition-colors"
             >
               {deleting && <Loader2 className="w-3 h-3 animate-spin" />}
               {deleting ? "Deleting…" : "Yes, delete"}
@@ -148,7 +148,7 @@ export function SettingsAccount({ name, email, plan }: Props) {
         ) : (
           <button
             onClick={() => setConfirmDelete(true)}
-            className="mt-4 rounded-full border border-red-200 text-red-600 text-sm font-medium px-5 py-2 hover:bg-red-50 transition-colors"
+            className="mt-4 rounded-full border border-error/30 text-error text-sm font-medium px-5 py-2 hover:bg-error-bg transition-colors"
           >
             Delete account
           </button>

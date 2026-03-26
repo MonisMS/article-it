@@ -62,7 +62,7 @@ export function HistoryLogRow({ log }: { log: DigestLogRow }) {
         <div className="flex items-center gap-3 flex-shrink-0">
           <span className="text-app-text-subtle text-xs hidden sm:block">{log.articleCount} articles</span>
           <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-            isSent ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-600"
+            isSent ? "bg-success-bg text-success" : "bg-error-bg text-error"
           }`}>
             {isSent ? "Sent" : "Failed"}
           </span>
@@ -80,7 +80,7 @@ export function HistoryLogRow({ log }: { log: DigestLogRow }) {
               <Loader2 className="w-4 h-4 animate-spin" /> Loading…
             </div>
           )}
-          {error && <p className="text-sm text-red-500">{error}</p>}
+          {error && <p className="text-sm text-error">{error}</p>}
           {articles?.length === 0 && (
             <p className="text-sm text-app-text-subtle">No articles recorded for this digest.</p>
           )}

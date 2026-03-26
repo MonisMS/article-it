@@ -6,6 +6,35 @@ import { buildDigestEmail } from "@/lib/email/digest-template"
 import { signUnsubscribeToken } from "@/lib/unsubscribe-token"
 import { createId } from "@paralleldrive/cuid2"
 
+/**
+ * Pure function — no DB, no network. Given a schedule's settings and a
+ * reference time, returns true if the schedule should fire right now.
+ *
+ * Exported separately so it can be unit-tested without mocking the database.
+ * This is the pattern: extract pure logic → test it in isolation.
+ */
+export function isScheduleDue(
+  frequency: string,
+  dayOfWeek: number | null,
+  timezone: string,
+  now: Date
+): boolean {
+  if (frequency === "daily") return true
+  if (frequency === "weekly") {
+    // Convert the UTC time to the user's local timezone to get their day-of-week.
+    // e.g. UTC Monday 1am might still be Sunday in Los Angeles (UTC-8).
+    const localDay = parseInt(
+      new Intl.DateTimeFormat("en", { weekday: "short", timeZone: timezone })
+        .format(now)
+        .replace(/Sun|Mon|Tue|Wed|Thu|Fri|Sat/, (d) =>
+          String(["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(d))
+        )
+    )
+    return localDay === dayOfWeek
+  }
+  return false
+}
+
 export async function runDigests() {
   const now = new Date()
 
@@ -21,25 +50,11 @@ export async function runDigests() {
     },
   })
 
-  // Filter to schedules actually due today (respecting frequency + day)
-  const due = schedules.filter((s) => {
-    if (s.frequency === "daily") return true
-    if (s.frequency === "weekly") {
-      // Convert current UTC time to user's timezone to get their local day
-      const localDay = parseInt(
-        new Intl.DateTimeFormat("en", {
-          weekday: "short",
-          timeZone: s.timezone,
-        })
-          .format(now)
-          .replace(/Sun|Mon|Tue|Wed|Thu|Fri|Sat/, (d) =>
-            String(["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(d))
-          )
-      )
-      return localDay === s.dayOfWeek
-    }
-    return false
-  })
+  // Filter to schedules actually due today — delegates to isScheduleDue()
+  // so the timezone logic is tested independently of the DB query.
+  const due = schedules.filter((s) =>
+    isScheduleDue(s.frequency, s.dayOfWeek, s.timezone, now)
+  )
 
   if (due.length === 0) {
     console.log("[digest] No schedules due right now")

@@ -42,8 +42,8 @@ export function BookmarkButton({
       title={bookmarked ? "Remove bookmark" : "Bookmark"}
       className={`flex items-center justify-center w-7 h-7 rounded-md transition-colors
         ${bookmarked
-          ? "text-zinc-900 bg-zinc-100 hover:bg-zinc-200"
-          : "text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100"
+          ? "text-app-text bg-app-active hover:bg-app-border"
+          : "text-app-text-subtle hover:text-app-text hover:bg-app-hover"
         }`}
     >
       <Bookmark className={`w-3.5 h-3.5 ${bookmarked ? "fill-current" : ""}`} />

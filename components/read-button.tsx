@@ -51,8 +51,8 @@ export function ReadButton({
       title={read ? "Mark as unread" : "Mark as read"}
       className={`flex items-center justify-center w-7 h-7 rounded-md transition-colors
         ${read
-          ? "text-blue-600 bg-blue-50 hover:bg-blue-100"
-          : "text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100"
+          ? "text-success bg-success-bg hover:bg-success-bg/80"
+          : "text-app-text-subtle hover:text-app-text hover:bg-app-hover"
         }`}
     >
       <Check className="w-3.5 h-3.5" />
