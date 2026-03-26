@@ -55,18 +55,13 @@ export default async function DashboardPage({ searchParams }: Props) {
   return (
     <div className="bg-app-bg min-h-full">
       <div className="max-w-4xl mx-auto">
-        <div className="pt-10 pb-6 px-4 sm:px-6">
+        <div className="pt-10 pb-6 px-4 sm:px-6 border-b border-app-border mb-6">
           <h1 className="text-3xl font-bold text-app-text tracking-tight">Your Feed</h1>
           <p className="text-app-text-muted text-sm mt-1">
             {topics.length === 0
               ? "Follow some topics to start building your feed."
               : `Articles from ${topics.length} topic${topics.length === 1 ? "" : "s"} you follow.`}
           </p>
-          {topics.length > 0 && totalCount > 0 && (
-            <span className="text-xs text-app-text-subtle mt-2 block">
-              {totalCount} article{totalCount === 1 ? "" : "s"} available
-            </span>
-          )}
         </div>
 
         {topics.length > 0 && (
@@ -89,6 +84,12 @@ export default async function DashboardPage({ searchParams }: Props) {
           <EmptyState hasTopics={topics.length > 0} />
         ) : (
           <>
+            {(!topic && page === 0) && (
+              <div className="flex items-center gap-3 px-4 sm:px-6 mb-5">
+                <span className="text-xs font-semibold text-app-text-subtle uppercase tracking-widest">All articles</span>
+                <div className="flex-1 h-px bg-app-border" />
+              </div>
+            )}
             <div className="grid sm:grid-cols-2 gap-5 px-4 sm:px-6">
               {articles.map((article) => (
                 <ArticleCard key={article.id} article={article as ArticleCardData} />
@@ -123,7 +124,7 @@ function EmptyState({ hasTopics }: { hasTopics: boolean }) {
   if (!hasTopics) {
     return (
       <div className="py-24 text-center px-4 sm:px-6">
-        <div className="w-16 h-16 rounded-2xl bg-app-accent-light flex items-center justify-center mx-auto mb-6">
+        <div className="w-16 h-16 rounded-xl bg-app-accent-light flex items-center justify-center mx-auto mb-6">
           <Rss className="text-app-accent w-8 h-8" />
         </div>
         <h2 className="text-xl font-semibold text-app-text mt-4">Start following topics</h2>
@@ -141,7 +142,7 @@ function EmptyState({ hasTopics }: { hasTopics: boolean }) {
   }
   return (
     <div className="py-24 text-center px-4 sm:px-6">
-      <div className="w-16 h-16 rounded-2xl bg-app-accent-light flex items-center justify-center mx-auto mb-6">
+      <div className="w-16 h-16 rounded-xl bg-app-accent-light flex items-center justify-center mx-auto mb-6">
         <Rss className="text-app-accent w-8 h-8" />
       </div>
       <h2 className="text-xl font-semibold text-app-text mt-4">No articles yet</h2>

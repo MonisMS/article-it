@@ -23,14 +23,14 @@ export default async function HistoryPage({ searchParams }: Props) {
 
   return (
     <div className="max-w-3xl mx-auto">
-      <div className="pt-10 pb-6 px-4 sm:px-6">
+      <div className="pt-10 pb-6 px-4 sm:px-6 border-b border-app-border mb-6">
         <h1 className="text-3xl font-bold text-app-text tracking-tight">History</h1>
         <p className="text-app-text-muted text-sm mt-1">Every digest we've sent you, and what was in it.</p>
       </div>
 
       {logs.length === 0 ? (
         <div className="py-24 text-center">
-          <div className="w-16 h-16 rounded-2xl bg-app-accent-light flex items-center justify-center mx-auto mb-6">
+          <div className="w-16 h-16 rounded-xl bg-app-accent-light flex items-center justify-center mx-auto mb-6">
             <History className="w-7 h-7 text-app-accent" />
           </div>
           <h2 className="text-xl font-semibold text-app-text">No digests sent yet</h2>

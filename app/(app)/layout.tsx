@@ -25,7 +25,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   if (!firstTopic) redirect("/onboarding")
 
   return (
-    <div className="flex h-screen overflow-hidden bg-zinc-50">
+    <div className="flex h-screen overflow-hidden bg-app-bg">
       {/* Sidebar — desktop only */}
       <div className="hidden md:flex flex-shrink-0">
         <Sidebar

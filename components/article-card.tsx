@@ -45,27 +45,21 @@ export function ArticleCard({
   const showImage = article.imageUrl && !imgError
 
   return (
-    <div className={`group flex flex-col rounded-2xl border border-app-border shadow-sm hover:shadow-md transition-all overflow-hidden
-      ${read ? "bg-app-hover" : "bg-app-surface"}`}>
-      {showImage ? (
+    <div className={`group flex flex-col rounded-xl border transition-all duration-150 overflow-hidden
+      ${read
+        ? "bg-app-hover border-app-border"
+        : "bg-app-surface border-app-border hover:border-app-border-strong hover:shadow-sm"
+      }`}>
+      {showImage && (
         <img
           src={article.imageUrl!}
           alt=""
           onError={() => setImgError(true)}
-          className="object-cover aspect-video w-full rounded-t-2xl"
+          className="object-cover aspect-video w-full"
         />
-      ) : (
-        <div className="aspect-video w-full rounded-t-2xl bg-gradient-to-br from-app-accent-light to-app-hover flex items-center justify-center">
-          <div className="flex flex-col items-center gap-1 opacity-60">
-            {primaryTopic?.icon && <span className="text-2xl">{primaryTopic.icon}</span>}
-            <span className="text-lg font-semibold text-app-text-muted">
-              {article.source.name.charAt(0).toUpperCase()}
-            </span>
-          </div>
-        </div>
       )}
 
-      <div className="flex flex-col gap-3 p-6 flex-1">
+      <div className="flex flex-col gap-3 flex-1 p-5">
         {primaryTopic && (
           <div className="flex items-center gap-1.5">
             <span className="text-sm">{primaryTopic.icon}</span>

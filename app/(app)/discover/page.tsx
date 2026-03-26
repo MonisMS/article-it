@@ -26,7 +26,7 @@ export default async function DiscoverPage({ searchParams }: Props) {
         </Link>
 
         <div className="mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-app-accent-light flex items-center justify-center text-3xl mb-4">
+          <div className="w-14 h-14 rounded-xl bg-app-accent-light flex items-center justify-center text-3xl mb-4">
             {topic.icon}
           </div>
           <h1 className="text-2xl font-bold text-app-text">{topic.name}</h1>
@@ -83,7 +83,7 @@ export default async function DiscoverPage({ searchParams }: Props) {
 
   return (
     <div className="max-w-5xl mx-auto pt-10 pb-6 px-4 sm:px-6">
-      <div className="mb-8">
+      <div className="pb-6 border-b border-app-border mb-8">
         <h1 className="text-3xl font-bold text-app-text tracking-tight">Discover</h1>
         <p className="text-app-text-muted text-sm mt-1">Browse all topics and find articles you love.</p>
       </div>
@@ -93,7 +93,7 @@ export default async function DiscoverPage({ searchParams }: Props) {
           <Link
             key={topic.id}
             href={`/discover?topic=${topic.slug}`}
-            className="group relative rounded-2xl bg-app-surface border border-app-border p-5 hover:border-app-accent hover:shadow-lg hover:scale-[1.02] transition-all duration-200 cursor-pointer"
+            className="group relative rounded-xl bg-app-surface border border-app-border p-5 hover:border-app-border-strong hover:shadow-sm transition-all duration-150 cursor-pointer"
           >
             <ChevronRight className="opacity-0 group-hover:opacity-100 transition-opacity absolute top-4 right-4 w-4 h-4 text-app-accent" />
             <div className="w-12 h-12 rounded-xl bg-app-accent-light flex items-center justify-center text-2xl mb-4">
@@ -108,7 +108,7 @@ export default async function DiscoverPage({ searchParams }: Props) {
         ))}
       </div>
 
-      <div className="mt-10 flex items-center justify-between rounded-2xl bg-app-accent-light border border-app-border px-6 py-4">
+      <div className="mt-10 flex items-center justify-between rounded-xl bg-app-accent-light border border-app-border px-6 py-4">
         <p className="text-sm font-medium text-app-text">Don&apos;t see a topic you care about?</p>
         <Link href="/suggest" className="text-sm font-semibold text-app-accent hover:underline underline-offset-2 flex-shrink-0">
           Suggest one →
