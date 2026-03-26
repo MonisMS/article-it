@@ -3,7 +3,7 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## What This Is
-ArticleIt — a personalized article aggregator. RSS feeds are ingested into Postgres every 6 hours. Users pick topics, get a personalized feed, and receive scheduled email digests via Resend.
+ArticleIt — a personalized article aggregator. RSS feeds are ingested into Postgres daily. Users pick topics, get a personalized feed ranked by source quality, and receive scheduled email digests via Resend.
 
 ---
 
@@ -23,19 +23,23 @@ Expand beyond RSS feeds to pull content from:
 This will require sourcing changes in `lib/ingestion.ts` and potentially new source types in the schema.
 
 ### Full UI revamp
-Current UI is functional but minimal. v2 should include:
-- ~~Proper design system / component library decision~~ — **done (2026-03-26)**: shadcn/ui installed, hardcoded colours replaced with semantic tokens (`--color-success`, `--color-error`, `--color-app-accent`, etc.), `components/ui/` now has Button, Badge, Input, Separator
+- ~~Proper design system / component library decision~~ — **done (2026-03-26)**: shadcn/ui installed, semantic color tokens throughout (`--color-app-*` prefix), `components/ui/` has Button, Badge, Input, Separator
+- ~~Better mobile layout~~ — **done (2026-03-26)**: mobile nav is now icon-only with accent dot indicator; `aria-label` + `title` for accessibility
+- ~~UI polish pass~~ — **done (2026-03-26)**: neutral grey palette, `rounded-xl` throughout, page headers with `border-b` separators, settings sections in card containers
 - Article reading experience improvements
-- Better mobile layout (current bottom nav gets cramped at 5 items)
 - Dark mode
-- Landing page refresh once there's more to show
+- Landing page refresh
 
 ### Other v2 items
 - Google / GitHub OAuth login (Better Auth supports it — add providers in `lib/auth.ts`)
-- ~~Forget password page UX~~ — **done (2026-03-26)**: `autoFocus` added to first input on both forgot-password and reset-password pages. Error banners use semantic `error` tokens instead of hardcoded `red-*`.
+- ~~Forget password page UX~~ — **done (2026-03-26)**
 - Pro plan implementation — `plan` field + `ADMIN_EMAIL` guard already in place, just needs Stripe + feature gating
 - Article deduplication across sources (same article from two feeds gets stored once)
 - ~~Neon storage monitoring~~ — **done (2026-03-26)**: `app/api/cron/cleanup/route.ts` + `.github/workflows/cron-cleanup.yml` (Sunday 03:00 UTC). Deletes articles older than 90 days with no bookmarks.
+- ~~Source quality scoring~~ — **done (2026-03-26)**: `qualityScore` on `rss_sources`, updated weekly by `/api/cron/quality` (Sunday 04:00 UTC). Formula: `bookmarks × 0.6 + reads × 0.4`, minimum 5 interactions threshold.
+- ~~Daily reading queue~~ — **done (2026-03-26)**: `DailyQueue` component on dashboard — top 5 unread articles with progress tracking. No persistence; dynamic on page load.
+- ~~First-digest preview~~ — **done (2026-03-26)**: `DigestPreview` shows on dashboard until first real digest fires (`hasReceivedDigest` check).
+- ~~Weekly reading stats in digest~~ — **done (2026-03-26)**: `getWeeklyReadingStats()` in `lib/digest.ts`, injected into email template as a single summary line.
 
 ## Commands
 ```bash
@@ -46,7 +50,7 @@ pnpm test             # Run all tests once (use before deploying)
 pnpm test:watch       # Re-run tests on file save (use during development)
 pnpm db:push          # Push Drizzle schema to Neon — use the DIRECT connection string, not pooled
 pnpm db:studio        # Open Drizzle Studio in browser
-pnpm db:seed          # Seed 12 topics + 47 RSS sources into DB
+pnpm db:seed          # Seed 12 topics + 47 RSS sources + 15 GitHub release feeds into DB
 ```
 
 Always use `pnpm`. Never `npm` or `yarn`.
@@ -86,21 +90,27 @@ app/
 
 ### Data flow
 ```
-GitHub Actions (every 6h)
+GitHub Actions (daily 06:00 UTC)
   → GET /api/cron/ingest   (Authorization: Bearer CRON_SECRET)
   → lib/ingestion.ts       (parallel RSS fetch, 8s timeout per source)
   → articles table         (deduped by url — onConflictDoNothing)
   → article_topics table
 
-GitHub Actions (every 1h)
+GitHub Actions (hourly 06:00–22:00 UTC)
   → GET /api/cron/digest   (Authorization: Bearer CRON_SECRET)
   → lib/digest.ts          (finds schedules matching current UTC hour)
   → Resend email           (HTML template + HMAC-signed unsubscribe link)
   → digest_logs table
 
+GitHub Actions (Sunday 04:00 UTC)
+  → GET /api/cron/quality  (Authorization: Bearer CRON_SECRET)
+  → updates rss_sources.qualityScore for sources with ≥5 interactions
+  → formula: bookmarks × 0.6 + reads × 0.4, capped at 1.0
+
 User visits /dashboard
-  → getArticlesForUser()   (EXISTS subquery, single DB round trip)
-  → ArticleCard            (shows imageUrl if present, read/bookmark state)
+  → getArticlesForUser()   quality-blended ranking: publishedAt + (qualityScore × 12h)
+  → getDailyQueue()        top 5 unread articles (same ranking)
+  → ArticleCard            shows imageUrl if present, read/bookmark state
 ```
 
 **Note:** `vercel.json` is intentionally empty (`{}`). Crons run via GitHub Actions workflows in `.github/workflows/` because Vercel Hobby plan rejects deploys with sub-daily cron schedules. After deploying, set `APP_URL` and `CRON_SECRET` as GitHub Actions secrets.
@@ -121,6 +131,7 @@ Two files, both re-exported from `index.ts`:
 
 Key relations:
 - `rss_sources` ↔ `topics` — many-to-many via `rss_source_topics`
+- `rss_sources.qualityScore` — `real` (0.0–1.0, default 0.5); updated weekly by quality cron
 - `articles` ↔ `topics` — many-to-many via `article_topics`
 - `user` ↔ `topics` — many-to-many via `user_topics`
 - `digest_schedules` — unique on (userId, topicId)
@@ -136,6 +147,7 @@ After any schema change, run `pnpm db:push` (with the **direct** Neon connection
 | `/api/cron/ingest` | CRON_SECRET | RSS ingestion (GET) |
 | `/api/cron/digest` | CRON_SECRET | Digest sending (GET) |
 | `/api/cron/cleanup` | CRON_SECRET | Delete articles >90 days old with no bookmarks (GET) |
+| `/api/cron/quality` | CRON_SECRET | Recompute qualityScore on rss_sources (GET) |
 | `/api/ingest` | session | Manual ingest trigger (POST) |
 | `/api/topics` | none | All active topics (GET) |
 | `/api/user/topics` | session | Followed topics (GET/POST) |
@@ -163,9 +175,7 @@ Uses `@neondatabase/serverless` HTTP driver (no TCP sockets — works in all run
 2. **Neon cold start** — free-tier compute suspends after 5 min idle; first query fails. Retried with 100ms → 300ms → 700ms backoff.
 
 ### Cron security
-Both cron routes fail closed: `if (!cronSecret || authHeader !== \`Bearer ${cronSecret}\`)`. If `CRON_SECRET` env var is missing the endpoint returns 401, it does not fall open.
-
-Both cron routes also export `maxDuration = 300` (requires Vercel Pro; ignored on Hobby).
+All cron routes fail closed: `if (!cronSecret || authHeader !== \`Bearer ${cronSecret}\`)`. If `CRON_SECRET` env var is missing the endpoint returns 401, it does not fall open. All export `maxDuration = 300` (requires Vercel Pro; ignored on Hobby).
 
 ### Digest timezone logic
 Schedules store `hour` in UTC. For weekly digests, `lib/digest.ts` converts the current UTC time to the user's `timezone` (IANA string) to check the day-of-week match. Never assume UTC == local time.

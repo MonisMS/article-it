@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { BookOpen, LayoutDashboard, Bookmark, Settings, LogOut, Compass, History, Lightbulb, ShieldCheck } from "lucide-react"
+import { BookOpen, LayoutDashboard, Bookmark, User, LogOut, Compass, History, Lightbulb, ShieldCheck } from "lucide-react"
 import { signOut } from "@/lib/auth-client"
 import { SearchBar } from "@/components/search-bar"
 
@@ -11,7 +11,7 @@ const NAV = [
   { href: "/discover",  icon: Compass,         label: "Discover" },
   { href: "/bookmarks", icon: Bookmark,         label: "Bookmarks" },
   { href: "/history",   icon: History,          label: "History" },
-  { href: "/settings",  icon: Settings,         label: "Settings" },
+  { href: "/profile",   icon: User,             label: "Profile" },
 ]
 
 type Props = {
