@@ -1,6 +1,6 @@
 import { db } from "@/lib/db"
-import { digestSchedules, digestLogs, digestLogArticles, articles, articleTopics } from "@/lib/db/schema"
-import { and, eq, gte, desc, sql } from "drizzle-orm"
+import { digestSchedules, digestLogs, digestLogArticles, articles, articleTopics, readArticles, userTopics } from "@/lib/db/schema"
+import { and, eq, gte, desc, sql, countDistinct } from "drizzle-orm"
 import { resend } from "@/lib/resend"
 import { buildDigestEmail } from "@/lib/email/digest-template"
 import { signUnsubscribeToken } from "@/lib/unsubscribe-token"
@@ -33,6 +33,36 @@ export function isScheduleDue(
     return localDay === dayOfWeek
   }
   return false
+}
+
+/**
+ * Returns how many articles and distinct topics a user read in the last 7 days.
+ * Used to render the weekly reading summary line at the bottom of each digest.
+ */
+async function getWeeklyReadingStats(
+  userId: string,
+  now: Date
+): Promise<{ articlesRead: number; topicsRead: number }> {
+  const since = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+
+  const [result] = await db
+    .select({
+      articlesRead: countDistinct(readArticles.articleId),
+      topicsRead: countDistinct(articleTopics.topicId),
+    })
+    .from(readArticles)
+    .innerJoin(articleTopics, eq(articleTopics.articleId, readArticles.articleId))
+    .where(
+      and(
+        eq(readArticles.userId, userId),
+        gte(readArticles.readAt, since)
+      )
+    )
+
+  return {
+    articlesRead: Number(result?.articlesRead ?? 0),
+    topicsRead: Number(result?.topicsRead ?? 0),
+  }
 }
 
 export async function runDigests() {
@@ -124,6 +154,7 @@ async function sendDigest(
   }
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://articleit.com"
+  const weeklyStats = await getWeeklyReadingStats(schedule.user.id, now)
 
   const { subject, html } = buildDigestEmail({
     userName: schedule.user.name,
@@ -138,6 +169,7 @@ async function sendDigest(
     })),
     dashboardUrl: `${appUrl}/dashboard?topic=${schedule.topic.slug}`,
     unsubscribeUrl: `${appUrl}/unsubscribe?id=${schedule.id}&sig=${signUnsubscribeToken(schedule.id)}`,
+    weeklyStats,
   })
 
   await resend.emails.send({

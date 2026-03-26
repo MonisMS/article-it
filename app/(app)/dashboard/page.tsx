@@ -2,9 +2,10 @@ import { Suspense } from "react"
 import { redirect } from "next/navigation"
 import { headers } from "next/headers"
 import { auth } from "@/lib/auth"
-import { getArticlesForUser, getArticlesCountForUser, getUserTopicsWithMeta, getBookmarkedArticleIds, getReadArticleIds } from "@/lib/db/queries/articles"
+import { getArticlesForUser, getArticlesCountForUser, getUserTopicsWithMeta, getBookmarkedArticleIds, getReadArticleIds, hasReceivedDigest } from "@/lib/db/queries/articles"
 import { ArticleCard, type ArticleCardData } from "@/components/article-card"
 import { TopicFilter } from "@/components/topic-filter"
+import { DigestPreview } from "@/components/digest-preview"
 import { Rss } from "lucide-react"
 import { TriggerIngestButton } from "@/components/trigger-ingest-button"
 import Link from "next/link"
@@ -25,12 +26,13 @@ export default async function DashboardPage({ searchParams }: Props) {
   const { topic, page: pageParam } = await searchParams
   const page = Math.max(0, Number(pageParam ?? 0))
 
-  const [userTopics, articleRows, totalCount, bookmarkedIds, readIds] = await Promise.all([
+  const [userTopics, articleRows, totalCount, bookmarkedIds, readIds, digestReceived] = await Promise.all([
     getUserTopicsWithMeta(session.user.id),
     getArticlesForUser(session.user.id, topic, page),
     getArticlesCountForUser(session.user.id, topic),
     getBookmarkedArticleIds(session.user.id),
     getReadArticleIds(session.user.id),
+    hasReceivedDigest(session.user.id),
   ])
 
   const topics = userTopics.map((ut) => ut.topic)
@@ -65,6 +67,10 @@ export default async function DashboardPage({ searchParams }: Props) {
               <TopicFilter topics={topics} />
             </Suspense>
           </div>
+        )}
+
+        {!digestReceived && articles.length > 0 && !topic && page === 0 && (
+          <DigestPreview articles={articles} />
         )}
 
         {articles.length === 0 ? (

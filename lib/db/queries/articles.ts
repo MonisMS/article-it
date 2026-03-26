@@ -1,5 +1,5 @@
 import { db } from "@/lib/db"
-import { articles, articleTopics, userTopics, topics, rssSources, bookmarks, readArticles } from "@/lib/db/schema"
+import { articles, articleTopics, userTopics, topics, rssSources, bookmarks, readArticles, digestLogs } from "@/lib/db/schema"
 import { eq, inArray, desc, sql } from "drizzle-orm"
 
 export type ArticleWithMeta = Awaited<ReturnType<typeof getArticlesForUser>>[number]
@@ -247,6 +247,18 @@ export async function searchArticles(query: string, page = 0) {
     source: { name: row.sourceName },
     articleTopics: topicMap.get(row.id) ?? [],
   }))
+}
+
+/**
+ * Returns true if the user has ever received a successfully sent digest.
+ * Used to decide whether to show the first-digest preview on the dashboard.
+ */
+export async function hasReceivedDigest(userId: string): Promise<boolean> {
+  const row = await db.query.digestLogs.findFirst({
+    where: eq(digestLogs.userId, userId),
+    columns: { id: true },
+  })
+  return !!row
 }
 
 export async function getUserTopicsWithMeta(userId: string) {

@@ -15,6 +15,13 @@ function timeAgo(date: Date | null): string {
   return `${days} days ago`
 }
 
+function formatWeeklySummary(articlesRead: number, topicsRead: number): string {
+  if (articlesRead === 0) return ""
+  const articleText = articlesRead === 1 ? "1 article" : `${articlesRead} articles`
+  const topicsText = topicsRead > 1 ? ` across ${topicsRead} topics` : ""
+  return `You read ${articleText}${topicsText} this week.`
+}
+
 export function buildDigestEmail(opts: {
   userName: string
   topicName: string
@@ -22,8 +29,9 @@ export function buildDigestEmail(opts: {
   articles: Article[]
   dashboardUrl: string
   unsubscribeUrl: string
+  weeklyStats?: { articlesRead: number; topicsRead: number }
 }): { subject: string; html: string } {
-  const { userName, topicName, topicIcon, articles, dashboardUrl, unsubscribeUrl } = opts
+  const { userName, topicName, topicIcon, articles, dashboardUrl, unsubscribeUrl, weeklyStats } = opts
 
   const subject = `${topicIcon} Your ${topicName} digest — ${new Date().toLocaleDateString("en-US", { month: "long", day: "numeric" })}`
 
@@ -85,9 +93,17 @@ export function buildDigestEmail(opts: {
         </td>
       </tr>
 
+      <!-- Weekly reading summary — only shown when the user has read articles -->
+      ${weeklyStats && weeklyStats.articlesRead > 0 ? `
+      <tr>
+        <td style="padding:0 32px 24px;">
+          <p style="margin:0;font-size:13px;color:#a1a1aa;">${formatWeeklySummary(weeklyStats.articlesRead, weeklyStats.topicsRead)}</p>
+        </td>
+      </tr>` : ""}
+
       <!-- CTA -->
       <tr>
-        <td style="padding:28px 32px;">
+        <td style="padding:0 32px 28px;">
           <a href="${dashboardUrl}" style="display:inline-block;background:#09090b;color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;padding:12px 24px;border-radius:8px;">View all articles →</a>
         </td>
       </tr>
