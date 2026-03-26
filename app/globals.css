@@ -38,6 +38,18 @@
   --color-lp-accent:        #E8A838;
   --color-lp-accent-hover:  #F0BC5E;
   --color-lp-accent-muted:  #2A3547;
+
+  --color-app-bg:           #f8f7f5;
+  --color-app-surface:      #ffffff;
+  --color-app-border:       #e8e6e1;
+  --color-app-border-subtle:#f0ede8;
+  --color-app-text:         #1a1917;
+  --color-app-text-muted:   #6b6560;
+  --color-app-text-subtle:  #a09990;
+  --color-app-accent:       #d97706;
+  --color-app-accent-light: #fef3c7;
+  --color-app-hover:        #f3f1ed;
+  --color-app-active:       #ede9e3;
 }
 
 .no-scrollbar::-webkit-scrollbar { display: none; }

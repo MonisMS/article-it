@@ -22,41 +22,41 @@ export default async function HistoryPage({ searchParams }: Props) {
   const { logs, hasMore } = await getDigestLogsForUser(session.user.id, page)
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-zinc-900">Digest History</h1>
-        <p className="text-sm text-zinc-500 mt-1">Every digest we've sent you, and what was in it.</p>
+    <div className="max-w-3xl mx-auto">
+      <div className="pt-10 pb-6 px-4 sm:px-6">
+        <h1 className="text-3xl font-bold text-app-text tracking-tight">History</h1>
+        <p className="text-app-text-muted text-sm mt-1">Every digest we've sent you, and what was in it.</p>
       </div>
 
       {logs.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24 text-center">
-          <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-zinc-100 mb-4">
-            <History className="w-5 h-5 text-zinc-400" />
+        <div className="py-24 text-center">
+          <div className="w-16 h-16 rounded-2xl bg-app-accent-light flex items-center justify-center mx-auto mb-6">
+            <History className="w-7 h-7 text-app-accent" />
           </div>
-          <h2 className="text-lg font-semibold text-zinc-900">No digests yet</h2>
-          <p className="mt-2 text-sm text-zinc-500 max-w-xs">
+          <h2 className="text-xl font-semibold text-app-text">No digests sent yet</h2>
+          <p className="text-app-text-muted text-sm mt-2 max-w-sm mx-auto">
             Once your first digest is sent, it'll show up here.
           </p>
         </div>
       ) : (
         <>
-          <div className="space-y-3">
+          <div className="px-4 sm:px-6 space-y-3">
             {logs.map((log) => (
               <HistoryLogRow key={log.id} log={log} />
             ))}
           </div>
 
-          <div className="flex items-center justify-between mt-8 pt-6 border-t border-zinc-100">
+          <div className="flex items-center justify-between mt-8 pt-6 border-t border-app-border px-4 sm:px-6">
             <a
               href={`/history?page=${Math.max(0, page - 1)}`}
-              className={`rounded-lg border border-zinc-200 px-4 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-50 transition-colors ${page === 0 ? "pointer-events-none opacity-30" : ""}`}
+              className={`rounded-full border border-app-border px-5 py-2 text-sm font-medium text-app-text-muted hover:bg-app-hover transition-colors ${page === 0 ? "pointer-events-none opacity-30" : ""}`}
             >
               ← Previous
             </a>
-            <span className="text-sm text-zinc-400">Page {page + 1}</span>
+            <span className="text-sm text-app-text-subtle">Page {page + 1}</span>
             <a
               href={`/history?page=${page + 1}`}
-              className={`rounded-lg border border-zinc-200 px-4 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-50 transition-colors ${!hasMore ? "pointer-events-none opacity-30" : ""}`}
+              className={`rounded-full border border-app-border px-5 py-2 text-sm font-medium text-app-text-muted hover:bg-app-hover transition-colors ${!hasMore ? "pointer-events-none opacity-30" : ""}`}
             >
               Next →
             </a>

@@ -29,15 +29,15 @@ export default async function SettingsPage() {
   const followedTopics = allTopics.filter((t) => followedIds.includes(t.id))
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
-      <div className="mb-10">
-        <h1 className="text-2xl font-bold text-zinc-900">Settings</h1>
-        <p className="text-sm text-zinc-500 mt-1">Manage your topics, digests, and account.</p>
+    <div className="max-w-3xl mx-auto">
+      <div className="pt-10 pb-8 px-4 sm:px-6">
+        <h1 className="text-3xl font-bold text-app-text tracking-tight">Settings</h1>
+        <p className="text-app-text-muted text-sm mt-1">Manage your topics, digests, and account.</p>
       </div>
 
-      {/* Account */}
-      <section className="mb-10">
-        <h2 className="text-base font-semibold text-zinc-900 mb-4">Account</h2>
+      <section className="px-4 sm:px-6 py-6">
+        <h2 className="text-lg font-semibold text-app-text mb-1">Account</h2>
+        <p className="text-sm text-app-text-muted mb-6">Your profile and plan details.</p>
         <SettingsAccount
           name={session.user.name}
           email={session.user.email}
@@ -45,24 +45,26 @@ export default async function SettingsPage() {
         />
       </section>
 
-      {/* Topics */}
-      <section className="mb-10">
-        <h2 className="text-base font-semibold text-zinc-900 mb-1">Your topics</h2>
-        <p className="text-sm text-zinc-500 mb-4">Add or remove topics from your feed.</p>
+      <hr className="border-app-border mx-4 sm:mx-6" />
+
+      <section className="px-4 sm:px-6 py-6">
+        <h2 className="text-lg font-semibold text-app-text mb-1">Your topics</h2>
+        <p className="text-sm text-app-text-muted mb-6">Add or remove topics from your feed.</p>
         <SettingsTopics
           allTopics={allTopics}
           followedIds={followedIds}
         />
       </section>
 
-      {/* Digest schedules */}
-      <section className="mb-10">
-        <h2 className="text-base font-semibold text-zinc-900 mb-1">Digest schedules</h2>
-        <p className="text-sm text-zinc-500 mb-4">
+      <hr className="border-app-border mx-4 sm:mx-6" />
+
+      <section className="px-4 sm:px-6 py-6">
+        <h2 className="text-lg font-semibold text-app-text mb-1">Digest schedules</h2>
+        <p className="text-sm text-app-text-muted mb-6">
           Set a delivery schedule for each topic you follow.
         </p>
         {followedTopics.length === 0 ? (
-          <p className="text-sm text-zinc-400">Follow some topics above first.</p>
+          <p className="text-sm text-app-text-subtle">Follow some topics above first.</p>
         ) : (
           <SettingsSchedules
             topics={followedTopics}

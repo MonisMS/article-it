@@ -25,13 +25,14 @@ export function TopicFilter({ topics }: { topics: Topic[] }) {
   }
 
   return (
-    <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+    <div className="flex flex-wrap gap-2 px-4 sm:px-6 pb-4">
       <button
         onClick={() => select("all")}
-        className={`flex-shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all active:scale-95 ${active === "all"
-            ? "bg-zinc-900 text-white"
-            : "bg-white border border-zinc-200 text-zinc-600 hover:border-zinc-300"
-          }`}
+        className={`rounded-full px-4 py-1.5 text-sm font-medium transition-all active:scale-95 ${
+          active === "all"
+            ? "bg-app-text text-white"
+            : "bg-app-surface border border-app-border text-app-text-muted hover:border-app-text hover:text-app-text"
+        }`}
       >
         All topics
       </button>
@@ -39,10 +40,11 @@ export function TopicFilter({ topics }: { topics: Topic[] }) {
         <button
           key={t.slug}
           onClick={() => select(t.slug)}
-          className={`flex-shrink-0 flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all active:scale-95 ${active === t.slug
-              ? "bg-zinc-900 text-white"
-              : "bg-white border border-zinc-200 text-zinc-600 hover:border-zinc-300"
-            }`}
+          className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium transition-all active:scale-95 ${
+            active === t.slug
+              ? "bg-app-text text-white"
+              : "bg-app-surface border border-app-border text-app-text-muted hover:border-app-text hover:text-app-text"
+          }`}
         >
           <span>{t.icon}</span>
           {t.name}

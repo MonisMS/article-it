@@ -41,57 +41,62 @@ export function HistoryLogRow({ log }: { log: DigestLogRow }) {
   const isSent = log.status === "sent"
 
   return (
-    <div className="rounded-xl border border-zinc-200 bg-white overflow-hidden">
+    <div className="rounded-xl bg-app-surface border border-app-border overflow-hidden hover:shadow-sm transition-shadow">
       <button
         onClick={toggle}
-        className="w-full flex items-center justify-between px-5 py-4 hover:bg-zinc-50 transition-colors text-left"
+        className="w-full flex items-center justify-between px-5 py-4 hover:bg-app-hover transition-colors text-left"
       >
         <div className="flex items-center gap-3">
           <span className="text-xl">{log.topic.icon ?? "📰"}</span>
           <div>
-            <p className="text-sm font-semibold text-zinc-900">{log.topic.name}</p>
-            <p className="text-xs text-zinc-400 mt-0.5">{formatDate(log.sentAt)}</p>
+            <div className="flex items-center gap-2 flex-wrap">
+              <p className="text-sm font-medium text-app-text">{log.topic.name}</p>
+              <span className="bg-app-accent-light text-app-accent rounded-full px-2.5 py-0.5 text-xs font-semibold">
+                {log.topic.name}
+              </span>
+            </div>
+            <p className="text-xs text-app-text-subtle mt-0.5">{formatDate(log.sentAt)}</p>
           </div>
         </div>
 
         <div className="flex items-center gap-3 flex-shrink-0">
-          <span className="text-xs text-zinc-500 hidden sm:block">{log.articleCount} articles</span>
+          <span className="text-app-text-subtle text-xs hidden sm:block">{log.articleCount} articles</span>
           <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
             isSent ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-600"
           }`}>
             {isSent ? "Sent" : "Failed"}
           </span>
           {open
-            ? <ChevronUp className="w-4 h-4 text-zinc-400" />
-            : <ChevronDown className="w-4 h-4 text-zinc-400" />
+            ? <ChevronUp className="w-4 h-4 text-app-text-subtle" />
+            : <ChevronDown className="w-4 h-4 text-app-text-subtle" />
           }
         </div>
       </button>
 
       {open && (
-        <div className="border-t border-zinc-100 px-5 py-4">
+        <div className="border-t border-app-border-subtle px-5 py-4">
           {loading && (
-            <div className="flex items-center gap-2 text-sm text-zinc-400">
+            <div className="flex items-center gap-2 text-sm text-app-text-subtle">
               <Loader2 className="w-4 h-4 animate-spin" /> Loading…
             </div>
           )}
           {error && <p className="text-sm text-red-500">{error}</p>}
           {articles?.length === 0 && (
-            <p className="text-sm text-zinc-400">No articles recorded for this digest.</p>
+            <p className="text-sm text-app-text-subtle">No articles recorded for this digest.</p>
           )}
           {articles && articles.length > 0 && (
             <ul className="space-y-3">
               {articles.map((a) => (
                 <li key={a.id} className="flex items-start justify-between gap-4">
                   <div className="min-w-0">
-                    <p className="text-sm font-medium text-zinc-900 truncate">{a.title}</p>
-                    <p className="text-xs text-zinc-400 mt-0.5">{a.sourceName}</p>
+                    <p className="text-sm font-medium text-app-text truncate">{a.title}</p>
+                    <p className="text-xs text-app-text-subtle mt-0.5">{a.sourceName}</p>
                   </div>
                   <a
                     href={a.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-shrink-0 flex items-center justify-center w-7 h-7 rounded-md text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 transition-colors"
+                    className="flex-shrink-0 flex items-center justify-center w-7 h-7 rounded-md text-app-text-subtle hover:text-app-accent hover:bg-app-hover transition-colors"
                   >
                     <ExternalLink className="w-3.5 h-3.5" />
                   </a>

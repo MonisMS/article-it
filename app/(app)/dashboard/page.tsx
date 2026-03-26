@@ -7,6 +7,7 @@ import { ArticleCard, type ArticleCardData } from "@/components/article-card"
 import { TopicFilter } from "@/components/topic-filter"
 import { Rss } from "lucide-react"
 import { TriggerIngestButton } from "@/components/trigger-ingest-button"
+import Link from "next/link"
 
 type Props = {
   searchParams: Promise<{ topic?: string; page?: string }>
@@ -39,54 +40,63 @@ export default async function DashboardPage({ searchParams }: Props) {
     isRead: readIds.has(a.id),
   }))
 
+  const totalPages = Math.max(1, Math.ceil(totalCount / 20))
+
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-zinc-900">Your Feed</h1>
-        <p className="text-sm text-zinc-500 mt-1">
-          {topics.length === 0
-            ? "Follow some topics to start building your feed."
-            : `Articles from ${topics.length} topic${topics.length === 1 ? "" : "s"} you follow.`}
-        </p>
-      </div>
-
-      {topics.length > 0 && (
-        <div className="mb-6">
-          <Suspense>
-            <TopicFilter topics={topics} />
-          </Suspense>
-        </div>
-      )}
-
-      {articles.length === 0 ? (
-        <EmptyState hasTopics={topics.length > 0} />
-      ) : (
-        <>
-          <div className="grid sm:grid-cols-2 gap-4">
-            {articles.map((article) => (
-              <ArticleCard key={article.id} article={article as ArticleCardData} />
-            ))}
-          </div>
-
-          <div className="flex items-center justify-between mt-8 pt-6 border-t border-zinc-100">
-            <a
-              href={`/dashboard?${topic ? `topic=${topic}&` : ""}page=${Math.max(0, page - 1)}`}
-              className={`rounded-lg border border-zinc-200 px-4 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-50 transition-colors ${page === 0 ? "pointer-events-none opacity-30" : ""}`}
-            >
-              ← Previous
-            </a>
-            <span className="text-sm text-zinc-400">
-              Page {page + 1} of {Math.max(1, Math.ceil(totalCount / 20))}
+    <div className="bg-app-bg min-h-full">
+      <div className="max-w-4xl mx-auto">
+        <div className="pt-10 pb-6 px-4 sm:px-6">
+          <h1 className="text-3xl font-bold text-app-text tracking-tight">Your Feed</h1>
+          <p className="text-app-text-muted text-sm mt-1">
+            {topics.length === 0
+              ? "Follow some topics to start building your feed."
+              : `Articles from ${topics.length} topic${topics.length === 1 ? "" : "s"} you follow.`}
+          </p>
+          {topics.length > 0 && totalCount > 0 && (
+            <span className="text-xs text-app-text-subtle mt-2 block">
+              {totalCount} article{totalCount === 1 ? "" : "s"} available
             </span>
-            <a
-              href={`/dashboard?${topic ? `topic=${topic}&` : ""}page=${page + 1}`}
-              className={`rounded-lg border border-zinc-200 px-4 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-50 transition-colors ${(page + 1) * 20 >= totalCount ? "pointer-events-none opacity-30" : ""}`}
-            >
-              Next →
-            </a>
+          )}
+        </div>
+
+        {topics.length > 0 && (
+          <div className="mb-6">
+            <Suspense>
+              <TopicFilter topics={topics} />
+            </Suspense>
           </div>
-        </>
-      )}
+        )}
+
+        {articles.length === 0 ? (
+          <EmptyState hasTopics={topics.length > 0} />
+        ) : (
+          <>
+            <div className="grid sm:grid-cols-2 gap-5 px-4 sm:px-6">
+              {articles.map((article) => (
+                <ArticleCard key={article.id} article={article as ArticleCardData} />
+              ))}
+            </div>
+
+            <div className="mt-10 flex items-center justify-center gap-4 px-4 sm:px-6 pb-10">
+              <a
+                href={`/dashboard?${topic ? `topic=${topic}&` : ""}page=${Math.max(0, page - 1)}`}
+                className={`rounded-full border border-app-border px-5 py-2 text-sm font-medium text-app-text-muted hover:bg-app-hover hover:text-app-text transition-colors ${page === 0 ? "opacity-40 pointer-events-none" : ""}`}
+              >
+                ← Previous
+              </a>
+              <span className="text-sm text-app-text-subtle">
+                Page {page + 1} of {totalPages}
+              </span>
+              <a
+                href={`/dashboard?${topic ? `topic=${topic}&` : ""}page=${page + 1}`}
+                className={`rounded-full border border-app-border px-5 py-2 text-sm font-medium text-app-text-muted hover:bg-app-hover hover:text-app-text transition-colors ${(page + 1) * 20 >= totalCount ? "opacity-40 pointer-events-none" : ""}`}
+              >
+                Next →
+              </a>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   )
 }
@@ -94,27 +104,35 @@ export default async function DashboardPage({ searchParams }: Props) {
 function EmptyState({ hasTopics }: { hasTopics: boolean }) {
   if (!hasTopics) {
     return (
-      <div className="flex flex-col items-center justify-center py-24 text-center">
-        <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-zinc-100 mb-4">
-          <Rss className="w-5 h-5 text-zinc-400" />
+      <div className="py-24 text-center px-4 sm:px-6">
+        <div className="w-16 h-16 rounded-2xl bg-app-accent-light flex items-center justify-center mx-auto mb-6">
+          <Rss className="text-app-accent w-8 h-8" />
         </div>
-        <h2 className="text-lg font-semibold text-zinc-900">No topics yet</h2>
-        <p className="mt-2 text-sm text-zinc-500 max-w-xs">
-          Head to <a href="/onboarding" className="font-medium text-zinc-900 underline underline-offset-2">onboarding</a> to pick topics and build your feed.
+        <h2 className="text-xl font-semibold text-app-text mt-4">Start following topics</h2>
+        <p className="text-app-text-muted text-sm mt-2 max-w-sm mx-auto">
+          Head to Discover to pick topics that interest you and build your personal feed.
         </p>
+        <Link
+          href="/discover"
+          className="mt-6 inline-flex items-center gap-2 rounded-full bg-app-accent px-6 py-2.5 text-sm font-semibold text-white hover:opacity-90 transition-opacity"
+        >
+          Browse topics
+        </Link>
       </div>
     )
   }
   return (
-    <div className="flex flex-col items-center justify-center py-24 text-center">
-      <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-zinc-100 mb-4">
-        <Rss className="w-5 h-5 text-zinc-400" />
+    <div className="py-24 text-center px-4 sm:px-6">
+      <div className="w-16 h-16 rounded-2xl bg-app-accent-light flex items-center justify-center mx-auto mb-6">
+        <Rss className="text-app-accent w-8 h-8" />
       </div>
-      <h2 className="text-lg font-semibold text-zinc-900">No articles yet</h2>
-      <p className="mt-2 text-sm text-zinc-500 max-w-xs">
+      <h2 className="text-xl font-semibold text-app-text mt-4">No articles yet</h2>
+      <p className="text-app-text-muted text-sm mt-2 max-w-sm mx-auto">
         The ingestion pipeline hasn&apos;t run yet. Trigger it manually to fetch articles now.
       </p>
-      <TriggerIngestButton />
+      <div className="mt-6">
+        <TriggerIngestButton />
+      </div>
     </div>
   )
 }

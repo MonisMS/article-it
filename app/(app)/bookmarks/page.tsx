@@ -39,33 +39,35 @@ export default async function BookmarksPage() {
   }))
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-zinc-900">Bookmarks</h1>
-        <p className="text-sm text-zinc-500 mt-1">
-          {articles.length === 0 ? "No bookmarks yet." : `${articles.length} saved article${articles.length === 1 ? "" : "s"}.`}
-        </p>
+    <div className="max-w-4xl mx-auto">
+      <div className="pt-10 pb-6 px-4 sm:px-6">
+        <h1 className="text-3xl font-bold text-app-text tracking-tight">Bookmarks</h1>
+        {articles.length > 0 && (
+          <p className="text-app-text-subtle text-sm mt-1">
+            {articles.length} saved article{articles.length === 1 ? "" : "s"}
+          </p>
+        )}
       </div>
 
       {articles.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24 text-center">
-          <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-zinc-100 mb-4">
-            <Bookmark className="w-5 h-5 text-zinc-400" />
+        <div className="py-24 text-center">
+          <div className="w-16 h-16 rounded-2xl bg-app-accent-light flex items-center justify-center mx-auto mb-6">
+            <Bookmark className="w-7 h-7 text-app-accent" />
           </div>
-          <h2 className="text-lg font-semibold text-zinc-900">Nothing saved yet</h2>
-          <p className="mt-2 text-sm text-zinc-500">
+          <h2 className="text-xl font-semibold text-app-text">Nothing saved yet</h2>
+          <p className="text-app-text-muted text-sm mt-2 max-w-sm mx-auto">
             Hit the bookmark icon on any article to save it here.
           </p>
           <Link
             href="/discover"
-            className="mt-5 inline-flex items-center gap-2 rounded-lg border border-zinc-200 px-4 py-2.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 hover:border-zinc-300 transition-colors"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-app-accent px-6 py-2.5 text-sm font-semibold text-white hover:opacity-90 transition-opacity"
           >
             <Compass className="w-4 h-4" />
             Browse Discover
           </Link>
         </div>
       ) : (
-        <div className="grid sm:grid-cols-2 gap-4">
+        <div className="grid sm:grid-cols-2 gap-5 px-4 sm:px-6">
           {articles.map((article) => (
             <ArticleCard key={article.id} article={article as ArticleCardData} />
           ))}

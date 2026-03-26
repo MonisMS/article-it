@@ -16,15 +16,17 @@ export default async function SuggestPage() {
   const suggestions = await getUserSuggestions(session.user.id)
 
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-zinc-900">Suggest a Topic</h1>
-        <p className="text-sm text-zinc-500 mt-1">
+    <div className="max-w-2xl mx-auto">
+      <div className="pt-10 pb-8 px-4 sm:px-6 max-w-2xl">
+        <h1 className="text-3xl font-bold text-app-text tracking-tight">Suggest a Topic</h1>
+        <p className="text-app-text-muted text-sm mt-2 max-w-md leading-relaxed">
           Help us grow the topic library. We review all suggestions.
         </p>
       </div>
 
-      <TopicSuggestForm initialSuggestions={suggestions} />
+      <div className="px-4 sm:px-6 max-w-2xl">
+        <TopicSuggestForm initialSuggestions={suggestions} />
+      </div>
     </div>
   )
 }

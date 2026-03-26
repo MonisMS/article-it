@@ -61,94 +61,86 @@ export function SettingsAccount({ name, email, plan }: Props) {
 
   return (
     <>
-    <div className="rounded-xl border border-zinc-200 bg-white divide-y divide-zinc-100">
-      {/* Name row */}
-      <div className="flex items-center justify-between px-5 py-4">
-        <span className="text-sm text-zinc-500 w-20 flex-shrink-0">Name</span>
-        {editing ? (
-          <div className="flex items-center gap-2 flex-1 ml-4">
-            <input
-              autoFocus
-              value={draft}
-              onChange={(e) => setDraft(e.target.value)}
-              onKeyDown={(e) => { if (e.key === "Enter") save(); if (e.key === "Escape") cancel() }}
-              className="flex-1 rounded-lg border border-zinc-300 px-3 py-1.5 text-sm text-zinc-900 outline-none focus:border-zinc-500 transition-colors"
-            />
-            <button
-              onClick={save}
-              disabled={saving}
-              className="flex items-center justify-center w-7 h-7 rounded-md bg-zinc-900 text-white hover:bg-zinc-700 transition-colors disabled:opacity-50"
-            >
-              {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
-            </button>
-            <button
-              onClick={cancel}
-              className="flex items-center justify-center w-7 h-7 rounded-md border border-zinc-200 text-zinc-500 hover:bg-zinc-50 transition-colors"
-            >
-              <X className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        ) : (
-          <div className="flex items-center gap-2 flex-1 ml-4 justify-end">
-            <span className="text-sm font-medium text-zinc-900">{saved ? draft : name}</span>
-            <button
-              onClick={() => setEditing(true)}
-              className="flex items-center justify-center w-6 h-6 rounded-md text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 transition-colors"
-            >
-              <Pencil className="w-3 h-3" />
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Email row */}
-      <div className="flex items-center justify-between px-5 py-4">
-        <span className="text-sm text-zinc-500 w-20 flex-shrink-0">Email</span>
-        <span className="text-sm font-medium text-zinc-900 ml-4">{email}</span>
-      </div>
-
-      {/* Plan row */}
-      <div className="flex items-center justify-between px-5 py-4">
-        <span className="text-sm text-zinc-500 w-20 flex-shrink-0">Plan</span>
-        <div className="flex items-center gap-3 ml-4">
-          <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-            isPro
-              ? "bg-violet-100 text-violet-700"
-              : "bg-zinc-100 text-zinc-600"
-          }`}>
-            {isPro ? "Pro" : "Free"}
-          </span>
-          {!isPro && (
-            <Link href="/upgrade" className="text-xs font-medium text-violet-600 hover:text-violet-800 transition-colors">
-              Upgrade to Pro →
-            </Link>
+      <div className="divide-y divide-app-border-subtle">
+        <div className="flex items-center justify-between py-4">
+          <span className="text-sm text-app-text-muted w-20 flex-shrink-0">Name</span>
+          {editing ? (
+            <div className="flex items-center gap-2 flex-1 ml-4">
+              <input
+                autoFocus
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") save(); if (e.key === "Escape") cancel() }}
+                className="flex-1 rounded-lg border border-app-border bg-app-bg px-3 py-2 text-sm text-app-text placeholder:text-app-text-subtle focus:outline-none focus:ring-2 focus:ring-app-accent/30 focus:border-app-accent"
+              />
+              <button
+                onClick={save}
+                disabled={saving}
+                className="flex items-center justify-center w-7 h-7 rounded-full bg-app-text text-white hover:opacity-90 transition-opacity disabled:opacity-50"
+              >
+                {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
+              </button>
+              <button
+                onClick={cancel}
+                className="flex items-center justify-center w-7 h-7 rounded-full border border-app-border text-app-text-muted hover:bg-app-hover transition-colors"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 flex-1 ml-4 justify-end">
+              <span className="text-sm font-medium text-app-text">{saved ? draft : name}</span>
+              <button
+                onClick={() => setEditing(true)}
+                className="flex items-center justify-center w-6 h-6 rounded-full text-app-text-muted hover:text-app-text hover:bg-app-hover transition-colors"
+              >
+                <Pencil className="w-3 h-3" />
+              </button>
+            </div>
           )}
         </div>
-      </div>
-    </div>
 
-    {/* Danger zone */}
-
-    <div className="mt-8 rounded-xl border border-red-100 bg-white">
-      <div className="flex items-center justify-between px-5 py-4">
-        <div>
-          <p className="text-sm font-medium text-zinc-900">Delete account</p>
-          <p className="text-xs text-zinc-400 mt-0.5">Permanently deletes your account and all data.</p>
+        <div className="flex items-center justify-between py-4">
+          <span className="text-sm text-app-text-muted w-20 flex-shrink-0">Email</span>
+          <span className="text-sm text-app-text-muted ml-4">{email}</span>
         </div>
+
+        <div className="flex items-center justify-between py-4">
+          <span className="text-sm text-app-text-muted w-20 flex-shrink-0">Plan</span>
+          <div className="flex items-center gap-3 ml-4">
+            <span className={`inline-flex items-center ${
+              isPro
+                ? "rounded-full bg-app-accent-light text-app-accent text-xs font-semibold px-3 py-1"
+                : "rounded-full bg-app-hover text-app-text-muted text-xs font-medium px-3 py-1"
+            }`}>
+              {isPro ? "Pro" : "Free"}
+            </span>
+            {!isPro && (
+              <Link href="/upgrade" className="text-xs font-medium text-app-accent hover:opacity-80 transition-opacity">
+                Upgrade to Pro →
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="pt-8 border-t border-app-border mt-8">
+        <p className="text-sm font-semibold text-app-text">Danger zone</p>
+        <p className="text-sm text-app-text-muted mt-1">Permanently deletes your account and all data.</p>
         {confirmDelete ? (
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-zinc-500 hidden sm:block">Are you sure?</span>
+          <div className="flex items-center gap-2 mt-4">
+            <span className="text-xs text-app-text-muted hidden sm:block">Are you sure?</span>
             <button
               onClick={deleteAccount}
               disabled={deleting}
-              className="flex items-center gap-1.5 rounded-md bg-red-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-700 disabled:opacity-60 transition-colors"
+              className="flex items-center gap-1.5 rounded-full bg-red-600 px-5 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-60 transition-colors"
             >
               {deleting && <Loader2 className="w-3 h-3 animate-spin" />}
               {deleting ? "Deleting…" : "Yes, delete"}
             </button>
             <button
               onClick={() => setConfirmDelete(false)}
-              className="rounded-md border border-zinc-200 px-3 py-1.5 text-xs font-medium text-zinc-600 hover:bg-zinc-50 transition-colors"
+              className="rounded-full border border-app-border px-5 py-2 text-sm font-medium text-app-text-muted hover:bg-app-hover transition-colors"
             >
               Cancel
             </button>
@@ -156,13 +148,12 @@ export function SettingsAccount({ name, email, plan }: Props) {
         ) : (
           <button
             onClick={() => setConfirmDelete(true)}
-            className="rounded-md border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 transition-colors"
+            className="mt-4 rounded-full border border-red-200 text-red-600 text-sm font-medium px-5 py-2 hover:bg-red-50 transition-colors"
           >
             Delete account
           </button>
         )}
       </div>
-    </div>
     </>
   )
 }
