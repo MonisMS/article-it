@@ -10,9 +10,7 @@ ArticleIt — a personalized article aggregator. RSS feeds are ingested into Pos
 ## Version 2 — Planned
 
 ### Resource optimisation (cron frequency)
-Current cron schedules are too aggressive for the free tier as user count grows:
-- **Ingest** — change from every 6h to once daily (or every 2 days). Articles don't need to be that fresh. Edit `.github/workflows/cron-ingest.yml` cron expression: `0 6 * * *` = once daily at 6am UTC.
-- **Digest** — running every 1h (24×/day) is wasteful. Most users pick 9am or similar fixed times. Consider reducing to every 2h or 4h, or switching to a smarter schedule that only runs during peak hours (6am–10pm UTC). Edit `.github/workflows/cron-digest.yml`.
+~~Done (2026-03-26)~~: Ingest now runs once daily at 06:00 UTC. Digest runs hourly but only 06:00–22:00 UTC (17 runs/day vs 24). Both `.github/workflows/cron-*.yml` files updated.
 
 ### New content sources
 Expand beyond RSS feeds to pull content from:
@@ -26,7 +24,7 @@ This will require sourcing changes in `lib/ingestion.ts` and potentially new sou
 
 ### Full UI revamp
 Current UI is functional but minimal. v2 should include:
-- Proper design system / component library decision
+- ~~Proper design system / component library decision~~ — **done (2026-03-26)**: shadcn/ui installed, hardcoded colours replaced with semantic tokens (`--color-success`, `--color-error`, `--color-app-accent`, etc.), `components/ui/` now has Button, Badge, Input, Separator
 - Article reading experience improvements
 - Better mobile layout (current bottom nav gets cramped at 5 items)
 - Dark mode
@@ -34,22 +32,24 @@ Current UI is functional but minimal. v2 should include:
 
 ### Other v2 items
 - Google / GitHub OAuth login (Better Auth supports it — add providers in `lib/auth.ts`)
-- Forget password page UX — currently no keyboard submit on the form
+- ~~Forget password page UX~~ — **done (2026-03-26)**: `autoFocus` added to first input on both forgot-password and reset-password pages. Error banners use semantic `error` tokens instead of hardcoded `red-*`.
 - Pro plan implementation — `plan` field + `ADMIN_EMAIL` guard already in place, just needs Stripe + feature gating
 - Article deduplication across sources (same article from two feeds gets stored once)
-- Neon storage monitoring — articles table will grow fast; add a cleanup job to delete articles older than 90 days with no bookmarks
+- ~~Neon storage monitoring~~ — **done (2026-03-26)**: `app/api/cron/cleanup/route.ts` + `.github/workflows/cron-cleanup.yml` (Sunday 03:00 UTC). Deletes articles older than 90 days with no bookmarks.
 
 ## Commands
 ```bash
 pnpm dev              # Dev server (localhost:3000)
 pnpm build            # Production build
 pnpm lint             # ESLint
+pnpm test             # Run all tests once (use before deploying)
+pnpm test:watch       # Re-run tests on file save (use during development)
 pnpm db:push          # Push Drizzle schema to Neon — use the DIRECT connection string, not pooled
 pnpm db:studio        # Open Drizzle Studio in browser
 pnpm db:seed          # Seed 12 topics + 47 RSS sources into DB
 ```
 
-Always use `pnpm`. Never `npm` or `yarn`. There are no automated tests.
+Always use `pnpm`. Never `npm` or `yarn`.
 
 To manually test cron logic locally:
 ```bash
@@ -135,6 +135,7 @@ After any schema change, run `pnpm db:push` (with the **direct** Neon connection
 | `/api/auth/[...all]` | — | Better Auth handler |
 | `/api/cron/ingest` | CRON_SECRET | RSS ingestion (GET) |
 | `/api/cron/digest` | CRON_SECRET | Digest sending (GET) |
+| `/api/cron/cleanup` | CRON_SECRET | Delete articles >90 days old with no bookmarks (GET) |
 | `/api/ingest` | session | Manual ingest trigger (POST) |
 | `/api/topics` | none | All active topics (GET) |
 | `/api/user/topics` | session | Followed topics (GET/POST) |
@@ -169,6 +170,8 @@ Both cron routes also export `maxDuration = 300` (requires Vercel Pro; ignored o
 ### Digest timezone logic
 Schedules store `hour` in UTC. For weekly digests, `lib/digest.ts` converts the current UTC time to the user's `timezone` (IANA string) to check the day-of-week match. Never assume UTC == local time.
 
+The matching logic is extracted as `isScheduleDue(frequency, dayOfWeek, timezone, now)` — a **pure exported function** so it can be unit tested without a DB. Tests live in `__tests__/digest-schedule.test.ts`. Key edge case: Monday 12:00 UTC is still Monday in Tokyo (21:00 JST) — Tuesday in Tokyo doesn't begin until 15:00 UTC.
+
 ### Onboarding flow
 `/sign-up` → email verification → `/onboarding` (pick ≥1 topic) → `/onboarding/schedule` (set digest schedule) → `/dashboard`
 
@@ -184,6 +187,27 @@ CRON_SECRET=            # Bearer token checked by /api/cron/* routes
 ADMIN_EMAIL=            # Email address that gets access to /admin panel — checked against session.user.email
 NODE_OPTIONS=--no-network-family-autoselection   # WSL2 fix for Node v20 fetch AggregateError — local dev only, do not set in Vercel
 ```
+
+---
+
+## Testing
+
+Test runner: **Vitest** (`vitest.config.ts`). Path alias `@/` is configured there.
+
+```
+__tests__/
+  utils.test.ts           # slugify() — pure function, no mocks needed
+  digest-schedule.test.ts # isScheduleDue() — pure function, no mocks needed
+  cron-auth.test.ts       # /api/cron/ingest auth — mocks @/lib/ingestion
+```
+
+**Rules for writing new tests:**
+- Pure functions (no DB/network): import and call directly, no mocks needed
+- Functions that import DB modules: mock `@/lib/db`, `@/lib/resend` etc. at the top of the test file using `vi.mock()` — these modules call `neon()` and `new Resend()` at load time and will crash without env vars
+- Always use **fixed dates** (not `new Date()`) so tests are deterministic regardless of when they run
+- Run `pnpm test` before every deploy
+
+**What NOT to test yet:** React components (UI testing requires more setup — deferred).
 
 ---
 

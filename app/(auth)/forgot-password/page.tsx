@@ -69,6 +69,7 @@ export default function ForgotPasswordPage() {
                   id="email"
                   type="email"
                   autoComplete="email"
+                  autoFocus
                   required
                   placeholder="john@example.com"
                   value={email}
@@ -78,7 +79,7 @@ export default function ForgotPasswordPage() {
               </div>
 
               {error && (
-                <div className="rounded-lg bg-red-50 border border-red-100 px-4 py-3 text-sm text-red-600">
+                <div className="rounded-lg bg-error-bg border border-error/20 px-4 py-3 text-sm text-error">
                   {error}
                 </div>
               )}

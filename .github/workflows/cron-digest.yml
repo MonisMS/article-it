@@ -2,7 +2,7 @@ name: Email Digests
 
 on:
   schedule:
-    - cron: "0 * * * *" # every hour
+    - cron: "0 6-22 * * *" # every hour, 06:00–22:00 UTC (covers all realistic digest times)
   workflow_dispatch: # allow manual trigger from GitHub UI
 
 jobs:

@@ -1,15 +1,15 @@
-name: RSS Ingest
+name: Article Cleanup
 
 on:
   schedule:
-    - cron: "0 6 * * *" # once daily at 06:00 UTC
+    - cron: "0 3 * * 0" # Sunday 03:00 UTC — weekly, off-peak
   workflow_dispatch: # allow manual trigger from GitHub UI
 
 jobs:
-  ingest:
+  cleanup:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger ingest
+      - name: Delete articles older than 90 days (unbookmarked)
         env:
           APP_URL: ${{ secrets.APP_URL }}
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
@@ -19,10 +19,10 @@ jobs:
             exit 0
           fi
           STATUS=$(curl -sSL -o /dev/null -w "%{http_code}" \
-            -X GET "$APP_URL/api/cron/ingest" \
+            -X GET "$APP_URL/api/cron/cleanup" \
             -H "Authorization: Bearer $CRON_SECRET")
           echo "Response status: $STATUS"
           if [ "${STATUS:0:1}" != "2" ]; then
-            echo "Ingest failed with status $STATUS"
+            echo "Cleanup failed with status $STATUS"
             exit 1
           fi

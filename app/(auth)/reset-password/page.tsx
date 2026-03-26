@@ -66,6 +66,7 @@ function ResetPasswordForm() {
             id="password"
             type="password"
             autoComplete="new-password"
+            autoFocus
             required
             minLength={8}
             placeholder="Min. 8 characters"
@@ -93,7 +94,7 @@ function ResetPasswordForm() {
         </div>
 
         {error && (
-          <div className="rounded-lg bg-red-50 border border-red-100 px-4 py-3 text-sm text-red-600">
+          <div className="rounded-lg bg-error-bg border border-error/20 px-4 py-3 text-sm text-error">
             {error}
           </div>
         )}
