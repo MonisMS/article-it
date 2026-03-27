@@ -25,13 +25,13 @@ export function TopicFilter({ topics }: { topics: Topic[] }) {
   }
 
   return (
-    <div className="flex flex-wrap gap-2 px-4 sm:px-6 pb-4">
+    <div className="flex gap-2 px-4 sm:px-6 pb-4 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
       <button
         onClick={() => select("all")}
-        className={`rounded-full px-4 py-1.5 text-sm font-medium transition-all active:scale-95 ${
+        className={`flex-shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition-all active:scale-95 ${
           active === "all"
-            ? "bg-app-text text-white"
-            : "bg-app-surface border border-app-border text-app-text-muted hover:border-app-text hover:text-app-text"
+            ? "bg-amber-500 text-white border border-amber-500"
+            : "bg-white border border-stone-200 text-stone-600 hover:border-amber-300 hover:text-stone-900"
         }`}
       >
         All topics
@@ -40,10 +40,10 @@ export function TopicFilter({ topics }: { topics: Topic[] }) {
         <button
           key={t.slug}
           onClick={() => select(t.slug)}
-          className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium transition-all active:scale-95 ${
+          className={`flex-shrink-0 flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium transition-all active:scale-95 ${
             active === t.slug
-              ? "bg-app-text text-white"
-              : "bg-app-surface border border-app-border text-app-text-muted hover:border-app-text hover:text-app-text"
+              ? "bg-amber-500 text-white border border-amber-500"
+              : "bg-white border border-stone-200 text-stone-600 hover:border-amber-300 hover:text-stone-900"
           }`}
         >
           <span>{t.icon}</span>

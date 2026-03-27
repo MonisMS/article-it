@@ -31,6 +31,13 @@ function timeAgo(date: Date | null): string {
   return `${Math.floor(hours / 24)}d ago`
 }
 
+function readingTime(text: string | null): string {
+  if (!text) return ""
+  const words = text.trim().split(/\s+/).length
+  const mins = Math.max(1, Math.round(words / 200))
+  return `${mins} min read`
+}
+
 export function ArticleCard({
   article,
   onReadChange,
@@ -45,27 +52,28 @@ export function ArticleCard({
   const showImage = article.imageUrl && !imgError
 
   return (
-    <div className={`group flex flex-col rounded-xl border transition-all duration-150 overflow-hidden
+    <div className={`group flex flex-col rounded-2xl border overflow-hidden transition-all duration-200
       ${read
-        ? "bg-app-hover border-app-border"
-        : "bg-app-surface border-app-border hover:border-app-border-strong hover:shadow-sm"
+        ? "bg-stone-50/80 border-stone-200 border-l-4 border-l-stone-300"
+        : "bg-gradient-to-b from-white to-stone-50/50 border-stone-200 hover:border-stone-300 hover:shadow-md hover:shadow-stone-200/60 hover:-translate-y-0.5"
       }`}>
-      {showImage && (
+
+      {showImage ? (
         <img
           src={article.imageUrl!}
           alt=""
           onError={() => setImgError(true)}
           className="object-cover aspect-video w-full"
         />
+      ) : (
+        <div className="h-1 w-full bg-gradient-to-r from-amber-400 to-amber-600" />
       )}
 
       <div className="flex flex-col gap-3 flex-1 p-5">
         {primaryTopic && (
           <div className="flex items-center gap-1.5">
-            <span className="text-sm">{primaryTopic.icon}</span>
-            <span className="bg-app-accent-light text-app-accent rounded-full px-2.5 py-0.5 text-xs font-semibold">
-              {primaryTopic.name}
-            </span>
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 flex-shrink-0" />
+            <span className="text-xs font-medium text-stone-500">{primaryTopic.name}</span>
           </div>
         )}
 
@@ -73,30 +81,36 @@ export function ArticleCard({
           href={article.url}
           target="_blank"
           rel="noopener noreferrer"
-          className={`text-base font-semibold leading-snug hover:text-app-accent transition-colors line-clamp-2
-            ${read ? "text-app-text-muted" : "text-app-text"}`}
+          className={`text-[15px] font-semibold leading-snug hover:text-amber-700 transition-colors line-clamp-2
+            ${read ? "text-stone-400" : "text-stone-900"}`}
         >
           {article.title}
         </Link>
 
         {article.description && (
-          <p className="text-sm text-app-text-muted leading-relaxed line-clamp-2">
+          <p className="text-sm text-stone-500 leading-relaxed line-clamp-2">
             {article.description}
           </p>
         )}
 
-        <div className="flex items-center justify-between mt-auto pt-1">
-          <div className="flex items-center gap-2 text-xs text-app-text-subtle">
-            <span className="font-medium">{article.source.name}</span>
+        <div className="flex items-center justify-between mt-auto pt-2 border-t border-stone-100">
+          <div className="flex items-center gap-2 text-xs text-stone-400">
+            <span className="font-medium text-stone-500">{article.source.name}</span>
             {article.publishedAt && (
               <>
                 <span>·</span>
                 <span>{timeAgo(article.publishedAt)}</span>
               </>
             )}
+            {article.description && (
+              <>
+                <span>·</span>
+                <span>{readingTime(article.description)}</span>
+              </>
+            )}
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-0.5">
             <ReadButton
               articleId={article.id}
               initialRead={read}
@@ -113,7 +127,7 @@ export function ArticleCard({
               href={article.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center w-7 h-7 rounded-md text-app-text-subtle hover:text-app-text hover:bg-app-hover transition-colors"
+              className="flex items-center justify-center w-7 h-7 rounded-md text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition-colors"
               title="Open article"
             >
               <ExternalLink className="w-3.5 h-3.5" />

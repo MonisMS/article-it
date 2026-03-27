@@ -21,35 +21,42 @@ export function DailyQueue({ initialArticles }: Props) {
   return (
     <div className="mx-4 sm:mx-6 mb-10">
       <div className="flex items-center justify-between mb-4">
-        <div>
-          <h2 className="text-base font-semibold text-app-text">Today&apos;s reads</h2>
-          <p className="text-xs text-app-text-muted mt-0.5">
-            A small queue — read them all and you&apos;re done for today.
-          </p>
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0">
+            <span className="text-base">📚</span>
+          </div>
+          <div>
+            <h2 className="text-sm font-semibold text-stone-800">Today&apos;s Queue</h2>
+            <p className="text-xs text-stone-400">Read these and you&apos;re done for today</p>
+          </div>
         </div>
         {!allRead && (
-          <span className="text-xs font-medium text-app-text-subtle tabular-nums">
-            {readCount}/{total} read
-          </span>
+          <div className="flex items-center gap-2">
+            <div className="w-20 h-1.5 rounded-full bg-stone-100 overflow-hidden">
+              <div
+                className="h-full rounded-full bg-amber-500 transition-all duration-500"
+                style={{ width: `${total > 0 ? (readCount / total) * 100 : 0}%` }}
+              />
+            </div>
+            <span className="text-xs font-medium text-stone-500 tabular-nums">{readCount}/{total}</span>
+          </div>
         )}
       </div>
 
       {allRead ? (
-        <div className="rounded-xl border border-app-border bg-app-surface py-10 text-center">
-          <CheckCircle2 className="mx-auto mb-3 h-8 w-8 text-success" />
-          <p className="text-sm font-semibold text-app-text">You&apos;re all caught up</p>
-          <p className="text-xs text-app-text-muted mt-1">
-            Come back tomorrow for a fresh queue.
-          </p>
+        <div className="rounded-2xl border border-green-100 bg-gradient-to-br from-green-50 to-emerald-50 py-10 text-center">
+          <div className="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-3">
+            <CheckCircle2 className="w-7 h-7 text-green-600" />
+          </div>
+          <p className="text-sm font-semibold text-stone-800">Queue complete 🎉</p>
+          <p className="text-xs text-stone-500 mt-1">Come back tomorrow for a fresh batch.</p>
         </div>
       ) : (
-        <div className="grid sm:grid-cols-2 gap-5">
+        <div className="flex gap-4 overflow-x-auto pb-3 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] snap-x snap-mandatory">
           {initialArticles.map((article) => (
-            <ArticleCard
-              key={article.id}
-              article={article}
-              onReadChange={handleReadChange}
-            />
+            <div key={article.id} className="snap-start flex-shrink-0 w-72">
+              <ArticleCard article={article} onReadChange={handleReadChange} />
+            </div>
           ))}
         </div>
       )}

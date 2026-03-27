@@ -55,9 +55,9 @@ export default async function DashboardPage({ searchParams }: Props) {
   return (
     <div className="bg-app-bg min-h-full">
       <div className="max-w-4xl mx-auto">
-        <div className="pt-10 pb-6 px-4 sm:px-6 border-b border-app-border mb-6">
-          <h1 className="text-3xl font-bold text-app-text tracking-tight">Your Feed</h1>
-          <p className="text-app-text-muted text-sm mt-1">
+        <div className="pt-10 pb-6 px-4 sm:px-6 border-b border-stone-200 mb-6 bg-gradient-to-b from-stone-50 to-transparent">
+          <h1 className="text-3xl font-bold text-stone-900 tracking-tight">Your Feed</h1>
+          <p className="text-stone-500 text-sm mt-1">
             {topics.length === 0
               ? "Follow some topics to start building your feed."
               : `Articles from ${topics.length} topic${topics.length === 1 ? "" : "s"} you follow.`}
@@ -86,8 +86,8 @@ export default async function DashboardPage({ searchParams }: Props) {
           <>
             {(!topic && page === 0) && (
               <div className="flex items-center gap-3 px-4 sm:px-6 mb-5">
-                <span className="text-xs font-semibold text-app-text-subtle uppercase tracking-widest">All articles</span>
-                <div className="flex-1 h-px bg-app-border" />
+                <span className="text-xs font-semibold text-stone-400 uppercase tracking-widest">All articles</span>
+                <div className="flex-1 h-px bg-gradient-to-r from-stone-200 to-transparent" />
               </div>
             )}
             <div className="grid sm:grid-cols-2 gap-5 px-4 sm:px-6">
@@ -99,16 +99,16 @@ export default async function DashboardPage({ searchParams }: Props) {
             <div className="mt-10 flex items-center justify-center gap-4 px-4 sm:px-6 pb-10">
               <a
                 href={`/dashboard?${topic ? `topic=${topic}&` : ""}page=${Math.max(0, page - 1)}`}
-                className={`rounded-full border border-app-border px-5 py-2 text-sm font-medium text-app-text-muted hover:bg-app-hover hover:text-app-text transition-colors ${page === 0 ? "opacity-40 pointer-events-none" : ""}`}
+                className={`rounded-xl border border-stone-200 bg-white px-5 py-2 text-sm font-medium text-stone-600 hover:border-stone-300 hover:bg-stone-50 transition-all shadow-sm ${page === 0 ? "opacity-40 pointer-events-none" : ""}`}
               >
                 ← Previous
               </a>
-              <span className="text-sm text-app-text-subtle">
+              <span className="text-sm text-stone-400">
                 Page {page + 1} of {totalPages}
               </span>
               <a
                 href={`/dashboard?${topic ? `topic=${topic}&` : ""}page=${page + 1}`}
-                className={`rounded-full border border-app-border px-5 py-2 text-sm font-medium text-app-text-muted hover:bg-app-hover hover:text-app-text transition-colors ${(page + 1) * 20 >= totalCount ? "opacity-40 pointer-events-none" : ""}`}
+                className={`rounded-xl border border-stone-200 bg-white px-5 py-2 text-sm font-medium text-stone-600 hover:border-stone-300 hover:bg-stone-50 transition-all shadow-sm ${(page + 1) * 20 >= totalCount ? "opacity-40 pointer-events-none" : ""}`}
               >
                 Next →
               </a>

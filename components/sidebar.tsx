@@ -19,6 +19,15 @@ type Props = {
   isAdmin?: boolean
 }
 
+function initials(name: string): string {
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2)
+}
+
 export function Sidebar({ user, isAdmin }: Props) {
   const pathname = usePathname()
   const router = useRouter()
@@ -30,9 +39,9 @@ export function Sidebar({ user, isAdmin }: Props) {
   }
 
   return (
-    <aside className="flex h-full w-60 flex-col border-r border-app-border bg-app-surface px-3 py-5">
-      <Link href="/dashboard" className="flex items-center gap-2 px-3 mb-8 font-semibold text-app-text">
-        <span className="flex items-center justify-center w-7 h-7 rounded-md bg-app-text text-app-surface flex-shrink-0">
+    <aside className="flex h-full w-60 flex-col border-r border-stone-200 bg-white px-3 py-5">
+      <Link href="/dashboard" className="flex items-center gap-2.5 px-3 mb-8 font-semibold text-stone-900">
+        <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-stone-900 text-white flex-shrink-0">
           <BookOpen className="w-3.5 h-3.5" />
         </span>
         ArticleIt
@@ -49,26 +58,26 @@ export function Sidebar({ user, isAdmin }: Props) {
             <Link
               key={href}
               href={href}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors
+              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all duration-150
                 ${active
-                  ? "bg-app-active text-app-text font-medium border-l-2 border-app-accent"
-                  : "text-app-text-muted hover:bg-app-hover hover:text-app-text font-normal"
+                  ? "bg-stone-100 text-stone-900 font-semibold"
+                  : "text-stone-500 hover:bg-stone-50 hover:text-stone-900 font-normal"
                 }`}
             >
-              <Icon className="w-4 h-4 flex-shrink-0" />
+              <Icon className={`w-4 h-4 flex-shrink-0 ${active ? "text-amber-600" : ""}`} />
               {label}
             </Link>
           )
         })}
       </nav>
 
-      <div className="border-t border-app-border pt-3 mt-4 flex flex-col gap-0.5">
+      <div className="border-t border-stone-100 pt-3 mt-4 flex flex-col gap-0.5">
         <Link
           href="/suggest"
-          className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+          className={`flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-all duration-150 ${
             pathname === "/suggest"
-              ? "bg-app-active text-app-text"
-              : "text-app-text-muted hover:bg-app-hover hover:text-app-text"
+              ? "bg-stone-100 text-stone-900"
+              : "text-stone-500 hover:bg-stone-50 hover:text-stone-900"
           }`}
         >
           <Lightbulb className="w-4 h-4 flex-shrink-0" />
@@ -78,10 +87,10 @@ export function Sidebar({ user, isAdmin }: Props) {
         {isAdmin && (
           <Link
             href="/admin"
-            className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+            className={`flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-all duration-150 ${
               pathname.startsWith("/admin")
-                ? "bg-app-accent-light text-app-accent"
-                : "text-app-accent hover:bg-app-accent-light"
+                ? "bg-amber-50 text-amber-700"
+                : "text-amber-600 hover:bg-amber-50"
             }`}
           >
             <ShieldCheck className="w-4 h-4 flex-shrink-0" />
@@ -89,13 +98,19 @@ export function Sidebar({ user, isAdmin }: Props) {
           </Link>
         )}
 
-        <div className="px-3 mt-2 mb-1 border-t border-app-border pt-3">
-          <p className="text-sm font-medium text-app-text truncate">{user.name}</p>
-          <p className="text-xs text-app-text-subtle truncate">{user.email}</p>
+        <div className="flex items-center gap-2.5 px-3 mt-3 mb-1 border-t border-stone-100 pt-3">
+          <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
+            <span className="text-xs font-bold text-amber-700">{initials(user.name)}</span>
+          </div>
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-stone-900 truncate">{user.name}</p>
+            <p className="text-xs text-stone-400 truncate">{user.email}</p>
+          </div>
         </div>
+
         <button
           onClick={handleSignOut}
-          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-app-text-muted hover:bg-app-hover hover:text-app-text transition-colors"
+          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-stone-500 hover:bg-stone-50 hover:text-stone-900 transition-all duration-150"
         >
           <LogOut className="w-4 h-4 flex-shrink-0" />
           Sign out
