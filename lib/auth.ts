@@ -1,4 +1,5 @@
 import { betterAuth } from "better-auth"
+import { emailOTP } from "better-auth/plugins"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
 import { db } from "@/lib/db"
 import {
@@ -8,7 +9,7 @@ import {
   verification,
 } from "@/lib/db/schema/auth"
 import { resend } from "@/lib/resend"
-import { buildVerificationEmail } from "@/lib/email/verification-template"
+import { buildOtpEmail } from "@/lib/email/otp-template"
 import { buildResetPasswordEmail } from "@/lib/email/reset-password-template"
 
 const FROM = "ArticleIt <noreply@m0nis.com>"
@@ -40,18 +41,20 @@ export const auth = betterAuth({
     },
   },
 
-  emailVerification: {
-    sendOnSignUp: true,
-    callbackURL: "/onboarding",
-    sendVerificationEmail: async ({ user: u, url }) => {
-      if (process.env.NODE_ENV === "development") {
-        console.log("\n[auth:dev] Email verification URL (use this if email doesn't arrive):\n", url, "\n")
-      }
-      const { subject, html } = buildVerificationEmail({ name: u.name, url })
-      const { error } = await resend.emails.send({ from: FROM, to: u.email, subject, html })
-      if (error) console.error("[auth] Failed to send verification email:", error)
-    },
-  },
+  plugins: [
+    emailOTP({
+      otpLength: 6,
+      expiresIn: 600, // 10 minutes
+      sendVerificationOTP: async ({ email, otp }: { email: string; otp: string }) => {
+        if (process.env.NODE_ENV === "development") {
+          console.log(`\n[auth:dev] Email OTP for ${email}: ${otp}\n`)
+        }
+        const { subject, html } = buildOtpEmail({ otp })
+        const { error } = await resend.emails.send({ from: FROM, to: email, subject, html })
+        if (error) console.error("[auth] Failed to send OTP email:", error)
+      },
+    }),
+  ],
 
   session: {
     cookieCache: {
