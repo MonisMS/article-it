@@ -8,24 +8,34 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  /* ── App UI palette (light) ───────────────────────────────────── */
-  --color-brand:          #18181b;
-  --color-brand-hover:    #3f3f46;
+  /* ── Shadow scale ─────────────────────────────────────────────── */
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.08);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.08);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+
+  /* ── Gradient tokens ──────────────────────────────────────────── */
+  --gradient-card: linear-gradient(to bottom, #ffffff, #fafaf9);
+  --gradient-accent: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+
+  /* ── App UI palette — warm stone-based neutrals ───────────────── */
+  --color-brand:          #1c1917;   /* stone-900 */
+  --color-brand-hover:    #44403c;   /* stone-700 */
   --color-brand-fg:       #ffffff;
-  --color-bg:             #fafafa;
+  --color-bg:             #fafaf9;   /* warm off-white (stone-50) */
   --color-surface:        #ffffff;
-  --color-surface-raised: #f4f4f5;
-  --color-overlay:        #f4f4f5;
-  --color-border:         #e4e4e7;
-  --color-border-strong:  #d4d4d8;
-  --color-text:           #18181b;
-  --color-text-muted:     #71717a;
-  --color-text-subtle:    #a1a1aa;
+  --color-surface-raised: #f5f5f4;   /* stone-100 */
+  --color-overlay:        #f5f5f4;
+  --color-border:         #e7e5e4;   /* stone-200 */
+  --color-border-strong:  #d6d3d1;   /* stone-300 */
+  --color-text:           #1c1917;   /* stone-900 */
+  --color-text-muted:     #78716c;   /* stone-500 — warm, not cold zinc */
+  --color-text-subtle:    #a8a29e;   /* stone-400 */
   --color-success:        #16a34a;
   --color-success-bg:     #f0fdf4;
   --color-error:          #dc2626;
   --color-error-bg:       #fef2f2;
-  --color-warning:        #d97706;
+  --color-warning:        #c2680a;   /* matches app-accent */
   --color-warning-bg:     #fffbeb;
 
   /* ── Landing page dark palette ────────────────────────────────── *
@@ -43,18 +53,23 @@
   --color-lp-accent-hover:  #F0BC5E;
   --color-lp-accent-muted:  #2A3547;
 
-  --color-app-bg:           #f9fafb;
-  --color-app-surface:      #ffffff;
-  --color-app-border:       #e5e7eb;
-  --color-app-border-subtle:#f1f5f9;
-  --color-app-border-strong:#d1d5db;
-  --color-app-text:         #111827;
-  --color-app-text-muted:   #6b7280;
-  --color-app-text-subtle:  #9ca3af;
-  --color-app-accent:       #d97706;
-  --color-app-accent-light: #fef3c7;
-  --color-app-hover:        #f3f4f6;
-  --color-app-active:       #e5e7eb;
+  /* ── App-namespaced tokens — unified with shadcn primitives ───── */
+  --color-app-bg:              #fafaf9;   /* stone-50 warm off-white */
+  --color-app-surface:         #ffffff;
+  --color-app-surface-hover:   #f5f5f4;   /* stone-100 */
+  --color-app-surface-active:  #e7e5e4;   /* stone-200 */
+  --color-app-border:          #e7e5e4;   /* stone-200 */
+  --color-app-border-subtle:   #f5f5f4;   /* stone-100 */
+  --color-app-border-strong:   #d6d3d1;   /* stone-300 */
+  --color-app-text:            #1c1917;   /* stone-900 */
+  --color-app-text-muted:      #78716c;   /* stone-500 */
+  --color-app-text-subtle:     #a8a29e;   /* stone-400 */
+  --color-app-accent:          #c2680a;   /* richer amber — brand primary */
+  --color-app-accent-vivid:    #d97706;   /* original amber for emphasis */
+  --color-app-accent-light:    #fef3c7;   /* amber-100 warm */
+  --color-app-hover:           #f5f5f4;   /* stone-100 — replaces gray-100 */
+  --color-app-active:          #e7e5e4;   /* stone-200 — replaces gray-200 */
+
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -118,38 +133,39 @@
 .animate-aurora-slow { animation: aurora-pulse 12s ease-in-out infinite reverse; }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: #d97706;            /* app-accent amber */
+  --background: #fafaf9;             /* warm stone-50 instead of pure white */
+  --foreground: #1c1917;             /* stone-900 */
+  --card: #ffffff;
+  --card-foreground: #1c1917;
+  --popover: #ffffff;
+  --popover-foreground: #1c1917;
+  --primary: #c2680a;                /* richer amber — unified with app-accent */
   --primary-foreground: #ffffff;
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: #d97706;               /* app-accent amber */
+  --secondary: #f5f5f4;              /* stone-100 warm */
+  --secondary-foreground: #1c1917;
+  --muted: #f5f5f4;                  /* stone-100 warm */
+  --muted-foreground: #78716c;       /* stone-500 warm */
+  --accent: #f5f5f4;
+  --accent-foreground: #1c1917;
+  --destructive: #dc2626;            /* clean red, not amber */
+  --destructive-foreground: #ffffff;
+  --border: #e7e5e4;                 /* stone-200 warm */
+  --input: #e7e5e4;                  /* stone-200 warm */
+  --ring: #c2680a;                   /* unified with --primary */
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar: #f5f5f4;                /* stone-100 — slightly warmer than before */
+  --sidebar-foreground: #1c1917;
+  --sidebar-primary: #1c1917;
+  --sidebar-primary-foreground: #fafaf9;
+  --sidebar-accent: #e7e5e4;
+  --sidebar-accent-foreground: #1c1917;
+  --sidebar-border: #e7e5e4;
+  --sidebar-ring: #a8a29e;           /* stone-400 */
 }
 
 .dark {

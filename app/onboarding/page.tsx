@@ -62,17 +62,19 @@ export default function OnboardingPage() {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       {/* Header */}
-      <header className="border-b border-zinc-100 px-4 sm:px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-2 font-semibold text-zinc-900">
-          <span className="flex items-center justify-center w-7 h-7 rounded-md bg-zinc-900 text-white">
+      <header className="border-b border-stone-100 px-4 sm:px-6 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-2 font-semibold text-stone-900">
+          <span className="flex items-center justify-center w-7 h-7 rounded-md bg-stone-900 text-white">
             <BookOpen className="w-3.5 h-3.5" />
           </span>
           ArticleIt
         </div>
-        <div className="flex items-center gap-2 text-sm text-zinc-400">
-          <span className="font-medium text-zinc-900">Step 1</span>
-          <span>/</span>
-          <span>2</span>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5">
+            <div className="w-16 h-1.5 rounded-full bg-amber-500" />
+            <div className="w-16 h-1.5 rounded-full bg-stone-200" />
+          </div>
+          <span className="text-xs text-stone-400 font-medium">1 of 2</span>
         </div>
       </header>
 
@@ -80,8 +82,10 @@ export default function OnboardingPage() {
         <div className="w-full max-w-2xl">
           {/* Title */}
           <div className="mb-10 text-center">
-            <h1 className="text-3xl font-bold text-zinc-900">What are you interested in?</h1>
-            <p className="mt-2 text-zinc-500 text-sm">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-stone-900 to-stone-600 bg-clip-text text-transparent">
+              What are you interested in?
+            </h1>
+            <p className="mt-2 text-stone-500 text-sm">
               Pick as many as you like. We&apos;ll build your feed around these.
             </p>
           </div>
@@ -89,7 +93,7 @@ export default function OnboardingPage() {
           {/* Topics grid */}
           {loading ? (
             <div className="flex justify-center py-20">
-              <Loader2 className="w-6 h-6 animate-spin text-zinc-400" />
+              <Loader2 className="w-6 h-6 animate-spin text-stone-400" />
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -99,19 +103,22 @@ export default function OnboardingPage() {
                   <button
                     key={topic.id}
                     onClick={() => toggle(topic.id)}
-                    className={`relative flex flex-col items-center gap-2 rounded-xl border px-4 py-5 text-center transition-all cursor-pointer
+                    className={`relative flex flex-col items-center text-center rounded-2xl px-4 py-6 overflow-hidden transition-all duration-200 cursor-pointer
                       ${isSelected
-                        ? "border-zinc-900 bg-zinc-900 text-white shadow-md"
-                        : "border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300 hover:shadow-sm"
+                        ? "border-2 border-amber-500 bg-amber-50 shadow-md shadow-amber-100/50"
+                        : "border border-stone-200 bg-white hover:border-amber-300 hover:shadow-md hover:shadow-amber-100/50"
                       }`}
                   >
+                    <span className="text-3xl mb-3">{topic.icon}</span>
+                    <span className="text-sm font-semibold text-stone-800">{topic.name}</span>
+                    {topic.description && (
+                      <span className="text-xs text-stone-500 mt-1 line-clamp-2">{topic.description}</span>
+                    )}
                     {isSelected && (
-                      <span className="absolute top-2.5 right-2.5 flex items-center justify-center w-4 h-4 rounded-full bg-white">
-                        <Check className="w-2.5 h-2.5 text-zinc-900" />
+                      <span className="absolute bottom-3 right-3 w-5 h-5 rounded-full bg-amber-500 flex items-center justify-center">
+                        <Check className="w-3 h-3 text-white" />
                       </span>
                     )}
-                    <span className="text-2xl">{topic.icon}</span>
-                    <span className="text-sm font-medium">{topic.name}</span>
                   </button>
                 )
               })}
@@ -125,18 +132,22 @@ export default function OnboardingPage() {
 
           {/* Footer */}
           <div className="mt-10 flex items-center justify-between">
-            <p className="text-sm text-zinc-400">
+            <span className="inline-flex items-center gap-1.5 bg-stone-100 px-3 py-1 rounded-full text-xs font-medium text-stone-600">
               {selected.size === 0
                 ? "No topics selected"
                 : `${selected.size} topic${selected.size === 1 ? "" : "s"} selected`}
-            </p>
+            </span>
             <button
               onClick={handleContinue}
               disabled={saving || selected.size === 0}
-              className="flex items-center gap-2 rounded-lg bg-zinc-900 px-6 py-2.5 text-sm font-semibold text-white hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="flex items-center gap-2 rounded-lg bg-stone-900 px-6 py-2.5 text-sm font-semibold text-white hover:bg-stone-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {saving && <Loader2 className="w-4 h-4 animate-spin" />}
-              {saving ? "Saving…" : "Continue →"}
+              {saving
+                ? "Saving…"
+                : selected.size === 0
+                  ? "Continue →"
+                  : `Continue with ${selected.size} topic${selected.size === 1 ? "" : "s"} →`}
             </button>
           </div>
         </div>
