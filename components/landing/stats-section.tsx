@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from "react"
 
 const STATS = [
-  { value: 107, suffix: "+", label: "Curated sources" },
+  { value: 130, suffix: "+", label: "Curated sources" },
   { value: 12,  suffix: "",  label: "Topics to follow" },
-  { value: 6,   suffix: "h", label: "Feed refresh cycle" },
+  { value: 24,  suffix: "h", label: "Feed refresh cycle" },
   { value: 0,   suffix: "",  label: "Algorithms. Ever." },
 ]
 

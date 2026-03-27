@@ -1,12 +1,12 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Bookmark, Clock, Mail, Rss, Search, Sparkles } from "lucide-react"
+import { Bookmark, BarChart2, Mail, Rss, Search, Sparkles } from "lucide-react"
 
 const FEATURES = [
   {
     icon: Rss,
-    title: "107+ sources, zero setup",
+    title: "130+ sources, zero setup",
     description: "TechCrunch, Ars Technica, Hacker News, The Verge — we've already curated the best feeds for every topic.",
     size: "lg",
   },
@@ -35,9 +35,9 @@ const FEATURES = [
     size: "lg",
   },
   {
-    icon: Clock,
-    title: "Read history",
-    description: "Track what you've read. Mark articles done. Keep your feed clean.",
+    icon: BarChart2,
+    title: "Reading insights",
+    description: "See which topics you actually read vs. which you ignore. Your feed gets smarter the more you use it.",
     size: "sm",
   },
 ]

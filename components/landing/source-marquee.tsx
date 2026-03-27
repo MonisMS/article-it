@@ -12,7 +12,7 @@ export function SourceMarquee() {
   return (
     <div className="bg-lp-surface border-y border-lp-border py-5 overflow-hidden">
       <p className="text-center text-xs font-medium text-lp-text-subtle tracking-widest uppercase mb-4">
-        Pulling from 107+ trusted sources
+        Pulling from 130+ trusted sources
       </p>
       <div className="relative">
         <div className="flex gap-8 animate-marquee whitespace-nowrap">

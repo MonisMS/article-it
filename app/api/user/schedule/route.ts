@@ -68,6 +68,32 @@ export async function POST(req: Request) {
   return NextResponse.json({ data: { ok: true }, error: null })
 }
 
+const patchSchema = z.object({
+  topicIds: z.array(z.string().min(1)),
+  isActive: z.boolean(),
+})
+
+export async function PATCH(req: Request) {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) return NextResponse.json({ data: null, error: "Unauthorized" }, { status: 401 })
+
+  const body = await req.json()
+  const parsed = patchSchema.safeParse(body)
+  if (!parsed.success) {
+    return NextResponse.json({ data: null, error: parsed.error.issues[0].message }, { status: 400 })
+  }
+
+  const { topicIds, isActive } = parsed.data
+  for (const topicId of topicIds) {
+    await db
+      .update(digestSchedules)
+      .set({ isActive, updatedAt: new Date() })
+      .where(and(eq(digestSchedules.userId, session.user.id), eq(digestSchedules.topicId, topicId)))
+  }
+
+  return NextResponse.json({ data: { ok: true }, error: null })
+}
+
 const deleteSchema = z.object({ topicId: z.string().min(1) })
 
 export async function DELETE(req: Request) {

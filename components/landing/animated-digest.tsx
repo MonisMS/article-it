@@ -5,12 +5,12 @@ import { useEffect, useState } from "react"
 import { Bell, Bookmark, Mail } from "lucide-react"
 
 const NOTIFICATIONS = [
-  { icon: Bell,     color: "text-lp-accent",              label: "5 new articles in AI & ML" },
-  { icon: Mail,     color: "text-blue-400",               label: "Your 9am digest is ready · 12 articles" },
-  { icon: Bookmark, color: "text-emerald-400",            label: "Bookmarked: The State of LLMs in 2025" },
-  { icon: Bell,     color: "text-lp-accent",              label: "3 new articles in Cybersecurity" },
-  { icon: Mail,     color: "text-blue-400",               label: "Your Sunday AI digest · 8 articles" },
-  { icon: Bookmark, color: "text-emerald-400",            label: "Bookmarked: Why Rust Is Taking Over Systems" },
+  { icon: Bell,     color: "text-lp-accent",       label: "5 new articles in AI & ML" },
+  { icon: Mail,     color: "text-lp-text",         label: "Your 9am digest is ready · 12 articles" },
+  { icon: Bookmark, color: "text-lp-accent-hover", label: "Bookmarked: The State of LLMs in 2025" },
+  { icon: Bell,     color: "text-lp-accent",       label: "3 new articles in Cybersecurity" },
+  { icon: Mail,     color: "text-lp-text",         label: "Your Sunday AI digest · 8 articles" },
+  { icon: Bookmark, color: "text-lp-accent-hover", label: "Bookmarked: Why Rust Is Taking Over Systems" },
 ]
 
 export function AnimatedDigest() {
