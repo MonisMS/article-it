@@ -53,11 +53,11 @@ export default async function DashboardPage({ searchParams }: Props) {
   const totalPages = Math.max(1, Math.ceil(totalCount / 20))
 
   return (
-    <div className="bg-app-bg min-h-full">
+    <div className="bg-app-bg dark:bg-[#0D1117] min-h-full">
       <div className="max-w-4xl mx-auto">
-        <div className="pt-10 pb-6 px-4 sm:px-6 border-b border-stone-200 mb-6 bg-gradient-to-b from-stone-50 to-transparent">
-          <h1 className="text-3xl font-bold text-stone-900 tracking-tight">Your Feed</h1>
-          <p className="text-stone-500 text-sm mt-1">
+        <div className="pt-10 pb-6 px-4 sm:px-6 border-b border-stone-200 dark:border-[#1E2A3A] mb-6 bg-gradient-to-b from-stone-50 dark:from-[#161C26]/50 to-transparent">
+          <h1 className="text-3xl font-bold text-stone-900 dark:text-[#F0EDE6] tracking-tight">Your Feed</h1>
+          <p className="text-stone-500 dark:text-[#B8C0CC] text-sm mt-1">
             {topics.length === 0
               ? "Follow some topics to start building your feed."
               : `Articles from ${topics.length} topic${topics.length === 1 ? "" : "s"} you follow.`}
@@ -86,8 +86,8 @@ export default async function DashboardPage({ searchParams }: Props) {
           <>
             {(!topic && page === 0) && (
               <div className="flex items-center gap-3 px-4 sm:px-6 mb-5">
-                <span className="text-xs font-semibold text-stone-400 uppercase tracking-widest">All articles</span>
-                <div className="flex-1 h-px bg-gradient-to-r from-stone-200 to-transparent" />
+                <span className="text-xs font-semibold text-stone-400 dark:text-[#6B7585] uppercase tracking-widest">All articles</span>
+                <div className="flex-1 h-px bg-gradient-to-r from-stone-200 dark:from-[#1E2A3A] to-transparent" />
               </div>
             )}
             <div className="grid sm:grid-cols-2 gap-5 px-4 sm:px-6">

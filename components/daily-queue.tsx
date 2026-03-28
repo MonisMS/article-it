@@ -22,34 +22,34 @@ export function DailyQueue({ initialArticles }: Props) {
     <div className="mx-4 sm:mx-6 mb-10">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0">
+          <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-[#2A3547] flex items-center justify-center flex-shrink-0">
             <span className="text-base">📚</span>
           </div>
           <div>
-            <h2 className="text-sm font-semibold text-stone-800">Today&apos;s Queue</h2>
-            <p className="text-xs text-stone-400">Read these and you&apos;re done for today</p>
+            <h2 className="text-sm font-semibold text-stone-800 dark:text-[#F0EDE6]">Today&apos;s Queue</h2>
+            <p className="text-xs text-stone-400 dark:text-[#6B7585]">Read these and you&apos;re done for today</p>
           </div>
         </div>
         {!allRead && (
           <div className="flex items-center gap-2">
-            <div className="w-20 h-1.5 rounded-full bg-stone-100 overflow-hidden">
+            <div className="w-20 h-1.5 rounded-full bg-stone-100 dark:bg-[#1E2533] overflow-hidden">
               <div
                 className="h-full rounded-full bg-amber-500 transition-all duration-500"
                 style={{ width: `${total > 0 ? (readCount / total) * 100 : 0}%` }}
               />
             </div>
-            <span className="text-xs font-medium text-stone-500 tabular-nums">{readCount}/{total}</span>
+            <span className="text-xs font-medium text-stone-500 dark:text-[#B8C0CC] tabular-nums">{readCount}/{total}</span>
           </div>
         )}
       </div>
 
       {allRead ? (
-        <div className="rounded-2xl border border-green-100 bg-gradient-to-br from-green-50 to-emerald-50 py-10 text-center">
-          <div className="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-3">
-            <CheckCircle2 className="w-7 h-7 text-green-600" />
+        <div className="rounded-2xl border border-green-100 dark:border-green-900/30 bg-gradient-to-br from-green-50 dark:from-green-950/30 to-emerald-50 dark:to-emerald-950/20 py-10 text-center">
+          <div className="w-14 h-14 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center mx-auto mb-3">
+            <CheckCircle2 className="w-7 h-7 text-green-600 dark:text-green-400" />
           </div>
-          <p className="text-sm font-semibold text-stone-800">Queue complete 🎉</p>
-          <p className="text-xs text-stone-500 mt-1">Come back tomorrow for a fresh batch.</p>
+          <p className="text-sm font-semibold text-stone-800 dark:text-[#F0EDE6]">Queue complete 🎉</p>
+          <p className="text-xs text-stone-500 dark:text-[#6B7585] mt-1">Come back tomorrow for a fresh batch.</p>
         </div>
       ) : (
         <div className="flex gap-4 overflow-x-auto pb-3 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] snap-x snap-mandatory">

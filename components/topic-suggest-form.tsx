@@ -1,22 +1,23 @@
 "use client"
 
 import { useState } from "react"
-import { Loader2 } from "lucide-react"
+import { CheckCircle2, Clock, Loader2, XCircle } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
 import type { SuggestionRow } from "@/lib/db/queries/suggestions"
 
-const STATUS_LABELS: Record<string, { label: string; className: string }> = {
-  pending:  { label: "Under review", className: "bg-amber-50 text-amber-700" },
-  approved: { label: "Approved",     className: "bg-emerald-50 text-emerald-700" },
-  rejected: { label: "Rejected",     className: "bg-zinc-100 text-zinc-500" },
+function timeAgo(date: Date): string {
+  const diff = Date.now() - new Date(date).getTime()
+  const days = Math.floor(diff / 86400000)
+  if (days === 0) return "Today"
+  if (days === 1) return "Yesterday"
+  if (days < 7) return `${days}d ago`
+  return `${Math.floor(days / 7)}w ago`
 }
 
-function StatusBadge({ status }: { status: string }) {
-  const config = STATUS_LABELS[status] ?? { label: status, className: "bg-zinc-100 text-zinc-500" }
-  return (
-    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${config.className}`}>
-      {config.label}
-    </span>
-  )
+const STATUS_CONFIG: Record<string, { label: string; icon: React.ElementType; className: string }> = {
+  pending:  { label: "Under review", icon: Clock,         className: "bg-amber-50 text-amber-700 border-amber-200" },
+  approved: { label: "Approved",     icon: CheckCircle2,  className: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+  rejected: { label: "Not added",    icon: XCircle,       className: "bg-stone-100 text-stone-500 border-stone-200" },
 }
 
 export function TopicSuggestForm({ initialSuggestions }: { initialSuggestions: SuggestionRow[] }) {
@@ -52,6 +53,7 @@ export function TopicSuggestForm({ initialSuggestions }: { initialSuggestions: S
       setName("")
       setDescription("")
       setSuccess(true)
+      setTimeout(() => setSuccess(false), 5000)
     } catch {
       setError("Something went wrong. Please try again.")
     } finally {
@@ -62,43 +64,68 @@ export function TopicSuggestForm({ initialSuggestions }: { initialSuggestions: S
   return (
     <div className="space-y-8">
       {/* Form */}
-      <div className="rounded-xl border border-zinc-200 bg-white p-6">
-        <h2 className="text-base font-semibold text-zinc-900 mb-1">Suggest a new topic</h2>
-        <p className="text-sm text-zinc-500 mb-5">
-          Don't see a topic you care about? Suggest it and we'll review it.
-        </p>
-
+      <div className="rounded-2xl border border-stone-200 dark:border-[#1E2A3A] bg-white dark:bg-[#161C26] p-6">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-500 mb-1.5">Topic name *</label>
+            <label className="block text-xs font-semibold text-stone-500 dark:text-[#6B7585] uppercase tracking-wide mb-2">
+              Topic name <span className="text-red-400">*</span>
+            </label>
             <input
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => { setName(e.target.value); setSuccess(false) }}
               placeholder="e.g. Web3, Game Dev, Design Systems"
               maxLength={60}
-              className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 outline-none focus:border-zinc-400 transition-colors"
+              className="w-full rounded-xl border border-stone-200 dark:border-[#1E2A3A] px-4 py-3 text-sm text-stone-900 dark:text-[#F0EDE6] placeholder:text-stone-400 dark:placeholder:text-[#6B7585] outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-500/20 transition-all bg-stone-50 dark:bg-[#1E2533] focus:bg-white dark:focus:bg-[#252F3F]"
             />
+            <p className="text-xs text-stone-400 dark:text-[#6B7585] mt-1.5">{name.length}/60 characters</p>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-500 mb-1.5">Description (optional)</label>
+            <label className="block text-xs font-semibold text-stone-500 dark:text-[#6B7585] uppercase tracking-wide mb-2">
+              Description <span className="text-stone-400 dark:text-[#6B7585] font-normal normal-case">(optional)</span>
+            </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="What kind of articles would this topic include?"
+              placeholder="What kind of articles would this topic include? The more context, the better."
               maxLength={300}
               rows={3}
-              className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 outline-none focus:border-zinc-400 transition-colors resize-none"
+              className="w-full rounded-xl border border-stone-200 dark:border-[#1E2A3A] px-4 py-3 text-sm text-stone-900 dark:text-[#F0EDE6] placeholder:text-stone-400 dark:placeholder:text-[#6B7585] outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-500/20 transition-all resize-none bg-stone-50 dark:bg-[#1E2533] focus:bg-white dark:focus:bg-[#252F3F]"
             />
+            <p className="text-xs text-stone-400 dark:text-[#6B7585] mt-1.5">{description.length}/300 characters</p>
           </div>
 
-          {error && <p className="text-sm text-red-500">{error}</p>}
-          {success && <p className="text-sm text-emerald-600 font-medium">Suggestion submitted — thanks!</p>}
+          <AnimatePresence>
+            {error && (
+              <motion.p
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="text-sm text-red-500 flex items-center gap-1.5"
+              >
+                <XCircle className="w-4 h-4 flex-shrink-0" />
+                {error}
+              </motion.p>
+            )}
+            {success && (
+              <motion.div
+                initial={{ opacity: 0, y: -4, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex items-center gap-2.5 rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-3"
+              >
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                <p className="text-sm font-medium text-emerald-700">
+                  Suggestion submitted — thanks for contributing!
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <button
             type="submit"
             disabled={submitting || !name.trim()}
-            className="flex items-center gap-1.5 rounded-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white hover:bg-zinc-700 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 transition-all"
+            className="flex items-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 active:bg-amber-600 px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
             {submitting ? "Submitting…" : "Submit suggestion"}
@@ -106,25 +133,44 @@ export function TopicSuggestForm({ initialSuggestions }: { initialSuggestions: S
         </form>
       </div>
 
-      {/* User's own suggestions */}
-      {suggestions.length > 0 && (
-        <div>
-          <h2 className="text-base font-semibold text-zinc-900 mb-4">Your suggestions</h2>
-          <div className="space-y-3">
-            {suggestions.map((s) => (
-              <div key={s.id} className="flex items-start justify-between gap-4 rounded-xl border border-zinc-200 bg-white px-5 py-4">
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-zinc-900">{s.name}</p>
-                  {s.description && (
-                    <p className="text-xs text-zinc-400 mt-0.5 truncate">{s.description}</p>
-                  )}
-                </div>
-                <StatusBadge status={s.status} />
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Past suggestions */}
+      <AnimatePresence>
+        {suggestions.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <h2 className="text-sm font-semibold text-stone-700 dark:text-[#C8C4BC] mb-3">Your suggestions</h2>
+            <div className="flex flex-col gap-2.5">
+              {suggestions.map((s, i) => {
+                const config = STATUS_CONFIG[s.status] ?? STATUS_CONFIG.pending
+                const StatusIcon = config.icon
+                return (
+                  <motion.div
+                    key={s.id}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.04 }}
+                    className="flex items-center justify-between gap-4 rounded-2xl border border-stone-200 dark:border-[#1E2A3A] bg-white dark:bg-[#161C26] px-5 py-4"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-semibold text-stone-900 dark:text-[#F0EDE6]">{s.name}</p>
+                      {s.description && (
+                        <p className="text-xs text-stone-400 dark:text-[#6B7585] mt-0.5 line-clamp-1">{s.description}</p>
+                      )}
+                      <p className="text-xs text-stone-300 dark:text-[#6B7585]/70 mt-1">{timeAgo(s.createdAt)}</p>
+                    </div>
+                    <span className={`flex-shrink-0 inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium ${config.className}`}>
+                      <StatusIcon className="w-3 h-3" />
+                      {config.label}
+                    </span>
+                  </motion.div>
+                )
+              })}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

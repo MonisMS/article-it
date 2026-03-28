@@ -31,7 +31,7 @@ export function TopicFilter({ topics }: { topics: Topic[] }) {
         className={`flex-shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition-all active:scale-95 ${
           active === "all"
             ? "bg-amber-500 text-white border border-amber-500"
-            : "bg-white border border-stone-200 text-stone-600 hover:border-amber-300 hover:text-stone-900"
+            : "bg-white dark:bg-[#161C26] border border-stone-200 dark:border-[#1E2A3A] text-stone-600 dark:text-[#B8C0CC] hover:border-amber-300 dark:hover:border-[#E8A838]/50 hover:text-stone-900 dark:hover:text-[#F0EDE6]"
         }`}
       >
         All topics
@@ -43,7 +43,7 @@ export function TopicFilter({ topics }: { topics: Topic[] }) {
           className={`flex-shrink-0 flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium transition-all active:scale-95 ${
             active === t.slug
               ? "bg-amber-500 text-white border border-amber-500"
-              : "bg-white border border-stone-200 text-stone-600 hover:border-amber-300 hover:text-stone-900"
+              : "bg-white dark:bg-[#161C26] border border-stone-200 dark:border-[#1E2A3A] text-stone-600 dark:text-[#B8C0CC] hover:border-amber-300 dark:hover:border-[#E8A838]/50 hover:text-stone-900 dark:hover:text-[#F0EDE6]"
           }`}
         >
           <span>{t.icon}</span>

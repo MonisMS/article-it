@@ -43,11 +43,11 @@ export default async function BookmarksPage() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="pt-10 pb-6 px-4 sm:px-6 border-b border-stone-200 mb-6 bg-gradient-to-b from-stone-50 to-transparent">
+      <div className="pt-10 pb-6 px-4 sm:px-6 border-b border-stone-200 dark:border-[#1E2A3A] mb-6 bg-gradient-to-b from-stone-50 dark:from-[#161C26]/50 to-transparent">
         <div className="flex items-end justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-stone-900 tracking-tight">Library</h1>
-            <p className="text-stone-400 text-sm mt-1">Your saved articles, organized by topic.</p>
+            <h1 className="text-3xl font-bold text-stone-900 dark:text-[#F0EDE6] tracking-tight">Library</h1>
+            <p className="text-stone-400 dark:text-[#6B7585] text-sm mt-1">Your saved articles, organized by topic.</p>
           </div>
         </div>
       </div>

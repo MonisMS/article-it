@@ -73,8 +73,8 @@ function LibraryCard({
       transition={{ delay: index * 0.03, duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
       className={`group flex gap-4 rounded-2xl border p-4 transition-all duration-200
         ${read
-          ? "bg-stone-50 border-stone-200 border-l-4 border-l-stone-300"
-          : "bg-white border-stone-200 hover:border-stone-300 hover:shadow-md hover:shadow-stone-200/50 hover:-translate-y-0.5"
+          ? "bg-stone-50 dark:bg-[#0D1117] border-stone-200 dark:border-[#1E2A3A] border-l-4 border-l-stone-300 dark:border-l-[#2D3B4F]"
+          : "bg-white dark:bg-[#161C26] border-stone-200 dark:border-[#1E2A3A] hover:border-stone-300 dark:hover:border-[#2D3B4F] hover:shadow-md hover:shadow-stone-200/50 dark:hover:shadow-black/30 hover:-translate-y-0.5"
         }`}
     >
       {/* Thumbnail */}
@@ -87,7 +87,7 @@ function LibraryCard({
             className="w-20 h-20 rounded-xl object-cover"
           />
         ) : (
-          <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-amber-50 to-orange-100 flex items-center justify-center text-2xl">
+          <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-amber-50 to-orange-100 dark:from-[#2A3547] dark:to-[#2A3547] flex items-center justify-center text-2xl">
             {primaryTopic?.icon ?? "📄"}
           </div>
         )}
@@ -98,7 +98,7 @@ function LibraryCard({
         {primaryTopic && (
           <div className="flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-500 flex-shrink-0" />
-            <span className="text-xs font-medium text-stone-400">{primaryTopic.name}</span>
+            <span className="text-xs font-medium text-stone-400 dark:text-[#6B7585]">{primaryTopic.name}</span>
           </div>
         )}
 
@@ -107,20 +107,20 @@ function LibraryCard({
           target="_blank"
           rel="noopener noreferrer"
           className={`text-sm font-semibold leading-snug hover:text-amber-700 transition-colors line-clamp-2
-            ${read ? "text-stone-400" : "text-stone-900"}`}
+            ${read ? "text-stone-400 dark:text-[#6B7585]" : "text-stone-900 dark:text-[#F0EDE6]"}`}
         >
           {article.title}
         </Link>
 
         {article.description && (
-          <p className="text-xs text-stone-400 leading-relaxed line-clamp-2 hidden sm:block">
+          <p className="text-xs text-stone-400 dark:text-[#6B7585] leading-relaxed line-clamp-2 hidden sm:block">
             {article.description}
           </p>
         )}
 
         <div className="flex items-center justify-between mt-auto pt-1">
-          <div className="flex items-center gap-2 text-xs text-stone-400">
-            <span className="font-medium text-stone-500">{article.source.name}</span>
+          <div className="flex items-center gap-2 text-xs text-stone-400 dark:text-[#6B7585]">
+            <span className="font-medium text-stone-500 dark:text-[#B8C0CC]">{article.source.name}</span>
             <span>·</span>
             <span className="flex items-center gap-1">
               <Clock className="w-3 h-3" />
@@ -150,7 +150,7 @@ function LibraryCard({
               href={article.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center w-7 h-7 rounded-md text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition-colors"
+              className="flex items-center justify-center w-7 h-7 rounded-md text-stone-400 dark:text-[#6B7585] hover:text-stone-700 dark:hover:text-[#C8C4BC] hover:bg-stone-100 dark:hover:bg-[#1E2533] transition-colors"
             >
               <ExternalLink className="w-3.5 h-3.5" />
             </Link>
@@ -180,11 +180,11 @@ function TopicSection({
     <div>
       <div className="flex items-center gap-2.5 mb-3">
         <span className="text-base leading-none">{topic.icon ?? "📄"}</span>
-        <span className="text-sm font-semibold text-stone-700">{topic.name}</span>
-        <span className="text-xs text-stone-400 bg-stone-100 px-2 py-0.5 rounded-full">
+        <span className="text-sm font-semibold text-stone-700 dark:text-[#C8C4BC]">{topic.name}</span>
+        <span className="text-xs text-stone-400 dark:text-[#6B7585] bg-stone-100 dark:bg-[#1E2533] px-2 py-0.5 rounded-full">
           {articles.length}
         </span>
-        <div className="flex-1 h-px bg-stone-100" />
+        <div className="flex-1 h-px bg-stone-100 dark:bg-[#1E2A3A]/60" />
       </div>
       <div className="flex flex-col gap-3">
         {articles.map((a, i) => (
@@ -275,11 +275,11 @@ export function BookmarksClient({ initialArticles }: { initialArticles: Bookmark
           transition={{ duration: 0.4 }}
           className="flex flex-col items-center"
         >
-          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center mb-6">
+          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-amber-100 to-orange-100 dark:from-[#2A3547] dark:to-[#2A3547] flex items-center justify-center mb-6">
             <Bookmark className="w-9 h-9 text-amber-600" />
           </div>
-          <h2 className="text-xl font-semibold text-stone-800">Your library is empty</h2>
-          <p className="text-stone-400 text-sm mt-2 max-w-xs mx-auto leading-relaxed">
+          <h2 className="text-xl font-semibold text-stone-800 dark:text-[#E8E3DA]">Your library is empty</h2>
+          <p className="text-stone-400 dark:text-[#6B7585] text-sm mt-2 max-w-xs mx-auto leading-relaxed">
             Save articles while reading to build your personal reading list.
           </p>
           <Link
@@ -308,9 +308,9 @@ export function BookmarksClient({ initialArticles }: { initialArticles: Bookmark
           { value: readCount, label: "read" },
           { value: `${unreadMins}m`, label: "left to read" },
         ].map(({ value, label }) => (
-          <div key={label} className="flex flex-col gap-0.5 rounded-2xl bg-white border border-stone-200 px-4 py-3">
-            <span className="text-2xl font-bold text-stone-900">{value}</span>
-            <span className="text-xs text-stone-400">{label}</span>
+          <div key={label} className="flex flex-col gap-0.5 rounded-2xl bg-white dark:bg-[#161C26] border border-stone-200 dark:border-[#1E2A3A] px-4 py-3">
+            <span className="text-2xl font-bold text-stone-900 dark:text-[#F0EDE6]">{value}</span>
+            <span className="text-xs text-stone-400 dark:text-[#6B7585]">{label}</span>
           </div>
         ))}
       </motion.div>
@@ -321,7 +321,9 @@ export function BookmarksClient({ initialArticles }: { initialArticles: Bookmark
           <button
             onClick={() => setActiveTopicId(null)}
             className={`flex-shrink-0 text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-150
-              ${!activeTopicId ? "bg-stone-900 text-white" : "bg-stone-100 text-stone-500 hover:bg-stone-200"}`}
+              ${!activeTopicId
+                ? "bg-stone-900 dark:bg-[#F0EDE6] text-white dark:text-[#0D1117]"
+                : "bg-stone-100 dark:bg-[#1E2533] text-stone-500 dark:text-[#B8C0CC] hover:bg-stone-200 dark:hover:bg-[#252F3F]"}`}
           >
             All
           </button>
@@ -330,7 +332,9 @@ export function BookmarksClient({ initialArticles }: { initialArticles: Bookmark
               key={t.id}
               onClick={() => setActiveTopicId(t.id === activeTopicId ? null : t.id)}
               className={`flex-shrink-0 flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-150
-                ${activeTopicId === t.id ? "bg-amber-500 text-white" : "bg-stone-100 text-stone-500 hover:bg-stone-200"}`}
+                ${activeTopicId === t.id
+                  ? "bg-amber-500 text-white"
+                  : "bg-stone-100 dark:bg-[#1E2533] text-stone-500 dark:text-[#B8C0CC] hover:bg-stone-200 dark:hover:bg-[#252F3F]"}`}
             >
               <span>{t.icon}</span>
               {t.name}
@@ -340,7 +344,7 @@ export function BookmarksClient({ initialArticles }: { initialArticles: Bookmark
 
         <button
           onClick={() => setSort((s) => (s === "newest" ? "oldest" : "newest"))}
-          className="flex-shrink-0 flex items-center gap-1.5 text-xs font-medium text-stone-500 hover:text-stone-800 bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-full transition-all"
+          className="flex-shrink-0 flex items-center gap-1.5 text-xs font-medium text-stone-500 dark:text-[#B8C0CC] hover:text-stone-800 dark:hover:text-[#E8E3DA] bg-stone-100 dark:bg-[#1E2533] hover:bg-stone-200 dark:hover:bg-[#252F3F] px-3 py-1.5 rounded-full transition-all"
         >
           <Filter className="w-3 h-3" />
           {sort === "newest" ? "Newest" : "Oldest"}

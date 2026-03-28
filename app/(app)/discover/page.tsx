@@ -39,7 +39,7 @@ export default async function DiscoverPage({ searchParams }: Props) {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
         <Link
           href="/discover"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors mb-6 group"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-stone-500 dark:text-[#B8C0CC] hover:text-stone-900 dark:hover:text-[#F0EDE6] transition-colors mb-6 group"
         >
           <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
           All topics
@@ -79,14 +79,14 @@ export default async function DiscoverPage({ searchParams }: Props) {
             <div className="mt-10 flex items-center justify-center gap-4">
               <Link
                 href={`/discover?topic=${topicSlug}&page=${Math.max(0, page - 1)}`}
-                className={`rounded-xl border border-stone-200 bg-white px-5 py-2 text-sm font-medium text-stone-600 hover:border-stone-300 hover:bg-stone-50 transition-all shadow-sm ${page === 0 ? "opacity-40 pointer-events-none" : ""}`}
+                className={`rounded-xl border border-stone-200 dark:border-[#1E2A3A] bg-white dark:bg-[#161C26] px-5 py-2 text-sm font-medium text-stone-600 dark:text-[#B8C0CC] hover:border-stone-300 dark:hover:border-[#2D3B4F] hover:bg-stone-50 dark:hover:bg-[#1E2533] transition-all shadow-sm ${page === 0 ? "opacity-40 pointer-events-none" : ""}`}
               >
                 ← Previous
               </Link>
-              <span className="text-sm text-stone-400">Page {page + 1}</span>
+              <span className="text-sm text-stone-400 dark:text-[#6B7585]">Page {page + 1}</span>
               <Link
                 href={`/discover?topic=${topicSlug}&page=${page + 1}`}
-                className={`rounded-xl border border-stone-200 bg-white px-5 py-2 text-sm font-medium text-stone-600 hover:border-stone-300 hover:bg-stone-50 transition-all shadow-sm ${articles.length < 20 ? "opacity-40 pointer-events-none" : ""}`}
+                className={`rounded-xl border border-stone-200 dark:border-[#1E2A3A] bg-white dark:bg-[#161C26] px-5 py-2 text-sm font-medium text-stone-600 dark:text-[#B8C0CC] hover:border-stone-300 dark:hover:border-[#2D3B4F] hover:bg-stone-50 dark:hover:bg-[#1E2533] transition-all shadow-sm ${articles.length < 20 ? "opacity-40 pointer-events-none" : ""}`}
               >
                 Next →
               </Link>
@@ -110,9 +110,9 @@ export default async function DiscoverPage({ searchParams }: Props) {
 
   return (
     <div className="max-w-5xl mx-auto pt-10 pb-10 px-4 sm:px-6">
-      <div className="pb-6 border-b border-stone-200 mb-8">
-        <h1 className="text-3xl font-bold text-stone-900 tracking-tight">Discover</h1>
-        <p className="text-stone-500 text-sm mt-1">Explore curated topics from the world&apos;s best sources.</p>
+      <div className="pb-6 border-b border-stone-200 dark:border-[#1E2A3A] mb-8">
+        <h1 className="text-3xl font-bold text-stone-900 dark:text-[#F0EDE6] tracking-tight">Discover</h1>
+        <p className="text-stone-500 dark:text-[#6B7585] text-sm mt-1">Explore curated topics from the world&apos;s best sources.</p>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -140,14 +140,14 @@ export default async function DiscoverPage({ searchParams }: Props) {
         })}
       </div>
 
-      <div className="mt-10 flex items-center justify-between rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 px-6 py-5">
+      <div className="mt-10 flex items-center justify-between rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 dark:from-[#1E2A3A] dark:to-[#1E2A3A] border border-amber-200 dark:border-[#2D3B4F] px-6 py-5">
         <div>
-          <p className="text-sm font-semibold text-stone-900">Don&apos;t see your topic?</p>
-          <p className="text-xs text-stone-500 mt-0.5">Help us grow the library.</p>
+          <p className="text-sm font-semibold text-stone-900 dark:text-[#F0EDE6]">Don&apos;t see your topic?</p>
+          <p className="text-xs text-stone-500 dark:text-[#6B7585] mt-0.5">Help us grow the library.</p>
         </div>
         <Link
           href="/suggest"
-          className="inline-flex items-center gap-1.5 text-sm font-semibold text-amber-700 hover:text-amber-800 bg-white border border-amber-300 px-4 py-2 rounded-xl hover:shadow-sm transition-all flex-shrink-0"
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-amber-700 hover:text-amber-800 bg-white dark:bg-[#161C26] border border-amber-300 dark:border-[#E8A838]/40 px-4 py-2 rounded-xl hover:shadow-sm transition-all flex-shrink-0"
         >
           Suggest one <ChevronRight className="w-3.5 h-3.5" />
         </Link>

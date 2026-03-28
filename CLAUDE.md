@@ -32,10 +32,15 @@ This will require sourcing changes in `lib/ingestion.ts` and potentially new sou
 - ~~Onboarding~~ — **done (2026-03-28)**: complete redesign. Dark immersive experience matching landing page (`#080C12` bg, animated aurora orbs, glass-morphism topic cards, Framer Motion throughout). Step 1: floating selection shelf, spring physics, staggered card entrance. Step 2: two-column layout, custom time picker (no `<select>`), frequency cards, live digest preview card, `AnimatePresence` for all transitions
 - ~~Dashboard~~ — **done (2026-03-28)**: article cards with reading time, hover lift, amber dot badge, read-state left border. Daily queue now horizontal scroll strip with progress bar. Digest preview has dashed amber border + gradient. Topic filter pills use amber active state. Sidebar has initials avatar, pill active state (no left border)
 - ~~Discover~~ — **done (2026-03-28)**: topic grid uses 10-color gradient cards (color derived from topic name hash for consistency). Topic detail page gets full-width gradient hero banner matching topic color
-- Article reading experience improvements (in progress — next session)
-- Bookmarks, History, Profile/Settings, Search, Suggest pages (in progress — next session)
+- ~~Article reading experience~~ — **done (2026-03-28)**: covered by article card redesign (reading time, hover lift, amber dot badge, read-state border)
+- ~~Bookmarks~~ — **done (2026-03-28)**: full library redesign — stats bar (saved/read/mins left), topic filter pills, grouped-by-topic default view, sort toggle, animated cards with `savedAt` timestamp, live unbookmark removes card. `BookmarkButton` now has `onToggle` prop.
+- ~~History~~ — **done (2026-03-28)**: timeline grouped by month, stats (digests sent + articles delivered), animated accordion rows with rotating chevron, article list stagger animation, fixed duplicate topic name bug.
+- ~~Profile~~ — **done (2026-03-28)**: `ProfileHero` component with avatar (amber gradient initials), name/email/plan badge, stat row (reads/bookmarks/topics). Reading insights redesigned with animated topic bar chart, stat strip, top source/topic rows.
+- ~~Search~~ — **done (2026-03-28)**: idle state has centered hero layout with large input and suggestion pills. `SearchBarHero` component with amber submit button. Fixed all `zinc` → `stone` colors.
+- ~~Suggest~~ — **done (2026-03-28)**: header with how-it-works 3-step strip, amber form inputs with character counters, animated success/error states, suggestion list with status icons (clock/checkmark/X) and `timeAgo` timestamps.
+- ~~Upgrade~~ — **done (2026-03-28)**: real pricing page — dark gradient header with amber glow, Free vs Pro comparison cards, Pro features list, honest "coming soon" CTA.
+- ~~Landing page hero~~ — **done (2026-03-28)**: added `ProductMock` component — browser frame with sidebar + article card grid animates in after CTAs. Shows real app layout with colored accent bars per topic.
 - Dark mode
-- Landing page refresh
 
 ### Other v2 items
 - Google / GitHub OAuth login (Better Auth supports it — add providers in `lib/auth.ts`)
