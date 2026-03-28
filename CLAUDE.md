@@ -26,7 +26,14 @@ This will require sourcing changes in `lib/ingestion.ts` and potentially new sou
 - ~~Proper design system / component library decision~~ — **done (2026-03-26)**: shadcn/ui installed, semantic color tokens throughout (`--color-app-*` prefix), `components/ui/` has Button, Badge, Input, Separator
 - ~~Better mobile layout~~ — **done (2026-03-26)**: mobile nav is now icon-only with accent dot indicator; `aria-label` + `title` for accessibility
 - ~~UI polish pass~~ — **done (2026-03-26)**: neutral grey palette, `rounded-xl` throughout, page headers with `border-b` separators, settings sections in card containers
-- Article reading experience improvements
+- ~~Design system overhaul~~ — **done (2026-03-28)**: warmer stone palette replacing zinc, shadow scale (`--shadow-xs/sm/md/lg`), gradient tokens, unified `app-*` and shadcn tokens
+- ~~Auth pages~~ — **done (2026-03-28)**: left panel gradient, password strength meter on sign-up, consistent use of `Input`/`Button` components
+- ~~Email verification~~ — **done (2026-03-28)**: replaced magic link with 6-digit OTP (`emailOTP` plugin). `sendVerificationOTP` in `lib/auth.ts`, `emailOTPClient` in `lib/auth-client.ts`, OTP email template at `lib/email/otp-template.ts`
+- ~~Onboarding~~ — **done (2026-03-28)**: complete redesign. Dark immersive experience matching landing page (`#080C12` bg, animated aurora orbs, glass-morphism topic cards, Framer Motion throughout). Step 1: floating selection shelf, spring physics, staggered card entrance. Step 2: two-column layout, custom time picker (no `<select>`), frequency cards, live digest preview card, `AnimatePresence` for all transitions
+- ~~Dashboard~~ — **done (2026-03-28)**: article cards with reading time, hover lift, amber dot badge, read-state left border. Daily queue now horizontal scroll strip with progress bar. Digest preview has dashed amber border + gradient. Topic filter pills use amber active state. Sidebar has initials avatar, pill active state (no left border)
+- ~~Discover~~ — **done (2026-03-28)**: topic grid uses 10-color gradient cards (color derived from topic name hash for consistency). Topic detail page gets full-width gradient hero banner matching topic color
+- Article reading experience improvements (in progress — next session)
+- Bookmarks, History, Profile/Settings, Search, Suggest pages (in progress — next session)
 - Dark mode
 - Landing page refresh
 

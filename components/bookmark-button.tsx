@@ -6,9 +6,11 @@ import { Bookmark } from "lucide-react"
 export function BookmarkButton({
   articleId,
   initialBookmarked,
+  onToggle,
 }: {
   articleId: string
   initialBookmarked: boolean
+  onToggle?: (bookmarked: boolean) => void
 }) {
   const [bookmarked, setBookmarked] = useState(initialBookmarked)
   const [loading, setLoading] = useState(false)
@@ -17,7 +19,8 @@ export function BookmarkButton({
     if (loading) return
     setLoading(true)
     const optimistic = !bookmarked
-    setBookmarked(optimistic) // optimistic update
+    setBookmarked(optimistic)
+    onToggle?.(optimistic)
 
     try {
       const res = await fetch("/api/bookmarks", {
@@ -26,10 +29,16 @@ export function BookmarkButton({
         body: JSON.stringify({ articleId }),
       })
       const { data, error } = await res.json()
-      if (error) setBookmarked(!optimistic) // revert on error
-      else setBookmarked(data.bookmarked)
+      if (error) {
+        setBookmarked(!optimistic)
+        onToggle?.(!optimistic)
+      } else {
+        setBookmarked(data.bookmarked)
+        onToggle?.(data.bookmarked)
+      }
     } catch {
-      setBookmarked(!optimistic) // revert on network error
+      setBookmarked(!optimistic)
+      onToggle?.(!optimistic)
     } finally {
       setLoading(false)
     }
