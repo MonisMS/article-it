@@ -56,6 +56,10 @@ export function AdminAssignmentsPanel({
     )
   }
 
+  if (sources.length === 0) {
+    return <p className="text-sm text-stone-400 dark:text-[#6B7585] py-4">No sources yet — add some in the RSS Sources tab first.</p>
+  }
+
   return (
     <div className="space-y-3">
       {sources.map((source) => {
@@ -63,19 +67,19 @@ export function AdminAssignmentsPanel({
         const available = allTopics.filter((t) => !assignedIds.has(t.id))
 
         return (
-          <div key={source.id} className="rounded-xl border border-zinc-200 bg-white px-5 py-4">
-            <p className="text-sm font-semibold text-zinc-900 mb-3">{source.name}</p>
+          <div key={source.id} className="rounded-xl border border-stone-200 dark:border-[#1E2A3A] bg-white dark:bg-[#161C26] px-5 py-4">
+            <p className="text-sm font-semibold text-stone-900 dark:text-[#F0EDE6] mb-3">{source.name}</p>
 
             <div className="flex flex-wrap gap-2">
               {source.assignedTopics.map((t) => (
-                <span key={t.id} className="flex items-center gap-1.5 rounded-full bg-zinc-100 px-3 py-1.5 text-xs font-medium text-zinc-700">
+                <span key={t.id} className="flex items-center gap-1.5 rounded-full bg-stone-100 dark:bg-[#1E2533] px-3 py-1.5 text-xs font-medium text-stone-700 dark:text-[#B8C0CC]">
                   <span>{t.icon}</span>
                   {t.name}
                   <button
                     onClick={() => unassign(source.id, t.id)}
-                    className="flex items-center justify-center w-3.5 h-3.5 rounded-full bg-zinc-300/60 hover:bg-zinc-300 transition-colors ml-0.5"
+                    className="flex items-center justify-center w-3.5 h-3.5 rounded-full bg-stone-300/60 dark:bg-[#2D3B4F] hover:bg-stone-300 dark:hover:bg-[#3D4B5F] transition-colors ml-0.5"
                   >
-                    <X className="w-2.5 h-2.5 text-zinc-600" />
+                    <X className="w-2.5 h-2.5 text-stone-600 dark:text-[#B8C0CC]" />
                   </button>
                 </span>
               ))}
@@ -84,21 +88,21 @@ export function AdminAssignmentsPanel({
               <div className="relative">
                 <button
                   onClick={() => setOpenPicker(openPicker === source.id ? null : source.id)}
-                  className="flex items-center gap-1 rounded-full border border-dashed border-zinc-300 px-3 py-1.5 text-xs font-medium text-zinc-500 hover:border-zinc-400 hover:text-zinc-700 transition-colors"
+                  className="flex items-center gap-1 rounded-full border border-dashed border-stone-300 dark:border-[#2D3B4F] px-3 py-1.5 text-xs font-medium text-stone-500 dark:text-[#6B7585] hover:border-amber-400 hover:text-amber-600 dark:hover:border-amber-500/50 dark:hover:text-amber-400 transition-colors"
                 >
                   <Plus className="w-3 h-3" /> Add topic
                 </button>
 
                 {openPicker === source.id && (
-                  <div className="absolute top-full left-0 mt-1.5 w-48 rounded-xl border border-zinc-200 bg-white shadow-lg z-10 py-1 overflow-hidden">
+                  <div className="absolute top-full left-0 mt-1.5 w-48 rounded-xl border border-stone-200 dark:border-[#1E2A3A] bg-white dark:bg-[#161C26] shadow-lg dark:shadow-black/30 z-10 py-1 overflow-hidden">
                     {available.length === 0 ? (
-                      <p className="px-3 py-2 text-xs text-zinc-400">All topics assigned</p>
+                      <p className="px-3 py-2 text-xs text-stone-400 dark:text-[#6B7585]">All topics assigned</p>
                     ) : (
                       available.map((t) => (
                         <button
                           key={t.id}
                           onClick={() => assign(source.id, t.id)}
-                          className="flex w-full items-center gap-2 px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors"
+                          className="flex w-full items-center gap-2 px-3 py-2 text-sm text-stone-700 dark:text-[#C8C4BC] hover:bg-stone-50 dark:hover:bg-[#1E2533] transition-colors"
                         >
                           <span>{t.icon}</span>
                           {t.name}

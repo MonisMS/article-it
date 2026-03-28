@@ -17,8 +17,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-zinc-900">Admin</h1>
-        <p className="text-sm text-zinc-500 mt-1">Manage topics, RSS sources, and user suggestions.</p>
+        <h1 className="text-2xl font-bold text-stone-900 dark:text-[#F0EDE6]">Admin</h1>
+        <p className="text-sm text-stone-500 dark:text-[#6B7585] mt-1">Manage topics, RSS sources, and user suggestions.</p>
       </div>
       <AdminTabs />
       {children}

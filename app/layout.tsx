@@ -14,9 +14,25 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "ArticleIt — Discover articles on topics you love",
+  title: "ArticleIt — Personalized Article Digests",
   description:
-    "Personalized article aggregator. Pick your topics, get the best articles delivered to your inbox on your schedule.",
+    "Pick your topics, get the best articles from the web delivered to your inbox on your schedule. A personalized reading digest built for curious people.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://articleit.com"),
+  openGraph: {
+    title: "ArticleIt — Personalized Article Digests",
+    description: "Pick your topics, get the best articles from the web delivered to your inbox on your schedule.",
+    type: "website",
+    siteName: "ArticleIt",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ArticleIt — Personalized Article Digests",
+    description: "Pick your topics, get the best articles from the web delivered to your inbox on your schedule.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 }
 
 export default function RootLayout({
