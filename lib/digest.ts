@@ -4,6 +4,7 @@ import { and, eq, gte, desc, sql, countDistinct } from "drizzle-orm"
 import { resend } from "@/lib/resend"
 import { buildDigestEmail } from "@/lib/email/digest-template"
 import { signUnsubscribeToken } from "@/lib/unsubscribe-token"
+import { feedbackUrl } from "@/lib/feedback-token"
 import { createId } from "@paralleldrive/cuid2"
 
 /**
@@ -156,6 +157,9 @@ async function sendDigest(
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://articleit.com"
   const weeklyStats = await getWeeklyReadingStats(schedule.user.id, now)
 
+  // Pre-generate the log ID so feedback URLs can reference it before the log is inserted
+  const logId = createId()
+
   const { subject, html } = buildDigestEmail({
     userName: schedule.user.name,
     topicName: schedule.topic.name,
@@ -166,6 +170,8 @@ async function sendDigest(
       description: r.description,
       sourceName: r.sourceName,
       publishedAt: r.publishedAt,
+      feedbackUpUrl: feedbackUrl(appUrl, schedule.user.id, r.id, logId, "up"),
+      feedbackDownUrl: feedbackUrl(appUrl, schedule.user.id, r.id, logId, "down"),
     })),
     dashboardUrl: `${appUrl}/dashboard?topic=${schedule.topic.slug}`,
     unsubscribeUrl: `${appUrl}/unsubscribe?id=${schedule.id}&sig=${signUnsubscribeToken(schedule.id)}`,
@@ -179,11 +185,11 @@ async function sendDigest(
     html,
   })
 
-  // Log the digest
+  // Log the digest using the pre-generated ID
   const [log] = await db
     .insert(digestLogs)
     .values({
-      id: createId(),
+      id: logId,
       scheduleId: schedule.id,
       userId: schedule.user.id,
       topicId: schedule.topic.id,

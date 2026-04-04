@@ -286,6 +286,34 @@ export const digestLogArticles = pgTable(
 )
 
 // ---------------------------------------------------------------------------
+// ARTICLE FEEDBACK
+// Thumbs up / down per article per digest — used to improve quality scoring.
+// One rating per user per article per digest (upsert on conflict).
+// ---------------------------------------------------------------------------
+
+export const articleFeedback = pgTable(
+  "article_feedback",
+  {
+    id: text("id").primaryKey().$defaultFn(() => createId()),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    articleId: text("article_id")
+      .notNull()
+      .references(() => articles.id, { onDelete: "cascade" }),
+    digestLogId: text("digest_log_id")
+      .notNull()
+      .references(() => digestLogs.id, { onDelete: "cascade" }),
+    rating: text("rating").notNull(), // "up" | "down"
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (t) => [
+    unique("article_feedback_unique").on(t.userId, t.articleId, t.digestLogId),
+    index("article_feedback_article_id_idx").on(t.articleId),
+  ]
+)
+
+// ---------------------------------------------------------------------------
 // RELATIONS
 // ---------------------------------------------------------------------------
 
@@ -355,4 +383,10 @@ export const digestLogsRelations = relations(digestLogs, ({ one, many }) => ({
 export const digestLogArticlesRelations = relations(digestLogArticles, ({ one }) => ({
   digestLog: one(digestLogs, { fields: [digestLogArticles.digestLogId], references: [digestLogs.id] }),
   article: one(articles, { fields: [digestLogArticles.articleId], references: [articles.id] }),
+}))
+
+export const articleFeedbackRelations = relations(articleFeedback, ({ one }) => ({
+  user: one(user, { fields: [articleFeedback.userId], references: [user.id] }),
+  article: one(articles, { fields: [articleFeedback.articleId], references: [articles.id] }),
+  digestLog: one(digestLogs, { fields: [articleFeedback.digestLogId], references: [digestLogs.id] }),
 }))

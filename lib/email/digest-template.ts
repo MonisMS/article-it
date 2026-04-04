@@ -4,6 +4,8 @@ type Article = {
   description: string | null
   sourceName: string
   publishedAt: Date | null
+  feedbackUpUrl?: string
+  feedbackDownUrl?: string
 }
 
 function timeAgo(date: Date | null): string {
@@ -42,7 +44,14 @@ export function buildDigestEmail(opts: {
       <td style="padding:20px 0;border-bottom:1px solid #f4f4f5;">
         <a href="${a.url}" style="font-size:15px;font-weight:600;color:#09090b;text-decoration:none;line-height:1.4;display:block;margin-bottom:6px;">${a.title}</a>
         ${a.description ? `<p style="margin:0 0 8px;font-size:13px;color:#71717a;line-height:1.5;">${a.description.slice(0, 160)}${a.description.length > 160 ? "…" : ""}</p>` : ""}
-        <span style="font-size:12px;color:#a1a1aa;">${a.sourceName}${a.publishedAt ? ` · ${timeAgo(a.publishedAt)}` : ""}</span>
+        <table cellpadding="0" cellspacing="0" width="100%"><tr>
+          <td style="font-size:12px;color:#a1a1aa;">${a.sourceName}${a.publishedAt ? ` · ${timeAgo(a.publishedAt)}` : ""}</td>
+          ${a.feedbackUpUrl && a.feedbackDownUrl ? `
+          <td align="right" style="white-space:nowrap;">
+            <a href="${a.feedbackUpUrl}" style="display:inline-block;font-size:11px;color:#a1a1aa;text-decoration:none;padding:2px 6px;border:1px solid #e4e4e7;border-radius:4px;margin-left:4px;" title="Good article">👍</a>
+            <a href="${a.feedbackDownUrl}" style="display:inline-block;font-size:11px;color:#a1a1aa;text-decoration:none;padding:2px 6px;border:1px solid #e4e4e7;border-radius:4px;margin-left:4px;" title="Not for me">👎</a>
+          </td>` : ""}
+        </tr></table>
       </td>
     </tr>`
     )
