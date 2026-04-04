@@ -37,17 +37,7 @@ export function ProfileHero({
   ]
 
   return (
-    <div className="relative overflow-hidden bg-gradient-to-b from-stone-50 dark:from-[#161C26] to-white dark:to-[#0D1117] border-b border-stone-200 dark:border-[#1E2A3A]">
-      {/* Subtle grid */}
-      <div
-        className="absolute inset-0 opacity-[0.025]"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(0,0,0,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.5) 1px, transparent 1px)",
-          backgroundSize: "40px 40px",
-        }}
-      />
-
+    <div className="bg-gradient-to-b from-stone-50 dark:from-[#161C26] to-white dark:to-[#0D1117] border-b border-stone-200 dark:border-[#1E2A3A]">
       <div className="relative px-4 sm:px-6 pt-10 pb-8">
         <motion.div
           initial={{ opacity: 0, y: 12 }}

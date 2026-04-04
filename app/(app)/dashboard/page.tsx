@@ -34,7 +34,6 @@ export default async function DashboardPage({ searchParams }: Props) {
     getBookmarkedArticleIds(session.user.id),
     getReadArticleIds(session.user.id),
     hasReceivedDigest(session.user.id),
-    // Only fetch the queue on page 0 with no topic filter — it's always cross-topic
     !topic && page === 0 ? getDailyQueue(session.user.id) : Promise.resolve([]),
   ])
 
@@ -47,49 +46,58 @@ export default async function DashboardPage({ searchParams }: Props) {
   const queueArticles = queueRows.map((a) => ({
     ...a,
     isBookmarked: bookmarkedIds.has(a.id),
-    isRead: false, // queue only contains unread articles
+    isRead: readIds.has(a.id),
   }))
 
   const totalPages = Math.max(1, Math.ceil(totalCount / 20))
+  const showQueue = topics.length > 0 && totalCount > 0 && !topic && page === 0 && queueArticles.length > 0
+  const showDigestBanner = !digestReceived && articles.length > 0 && !topic && page === 0
 
   return (
     <div className="bg-app-bg dark:bg-[#0D1117] min-h-full">
       <div className="max-w-4xl mx-auto">
-        <div className="pt-10 pb-6 px-4 sm:px-6 border-b border-stone-200 dark:border-[#1E2A3A] mb-6 bg-gradient-to-b from-stone-50 dark:from-[#161C26]/50 to-transparent">
-          <h1 className="text-3xl font-bold text-stone-900 dark:text-[#F0EDE6] tracking-tight">Your Feed</h1>
-          <p className="text-stone-500 dark:text-[#B8C0CC] text-sm mt-1">
-            {topics.length === 0
-              ? "Follow some topics to start building your feed."
-              : `Articles from ${topics.length} topic${topics.length === 1 ? "" : "s"} you follow.`}
-          </p>
+
+        {/* ── Header ──────────────────────────────────────────── */}
+        <div className="pt-10 pb-5 px-4 sm:px-6 border-b border-stone-200 dark:border-[#1E2A3A] mb-6 bg-gradient-to-b from-stone-50 dark:from-[#161C26]/50 to-transparent">
+          <div className="flex items-end justify-between gap-4 flex-wrap">
+            <div>
+              <h1 className="text-3xl font-bold text-stone-900 dark:text-[#F0EDE6] tracking-tight">Your Feed</h1>
+              <p className="text-stone-500 dark:text-[#B8C0CC] text-sm mt-1">
+                {topics.length === 0
+                  ? "Follow some topics to start building your feed."
+                  : `Articles from ${topics.length} topic${topics.length === 1 ? "" : "s"} you follow.`}
+              </p>
+            </div>
+          </div>
+
+          {/* Topic filter pills — sit flush inside header, below title */}
+          {topics.length > 0 && (
+            <div className="mt-4">
+              <Suspense>
+                <TopicFilter topics={topics} />
+              </Suspense>
+            </div>
+          )}
         </div>
 
-        {topics.length > 0 && (
-          <div className="mb-6">
-            <Suspense>
-              <TopicFilter topics={topics} />
-            </Suspense>
-          </div>
-        )}
+        {/* ── Digest setup banner ──────────────────────────────── */}
+        {showDigestBanner && <DigestPreview />}
 
-        {topics.length > 0 && totalCount > 0 && !topic && page === 0 && (
-          <DailyQueue initialArticles={queueArticles} />
-        )}
+        {/* ── Daily queue ──────────────────────────────────────── */}
+        {showQueue && <DailyQueue initialArticles={queueArticles} />}
 
-        {!digestReceived && articles.length > 0 && !topic && page === 0 && (
-          <DigestPreview articles={articles} />
-        )}
-
+        {/* ── Article grid ─────────────────────────────────────── */}
         {articles.length === 0 ? (
           <EmptyState hasTopics={topics.length > 0} />
         ) : (
           <>
-            {(!topic && page === 0) && (
-              <div className="flex items-center gap-3 px-4 sm:px-6 mb-5">
-                <span className="text-xs font-semibold text-stone-400 dark:text-[#6B7585] uppercase tracking-widest">All articles</span>
-                <div className="flex-1 h-px bg-gradient-to-r from-stone-200 dark:from-[#1E2A3A] to-transparent" />
-              </div>
-            )}
+            <div className="flex items-center gap-3 px-4 sm:px-6 mb-5">
+              <span className="text-xs font-semibold text-stone-400 dark:text-[#6B7585] uppercase tracking-widest">
+                {topic ? `${topics.find((t) => t.slug === topic)?.name ?? topic}` : "All articles"}
+              </span>
+              <div className="flex-1 h-px bg-gradient-to-r from-stone-200 dark:from-[#1E2A3A] to-transparent" />
+            </div>
+
             <div className="grid sm:grid-cols-2 gap-5 px-4 sm:px-6">
               {articles.map((article) => (
                 <ArticleCard key={article.id} article={article as ArticleCardData} />

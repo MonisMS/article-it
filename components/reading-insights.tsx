@@ -118,7 +118,7 @@ export function ReadingInsights({
           </div>
           <p className="text-xs text-stone-400 mt-3">
             Not interested?{" "}
-            <Link href="/profile#topics" className="text-amber-600 hover:underline underline-offset-2">
+            <Link href="/profile?tab=topics" className="text-amber-600 hover:underline underline-offset-2">
               Update your topics
             </Link>
           </p>

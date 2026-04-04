@@ -25,7 +25,7 @@ export function TopicFilter({ topics }: { topics: Topic[] }) {
   }
 
   return (
-    <div className="flex gap-2 px-4 sm:px-6 pb-4 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+    <div className="flex gap-2 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
       <button
         onClick={() => select("all")}
         className={`flex-shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition-all active:scale-95 ${

@@ -249,3 +249,57 @@ try {
 **Account deletion** — delete `session` and `account` rows explicitly before deleting `user`, to avoid FK violations when DB-level cascade constraints aren't in sync with the Drizzle schema definition.
 
 **Subagents for parallel work** — when a task has independent parts (explore codebase + research docs), launch multiple agents in parallel. Use `subagent_type: "Explore"` for codebase reading to keep the main context clean. Have subagents return structured summaries, not raw file dumps.
+
+---
+
+## Feature Roadmap (researched 2026-04-04)
+
+Market research confirmed: personalized email digest aggregators have a durable niche. Pocket (50M users) shut down July 2025 — live displaced audience. Direct competitor: Digest (usedigest.com) at $4.99/mo. Target user: developer/researcher/founder, 28-45, tools budget, wants curated inbox briefing without RSS complexity.
+
+### What's Built (verified in code)
+- Quality-blended feed ranking (`publishedAt + qualityScore × 12h`)
+- Weekly quality scoring cron (bookmarks × 0.6 + reads × 0.4, 90-day window, min 5 interactions)
+- RSS ingestion with deduplication, image extraction, 8s timeout
+- Full-text PostgreSQL search with hero state + suggestion pills
+- Daily Queue: top 5 unread, cross-topic, progress bar, completion state
+- Digest Preview widget (shown until first real digest fires)
+- Article cards: reading time, images, read/bookmark state, hover lift
+- Discover: gradient topic grid (color from name hash), topic detail hero
+- Bookmarks: grouped by topic, stats bar (saved/read/mins left), sort + filter
+- History: monthly timeline, expandable digest rows, lazy-load articles
+- Profile: hero (initials + plan badge), stat row, reading insights
+- Reading Insights: 7/30/all-time reads, top topic, per-topic bar charts, ignored topics alert
+- Search: full-text results, hero idle state with suggestion pills
+- Suggest: character counters, animated success/error, suggestion list with timestamps
+- Upgrade: Free vs Pro comparison, honest "coming soon" CTA (no Stripe)
+- Email digest: HTML template, first-name greeting, up to 10 articles, weekly summary line, HMAC unsubscribe
+- 2-step onboarding: topic selection (animated) → schedule (custom time picker, timezone detection, live preview)
+- Admin: topics, sources, assignments, suggestions management
+
+### Feature Roadmap (prioritized by research evidence)
+
+| # | Feature | Tier | Why | Effort |
+|---|---|---|---|---|
+| 1 | Reading streak + weekly progress card | 1 — Habit | Highest retention evidence; data already in read_articles | Low |
+| 2 | "New articles since last visit" urgency signal | 1 — Habit | Time-anchor pull-back; prevents dormancy | Low |
+| 3 | Digest article feedback (thumbs per article via signed URL) | 1 — Personalization | Negative signal loop; improves quality scoring | Medium |
+| 4 | Stripe + Pro plan enforcement | 2 — Revenue | Plan field + pricing page exist; just needs Stripe wired | Medium |
+| 5 | SEO landing pages (Pocket alt, personalized digest, etc.) | 2 — Revenue | Distribution is the hard problem; Pocket users are searching now | Low (content) |
+| 6 | Feed staleness detection + re-onboarding prompt | 3 — Retention | #2 cause of RSS abandonment; sources drift silently | Low |
+| 7 | Cold-start guard (min 3 topics, pre-curated best-of) | 3 — Retention | 72% of app churn in first 72 hours | Low |
+| 8 | Lapsed user re-engagement email (21+ days no reads) | 3 — Retention | 8-14% churn reduction; no such mechanism exists yet | Medium |
+| 9 | Reddit subreddit sources (seed data only) | 4 — Content | Zero code change; infrastructure handles it | Very Low |
+| 10 | Hacker News feeds (seed data only) | 4 — Content | Target audience uses HN daily | Very Low |
+| 11 | YouTube channel feeds (seed data only) | 4 — Content | RSS-native; image extraction already handles YT thumbnails | Very Low |
+| 12 | Google / GitHub OAuth | 5 — Acquisition | Drops signup friction; Better Auth supports both | Low |
+| 13 | Referral system | 5 — Acquisition | 40% of indie SaaS success is WOM | Medium |
+| 14 | OPML import | 5 — Acquisition | Unlocks Feedly/Inoreader refugees with years of curated feeds | Medium |
+| 15 | Dark mode | 6 — Polish | Table stakes in 2026 | Medium |
+| 16 | Article highlights / annotations | 6 — Future | Readwise territory; not urgent for v2 | High |
+| 17 | Digest sponsorship model | 6 — Future | Ad-supported at 5K+ subscribers; not now | High |
+| 18 | Niche-specific curated feed sets ("HN for X") | 6 — Future | v3 positioning angle; requires source curation work | High |
+
+### Monetization targets
+- 500 paying users @ $8/mo = $4K MRR (solo profitability threshold)
+- 1,000 paying users = $8K MRR
+- Comparable: Feedbin (solo, profitable 10+ yrs at $5/mo), Readwise (~$4.4M ARR small team)
