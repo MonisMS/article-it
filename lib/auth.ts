@@ -63,14 +63,19 @@ export const auth = betterAuth({
     },
   },
 
-  // Tell Better Auth about the extra `plan` field we added to the user table
+  // Tell Better Auth about the extra fields we added to the user table
   user: {
     additionalFields: {
       plan: {
         type: "string",
         required: false,
         defaultValue: "free",
-        input: false, // users can't set this themselves
+        input: false,
+      },
+      lastVisitAt: {
+        type: "date",
+        required: false,
+        input: false,
       },
     },
   },

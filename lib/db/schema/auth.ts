@@ -13,6 +13,8 @@ export const user = pgTable("user", {
   image: text("image"),
   // Additional field — plan controls access to Pro features
   plan: text("plan").notNull().default("free"), // "free" | "pro"
+  // Additional field — used to compute "new articles since last visit"
+  lastVisitAt: timestamp("last_visit_at"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 })

@@ -5,14 +5,20 @@ import { headers } from "next/headers"
 import { auth } from "@/lib/auth"
 import { getArticlesForUser, getArticlesCountForUser, getUserTopicsWithMeta, getBookmarkedArticleIds, getReadArticleIds, hasReceivedDigest, getDailyQueue } from "@/lib/db/queries/articles"
 import { getReadingStreak } from "@/lib/db/queries/streak"
+import { getNewArticlesCount } from "@/lib/db/queries/new-articles"
 import { ArticleCard, type ArticleCardData } from "@/components/article-card"
 import { TopicFilter } from "@/components/topic-filter"
 import { DigestPreview } from "@/components/digest-preview"
 import { DailyQueue } from "@/components/daily-queue"
 import { ReadingStreak } from "@/components/reading-streak"
+import { NewArticlesBanner } from "@/components/new-articles-banner"
+import { VisitTracker } from "@/components/visit-tracker"
 import { Rss } from "lucide-react"
 import { TriggerIngestButton } from "@/components/trigger-ingest-button"
 import Link from "next/link"
+import { db } from "@/lib/db"
+import { user as userTable } from "@/lib/db/schema/auth"
+import { eq } from "drizzle-orm"
 
 export const metadata: Metadata = {
   title: "Feed — ArticleIt",
@@ -35,7 +41,12 @@ export default async function DashboardPage({ searchParams }: Props) {
   const { topic, page: pageParam } = await searchParams
   const page = Math.max(0, Number(pageParam ?? 0))
 
-  const [userTopics, articleRows, totalCount, bookmarkedIds, readIds, digestReceived, queueRows, streakData] = await Promise.all([
+  // Fetch user record for lastVisitAt (only on main feed view)
+  const userRecord = (!topic && page === 0)
+    ? await db.select({ lastVisitAt: userTable.lastVisitAt }).from(userTable).where(eq(userTable.id, session.user.id)).then(r => r[0])
+    : null
+
+  const [userTopics, articleRows, totalCount, bookmarkedIds, readIds, digestReceived, queueRows, streakData, newCount] = await Promise.all([
     getUserTopicsWithMeta(session.user.id),
     getArticlesForUser(session.user.id, topic, page),
     getArticlesCountForUser(session.user.id, topic),
@@ -44,6 +55,7 @@ export default async function DashboardPage({ searchParams }: Props) {
     hasReceivedDigest(session.user.id),
     !topic && page === 0 ? getDailyQueue(session.user.id) : Promise.resolve([]),
     !topic && page === 0 ? getReadingStreak(session.user.id) : Promise.resolve(null),
+    userRecord?.lastVisitAt ? getNewArticlesCount(session.user.id, userRecord.lastVisitAt) : Promise.resolve(0),
   ])
 
   const topics = userTopics.map((ut) => ut.topic)
@@ -62,6 +74,7 @@ export default async function DashboardPage({ searchParams }: Props) {
   const showQueue = topics.length > 0 && totalCount > 0 && !topic && page === 0 && queueArticles.length > 0
   const showDigestBanner = !digestReceived && articles.length > 0 && !topic && page === 0
   const showStreak = streakData !== null && topics.length > 0 && totalCount > 0 && !topic && page === 0
+  const showNewBanner = newCount > 0 && userRecord?.lastVisitAt && !topic && page === 0
 
   return (
     <div className="bg-app-bg dark:bg-[#0D1117] min-h-full">
@@ -90,11 +103,17 @@ export default async function DashboardPage({ searchParams }: Props) {
           )}
         </div>
 
+        {/* ── New articles since last visit ────────────────────── */}
+        {showNewBanner && <NewArticlesBanner count={newCount} since={userRecord!.lastVisitAt!} />}
+
         {/* ── Reading streak ───────────────────────────────────── */}
         {showStreak && <ReadingStreak data={streakData!} />}
 
         {/* ── Digest setup banner ──────────────────────────────── */}
         {showDigestBanner && <DigestPreview />}
+
+        {/* ── Visit tracker (invisible — stamps lastVisitAt) ───── */}
+        <VisitTracker />
 
         {/* ── Daily queue ──────────────────────────────────────── */}
         {showQueue && <DailyQueue initialArticles={queueArticles} />}
