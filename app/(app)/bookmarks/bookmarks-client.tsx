@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react"
 import Link from "next/link"
-import { Bookmark, Clock, Compass, ExternalLink, Filter } from "lucide-react"
+import { Bookmark, Clock, Compass, ExternalLink, Filter, LayoutList, List } from "lucide-react"
 import { BookmarkButton } from "@/components/bookmark-button"
 import { ReadButton } from "@/components/read-button"
 import { motion, AnimatePresence } from "framer-motion"
@@ -210,6 +210,7 @@ export function BookmarksClient({ initialArticles }: { initialArticles: Bookmark
   )
   const [activeTopicId, setActiveTopicId] = useState<string | null>(null)
   const [sort, setSort] = useState<"newest" | "oldest">("newest")
+  const [viewMode, setViewMode] = useState<"grouped" | "list">("grouped")
 
   function handleReadChange(id: string, isRead: boolean) {
     setReadStates((prev) => ({ ...prev, [id]: isRead }))
@@ -249,7 +250,7 @@ export function BookmarksClient({ initialArticles }: { initialArticles: Bookmark
   }, [articles, activeTopicId, sort])
 
   const grouped = useMemo(() => {
-    if (activeTopicId) return null
+    if (viewMode === "list") return null
     const map = new Map<string, { topic: Topic; articles: BookmarkedArticle[] }>()
     for (const a of filtered) {
       const t = a.articleTopics[0]
@@ -263,7 +264,7 @@ export function BookmarksClient({ initialArticles }: { initialArticles: Bookmark
       map.get(key)!.articles.push(a)
     }
     return Array.from(map.values())
-  }, [filtered, activeTopicId])
+  }, [filtered, viewMode])
 
   // Empty state
   if (articles.length === 0) {
@@ -342,6 +343,32 @@ export function BookmarksClient({ initialArticles }: { initialArticles: Bookmark
           ))}
         </div>
 
+        {/* View mode toggle */}
+        <div className="flex-shrink-0 flex items-center rounded-lg border border-stone-200 dark:border-[#1E2A3A] overflow-hidden">
+          <button
+            onClick={() => setViewMode("grouped")}
+            title="Group by topic"
+            className={`flex items-center justify-center w-7 h-7 transition-colors ${
+              viewMode === "grouped"
+                ? "bg-stone-900 dark:bg-[#F0EDE6] text-white dark:text-[#0D1117]"
+                : "text-stone-400 dark:text-[#6B7585] hover:text-stone-600 dark:hover:text-[#B8C0CC] hover:bg-stone-50 dark:hover:bg-[#1E2533]"
+            }`}
+          >
+            <LayoutList className="w-3.5 h-3.5" />
+          </button>
+          <button
+            onClick={() => setViewMode("list")}
+            title="Flat list"
+            className={`flex items-center justify-center w-7 h-7 transition-colors ${
+              viewMode === "list"
+                ? "bg-stone-900 dark:bg-[#F0EDE6] text-white dark:text-[#0D1117]"
+                : "text-stone-400 dark:text-[#6B7585] hover:text-stone-600 dark:hover:text-[#B8C0CC] hover:bg-stone-50 dark:hover:bg-[#1E2533]"
+            }`}
+          >
+            <List className="w-3.5 h-3.5" />
+          </button>
+        </div>
+
         <button
           onClick={() => setSort((s) => (s === "newest" ? "oldest" : "newest"))}
           className="flex-shrink-0 flex items-center gap-1.5 text-xs font-medium text-stone-500 dark:text-[#B8C0CC] hover:text-stone-800 dark:hover:text-[#E8E3DA] bg-stone-100 dark:bg-[#1E2533] hover:bg-stone-200 dark:hover:bg-[#252F3F] px-3 py-1.5 rounded-full transition-all"
@@ -354,7 +381,7 @@ export function BookmarksClient({ initialArticles }: { initialArticles: Bookmark
       {/* Articles */}
       <div className="px-4 sm:px-6 pb-10">
         <AnimatePresence mode="popLayout">
-          {activeTopicId || !grouped ? (
+          {!grouped ? (
             <motion.div key="flat" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col gap-3">
               {filtered.map((a, i) => (
                 <LibraryCard

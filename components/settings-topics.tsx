@@ -15,6 +15,7 @@ export function SettingsTopics({
   const [followed, setFollowed] = useState<Set<string>>(new Set(followedIds))
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   function add(id: string) {
     setFollowed((prev) => new Set([...prev, id]))
@@ -36,13 +37,20 @@ export function SettingsTopics({
   async function save() {
     if (followed.size === 0) return
     setSaving(true)
-    await fetch("/api/user/topics", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ topicIds: Array.from(followed) }),
-    })
-    setSaving(false)
-    setSaved(true)
+    setError(null)
+    try {
+      const res = await fetch("/api/user/topics", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topicIds: Array.from(followed) }),
+      })
+      if (!res.ok) throw new Error("Failed to save")
+      setSaved(true)
+    } catch {
+      setError("Couldn't save topics. Try again.")
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -102,6 +110,7 @@ export function SettingsTopics({
           {saving ? "Saving…" : "Save changes"}
         </button>
         {saved && <span className="text-sm text-app-accent font-medium">Saved ✓</span>}
+        {error && <span className="text-sm text-red-500">{error}</span>}
         <span className="ml-auto text-xs text-app-text-subtle">{followed.size} topic{followed.size === 1 ? "" : "s"}</span>
       </div>
     </div>

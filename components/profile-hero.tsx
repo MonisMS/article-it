@@ -3,15 +3,7 @@
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { BookOpen, Bookmark, Layers, Zap } from "lucide-react"
-
-function initials(name: string): string {
-  return name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2)
-}
+import { initials } from "@/lib/utils"
 
 export function ProfileHero({
   name,

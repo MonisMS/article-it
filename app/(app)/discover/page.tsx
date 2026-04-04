@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import { db } from "@/lib/db"
 import { topics, articleTopics } from "@/lib/db/schema"
@@ -5,6 +6,11 @@ import { eq, count } from "drizzle-orm"
 import { getArticlesByTopicSlug } from "@/lib/db/queries/articles"
 import { ArticleCard, type ArticleCardData } from "@/components/article-card"
 import { ArrowLeft, ChevronRight } from "lucide-react"
+
+export const metadata: Metadata = {
+  title: "Discover — ArticleIt",
+  description: "Browse all topics and find articles that interest you.",
+}
 
 const TOPIC_GRADIENTS = [
   "from-violet-500 to-purple-600",

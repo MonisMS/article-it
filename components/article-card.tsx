@@ -5,6 +5,7 @@ import Link from "next/link"
 import { ExternalLink } from "lucide-react"
 import { BookmarkButton } from "@/components/bookmark-button"
 import { ReadButton } from "@/components/read-button"
+import { timeAgo, readingTime } from "@/lib/utils"
 
 type Topic = { id: string; name: string; icon: string | null; slug: string }
 
@@ -21,22 +22,6 @@ export type ArticleCardData = {
   isRead?: boolean
 }
 
-function timeAgo(date: Date | null): string {
-  if (!date) return ""
-  const diff = Date.now() - new Date(date).getTime()
-  const mins = Math.floor(diff / 60000)
-  if (mins < 60) return `${mins}m ago`
-  const hours = Math.floor(mins / 60)
-  if (hours < 24) return `${hours}h ago`
-  return `${Math.floor(hours / 24)}d ago`
-}
-
-function readingTime(text: string | null): string {
-  if (!text) return ""
-  const words = text.trim().split(/\s+/).length
-  const mins = Math.max(1, Math.round(words / 200))
-  return `${mins} min read`
-}
 
 export function ArticleCard({
   article,
@@ -61,7 +46,7 @@ export function ArticleCard({
       {showImage ? (
         <img
           src={article.imageUrl!}
-          alt=""
+          alt={article.title}
           onError={() => setImgError(true)}
           className="object-cover aspect-video w-full"
         />

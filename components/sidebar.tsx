@@ -2,17 +2,18 @@
 
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { BookOpen, LayoutDashboard, Bookmark, User, LogOut, Compass, History, Lightbulb, ShieldCheck } from "lucide-react"
+import { BookOpen, LayoutDashboard, Bookmark, User, LogOut, Compass, History, Lightbulb, ShieldCheck, Search } from "lucide-react"
 import { signOut } from "@/lib/auth-client"
-import { SearchBar } from "@/components/search-bar"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { initials } from "@/lib/utils"
 
 const NAV = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Feed" },
   { href: "/discover",  icon: Compass,         label: "Discover" },
-  { href: "/bookmarks", icon: Bookmark,         label: "Bookmarks" },
-  { href: "/history",   icon: History,          label: "History" },
-  { href: "/profile",   icon: User,             label: "Profile" },
+  { href: "/search",    icon: Search,          label: "Search" },
+  { href: "/bookmarks", icon: Bookmark,        label: "Bookmarks" },
+  { href: "/history",   icon: History,         label: "History" },
+  { href: "/profile",   icon: User,            label: "Profile" },
 ]
 
 type Props = {
@@ -20,14 +21,6 @@ type Props = {
   isAdmin?: boolean
 }
 
-function initials(name: string): string {
-  return name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2)
-}
 
 export function Sidebar({ user, isAdmin }: Props) {
   const pathname = usePathname()
@@ -47,10 +40,6 @@ export function Sidebar({ user, isAdmin }: Props) {
         </span>
         ArticleIt
       </Link>
-
-      <div className="mb-3 px-0">
-        <SearchBar />
-      </div>
 
       <nav className="flex-1 flex flex-col gap-0.5">
         {NAV.map(({ href, icon: Icon, label }) => {

@@ -5,6 +5,7 @@ import Link from "next/link"
 import { ChevronDown, ExternalLink, History, Loader2, Mail } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import type { DigestLogRow, DigestLogArticle } from "@/lib/db/queries/history"
+import { monthLabel } from "@/lib/utils"
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -16,10 +17,6 @@ function formatSentAt(date: Date): string {
     hour: "numeric",
     minute: "2-digit",
   })
-}
-
-function monthLabel(date: Date): string {
-  return new Date(date).toLocaleDateString("en-US", { month: "long", year: "numeric" })
 }
 
 function groupByMonth(logs: DigestLogRow[]): { month: string; logs: DigestLogRow[] }[] {
@@ -168,12 +165,15 @@ export function HistoryClient({
   logs,
   hasMore,
   page,
+  totalDigests,
+  totalArticles,
 }: {
   logs: DigestLogRow[]
   hasMore: boolean
   page: number
+  totalDigests: number
+  totalArticles: number
 }) {
-  const totalArticles = logs.reduce((sum, l) => sum + l.articleCount, 0)
 
   if (logs.length === 0) {
     return (
@@ -192,7 +192,7 @@ export function HistoryClient({
             Once your first digest is sent, it'll appear here with everything that was inside.
           </p>
           <Link
-            href="/settings"
+            href="/profile?tab=digests"
             className="mt-6 inline-flex items-center gap-2 rounded-full bg-amber-500 hover:bg-amber-400 px-6 py-2.5 text-sm font-semibold text-white transition-colors"
           >
             <Mail className="w-4 h-4" />
@@ -207,24 +207,22 @@ export function HistoryClient({
 
   return (
     <div className="px-4 sm:px-6 pb-10">
-      {/* Stats */}
-      {page === 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="grid grid-cols-2 gap-3 mb-8"
-        >
-          <div className="rounded-2xl bg-white dark:bg-[#161C26] border border-stone-200 dark:border-[#1E2A3A] px-5 py-4">
-            <p className="text-2xl font-bold text-stone-900 dark:text-[#F0EDE6]">{logs.length}</p>
-            <p className="text-xs text-stone-400 dark:text-[#6B7585] mt-0.5">digests sent</p>
-          </div>
-          <div className="rounded-2xl bg-white dark:bg-[#161C26] border border-stone-200 dark:border-[#1E2A3A] px-5 py-4">
-            <p className="text-2xl font-bold text-stone-900 dark:text-[#F0EDE6]">{totalArticles}</p>
-            <p className="text-xs text-stone-400 dark:text-[#6B7585] mt-0.5">articles delivered</p>
-          </div>
-        </motion.div>
-      )}
+      {/* Stats — always visible, show all-time totals */}
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="grid grid-cols-2 gap-3 mb-8"
+      >
+        <div className="rounded-2xl bg-white dark:bg-[#161C26] border border-stone-200 dark:border-[#1E2A3A] px-5 py-4">
+          <p className="text-2xl font-bold text-stone-900 dark:text-[#F0EDE6]">{totalDigests}</p>
+          <p className="text-xs text-stone-400 dark:text-[#6B7585] mt-0.5">digests sent</p>
+        </div>
+        <div className="rounded-2xl bg-white dark:bg-[#161C26] border border-stone-200 dark:border-[#1E2A3A] px-5 py-4">
+          <p className="text-2xl font-bold text-stone-900 dark:text-[#F0EDE6]">{totalArticles}</p>
+          <p className="text-xs text-stone-400 dark:text-[#6B7585] mt-0.5">articles delivered</p>
+        </div>
+      </motion.div>
 
       {/* Timeline grouped by month */}
       <div className="flex flex-col gap-8">

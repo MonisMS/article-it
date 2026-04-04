@@ -69,7 +69,7 @@ export default async function UnsubscribePage({ searchParams }: Props) {
         )}
 
         <Link
-          href="/settings"
+          href="/profile?tab=digests"
           className="text-sm font-medium text-zinc-700 border border-zinc-200 rounded-lg px-4 py-2.5 hover:bg-zinc-100 transition-colors"
         >
           Manage digest settings

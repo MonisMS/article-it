@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { Loader2, Plus } from "lucide-react"
+import { formatDate } from "@/lib/utils"
 
 type Source = {
   id: string
@@ -9,11 +10,6 @@ type Source = {
   url: string
   isActive: boolean
   lastFetchedAt: Date | null
-}
-
-function formatDate(date: Date | null): string {
-  if (!date) return "Never"
-  return new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
 }
 
 export function AdminSourcesPanel({ initialSources }: { initialSources: Source[] }) {

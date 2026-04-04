@@ -1,6 +1,6 @@
 import { db } from "@/lib/db"
 import { digestLogs, digestLogArticles } from "@/lib/db/schema"
-import { and, eq, desc } from "drizzle-orm"
+import { and, eq, desc, count, sum } from "drizzle-orm"
 
 const PAGE_SIZE = 20
 
@@ -18,6 +18,17 @@ export type DigestLogArticle = {
   url: string
   publishedAt: Date | null
   sourceName: string
+}
+
+export async function getDigestTotals(userId: string): Promise<{ totalDigests: number; totalArticles: number }> {
+  const [row] = await db
+    .select({ totalDigests: count(), totalArticles: sum(digestLogs.articleCount) })
+    .from(digestLogs)
+    .where(eq(digestLogs.userId, userId))
+  return {
+    totalDigests: row?.totalDigests ?? 0,
+    totalArticles: Number(row?.totalArticles ?? 0),
+  }
 }
 
 export async function getDigestLogsForUser(

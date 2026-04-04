@@ -1,8 +1,14 @@
+import type { Metadata } from "next"
 import { searchArticles } from "@/lib/db/queries/articles"
 import { ArticleCard, type ArticleCardData } from "@/components/article-card"
 import { SearchBarHero } from "@/components/search-bar"
 import { Search, Sparkles } from "lucide-react"
 import Link from "next/link"
+
+export const metadata: Metadata = {
+  title: "Search — ArticleIt",
+  description: "Search across all articles in your feed.",
+}
 
 type Props = { searchParams: Promise<{ q?: string; page?: string }> }
 
@@ -26,11 +32,11 @@ export default async function SearchPage({ searchParams }: Props) {
     <div className="max-w-4xl mx-auto">
 
       {/* Header + search input */}
-      <div className={`px-4 sm:px-6 border-b border-stone-200 dark:border-[#1E2A3A] bg-gradient-to-b from-stone-50 dark:from-[#161C26]/50 to-white dark:to-[#0D1117] transition-all ${
-        query ? "pt-8 pb-6" : "pt-16 pb-12"
-      }`}>
+      <div className="px-4 sm:px-6 pt-8 pb-6 border-b border-stone-200 dark:border-[#1E2A3A] bg-gradient-to-b from-stone-50 dark:from-[#161C26]/50 to-white dark:to-[#0D1117]">
+
+        {/* Idle hero — only when no query; adds its own height, doesn't shift the search bar */}
         {!query && (
-          <div className="text-center mb-8">
+          <div className="text-center mb-7">
             <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-100 to-orange-100 dark:from-[#2A3547] dark:to-[#2A3547] mb-5">
               <Search className="w-6 h-6 text-amber-600" />
             </div>
@@ -39,7 +45,8 @@ export default async function SearchPage({ searchParams }: Props) {
           </div>
         )}
 
-        <div className={query ? "max-w-full" : "max-w-xl mx-auto"}>
+        {/* Search bar — centered when idle, full-width when showing results */}
+        <div className={query ? "" : "max-w-xl mx-auto"}>
           <SearchBarHero initialValue={query} />
         </div>
 

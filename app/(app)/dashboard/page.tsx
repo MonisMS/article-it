@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { Suspense } from "react"
 import { redirect } from "next/navigation"
 import { headers } from "next/headers"
@@ -10,6 +11,11 @@ import { DailyQueue } from "@/components/daily-queue"
 import { Rss } from "lucide-react"
 import { TriggerIngestButton } from "@/components/trigger-ingest-button"
 import Link from "next/link"
+
+export const metadata: Metadata = {
+  title: "Feed — ArticleIt",
+  description: "Your personalized article feed, ranked by source quality.",
+}
 
 type Props = {
   searchParams: Promise<{ topic?: string; page?: string }>

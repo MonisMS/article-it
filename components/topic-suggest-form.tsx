@@ -4,15 +4,7 @@ import { useState } from "react"
 import { CheckCircle2, Clock, Loader2, XCircle } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import type { SuggestionRow } from "@/lib/db/queries/suggestions"
-
-function timeAgo(date: Date): string {
-  const diff = Date.now() - new Date(date).getTime()
-  const days = Math.floor(diff / 86400000)
-  if (days === 0) return "Today"
-  if (days === 1) return "Yesterday"
-  if (days < 7) return `${days}d ago`
-  return `${Math.floor(days / 7)}w ago`
-}
+import { timeAgo } from "@/lib/utils"
 
 const STATUS_CONFIG: Record<string, { label: string; icon: React.ElementType; className: string }> = {
   pending:  { label: "Under review", icon: Clock,         className: "bg-amber-50 text-amber-700 border-amber-200" },

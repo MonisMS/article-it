@@ -1,8 +1,14 @@
+import type { Metadata } from "next"
 import { redirect } from "next/navigation"
 import { headers } from "next/headers"
 import { auth } from "@/lib/auth"
-import { getDigestLogsForUser } from "@/lib/db/queries/history"
+import { getDigestLogsForUser, getDigestTotals } from "@/lib/db/queries/history"
 import { HistoryClient } from "@/components/history-client"
+
+export const metadata: Metadata = {
+  title: "Digest History — ArticleIt",
+  description: "Every digest we've sent you, and what was in it.",
+}
 
 type Props = { searchParams: Promise<{ page?: string }> }
 
@@ -18,7 +24,10 @@ export default async function HistoryPage({ searchParams }: Props) {
   const { page: pageParam } = await searchParams
   const page = Math.max(0, Number(pageParam ?? 0))
 
-  const { logs, hasMore } = await getDigestLogsForUser(session.user.id, page)
+  const [{ logs, hasMore }, totals] = await Promise.all([
+    getDigestLogsForUser(session.user.id, page),
+    getDigestTotals(session.user.id),
+  ])
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -27,7 +36,7 @@ export default async function HistoryPage({ searchParams }: Props) {
         <p className="text-stone-400 dark:text-[#6B7585] text-sm mt-1">Every digest we've sent you, and what was in it.</p>
       </div>
 
-      <HistoryClient logs={logs} hasMore={hasMore} page={page} />
+      <HistoryClient logs={logs} hasMore={hasMore} page={page} totalDigests={totals.totalDigests} totalArticles={totals.totalArticles} />
     </div>
   )
 }

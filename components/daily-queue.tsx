@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { CheckCircle2, Circle, ChevronDown, ExternalLink } from "lucide-react"
 import type { ArticleCardData } from "@/components/article-card"
+import { readingTime } from "@/lib/utils"
 
 type Props = {
   initialArticles: ArticleCardData[]
@@ -25,11 +26,21 @@ export function DailyQueue({ initialArticles }: Props) {
       wasRead ? next.delete(id) : next.add(id)
       return next
     })
-    await fetch("/api/user/read", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ articleId: id }),
-    })
+    try {
+      const res = await fetch("/api/user/read", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ articleId: id }),
+      })
+      if (!res.ok) throw new Error()
+    } catch {
+      // Roll back on failure
+      setReadSet((prev) => {
+        const next = new Set(prev)
+        wasRead ? next.add(id) : next.delete(id)
+        return next
+      })
+    }
   }
 
   if (total === 0) return null
@@ -119,7 +130,7 @@ export function DailyQueue({ initialArticles }: Props) {
                         <>
                           <span className="text-stone-200 dark:text-[#2A3547]">·</span>
                           <span className="text-xs text-stone-400 dark:text-[#6B7585]">
-                            {Math.max(1, Math.round(article.description.trim().split(/\s+/).length / 200))} min
+                            {readingTime(article.description)}
                           </span>
                         </>
                       )}

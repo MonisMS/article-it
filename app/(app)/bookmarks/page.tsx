@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { redirect } from "next/navigation"
 import { headers } from "next/headers"
 import { auth } from "@/lib/auth"
@@ -6,6 +7,11 @@ import { bookmarks } from "@/lib/db/schema"
 import { eq } from "drizzle-orm"
 import { getReadArticleIds } from "@/lib/db/queries/articles"
 import { BookmarksClient, type BookmarkedArticle } from "./bookmarks-client"
+
+export const metadata: Metadata = {
+  title: "Bookmarks — ArticleIt",
+  description: "Your saved articles, organized by topic.",
+}
 
 export default async function BookmarksPage() {
   let session

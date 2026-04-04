@@ -1,5 +1,13 @@
+import type { Metadata } from "next"
 import Link from "next/link"
+import { headers } from "next/headers"
+import { auth } from "@/lib/auth"
 import { ArrowLeft, Check, Sparkles, Zap } from "lucide-react"
+
+export const metadata: Metadata = {
+  title: "Upgrade to Pro — ArticleIt",
+  description: "Unlock unlimited topics, priority delivery, and advanced reading analytics.",
+}
 
 const FREE_FEATURES = [
   "Personalized article feed",
@@ -33,7 +41,13 @@ function FeatureRow({ text, included = true }: { text: string; included?: boolea
   )
 }
 
-export default function UpgradePage() {
+export default async function UpgradePage() {
+  let email = ""
+  try {
+    const session = await auth.api.getSession({ headers: await headers() })
+    email = session?.user.email ?? ""
+  } catch { /* not critical */ }
+
   return (
     <div className="max-w-4xl mx-auto">
       {/* Header */}
@@ -123,16 +137,18 @@ export default function UpgradePage() {
             </ul>
 
             <div className="relative mt-6 pt-5 border-t border-stone-700">
-              <button
-                disabled
-                className="w-full flex items-center justify-center gap-2 rounded-xl bg-amber-500 opacity-60 cursor-not-allowed px-4 py-2.5 text-sm font-semibold text-white"
-              >
-                <Zap className="w-3.5 h-3.5" />
-                Coming soon
-              </button>
-              <p className="text-xs text-stone-500 text-center mt-2.5">
-                Stripe integration in progress. Pro will launch soon.
-              </p>
+              <div className="rounded-xl bg-stone-800/60 border border-stone-700 px-4 py-3.5 text-center">
+                <p className="text-xs font-semibold text-amber-400 mb-0.5">Launching soon</p>
+                {email ? (
+                  <p className="text-xs text-stone-400 leading-relaxed">
+                    We'll email <span className="text-stone-300 font-medium">{email}</span> the moment Pro is available.
+                  </p>
+                ) : (
+                  <p className="text-xs text-stone-400 leading-relaxed">
+                    We'll notify you when Pro is ready.
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </div>

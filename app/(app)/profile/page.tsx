@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { redirect } from "next/navigation"
 import { headers } from "next/headers"
 import { auth } from "@/lib/auth"
@@ -7,6 +8,11 @@ import { eq, count } from "drizzle-orm"
 import { ProfileHero } from "@/components/profile-hero"
 import { ProfileTabs } from "@/components/profile-tabs"
 import { getReadingInsights } from "@/lib/db/queries/insights"
+
+export const metadata: Metadata = {
+  title: "Profile — ArticleIt",
+  description: "Manage your topics, digests, and account settings.",
+}
 
 type Props = {
   searchParams: Promise<{ tab?: string }>
