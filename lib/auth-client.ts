@@ -14,3 +14,11 @@ export const {
   requestPasswordReset,
   resetPassword,
 } = authClient
+
+export async function signInWithGoogle() {
+  return signIn.social({ provider: "google", callbackURL: "/dashboard" })
+}
+
+export async function signInWithGitHub() {
+  return signIn.social({ provider: "github", callbackURL: "/dashboard" })
+}

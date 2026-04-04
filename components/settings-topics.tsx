@@ -1,7 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { X, Plus, Loader2 } from "lucide-react"
+import Link from "next/link"
+import { X, Plus, Loader2, Zap } from "lucide-react"
 
 type Topic = { id: string; name: string; slug: string; icon: string | null }
 
@@ -44,6 +45,11 @@ export function SettingsTopics({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ topicIds: Array.from(followed) }),
       })
+      if (res.status === 403) {
+        const { error: msg } = await res.json()
+        setError(msg)
+        return
+      }
       if (!res.ok) throw new Error("Failed to save")
       setSaved(true)
     } catch {
@@ -110,7 +116,17 @@ export function SettingsTopics({
           {saving ? "Saving…" : "Save changes"}
         </button>
         {saved && <span className="text-sm text-app-accent font-medium">Saved ✓</span>}
-        {error && <span className="text-sm text-red-500">{error}</span>}
+        {error && (
+          error.includes("Upgrade") ? (
+            <span className="flex items-center gap-1.5 text-sm text-amber-600">
+              <Zap className="w-3.5 h-3.5 flex-shrink-0" />
+              {error.split(".")[0]}.{" "}
+              <Link href="/upgrade" className="underline underline-offset-2 font-medium">Upgrade to Pro</Link>
+            </span>
+          ) : (
+            <span className="text-sm text-red-500">{error}</span>
+          )
+        )}
         <span className="ml-auto text-xs text-app-text-subtle">{followed.size} topic{followed.size === 1 ? "" : "s"}</span>
       </div>
     </div>

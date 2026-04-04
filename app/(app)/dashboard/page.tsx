@@ -12,6 +12,7 @@ import { DigestPreview } from "@/components/digest-preview"
 import { DailyQueue } from "@/components/daily-queue"
 import { ReadingStreak } from "@/components/reading-streak"
 import { NewArticlesBanner } from "@/components/new-articles-banner"
+import { ColdStartNudge } from "@/components/cold-start-nudge"
 import { VisitTracker } from "@/components/visit-tracker"
 import { Rss } from "lucide-react"
 import { TriggerIngestButton } from "@/components/trigger-ingest-button"
@@ -75,6 +76,7 @@ export default async function DashboardPage({ searchParams }: Props) {
   const showDigestBanner = !digestReceived && articles.length > 0 && !topic && page === 0
   const showStreak = streakData !== null && topics.length > 0 && totalCount > 0 && !topic && page === 0
   const showNewBanner = newCount > 0 && userRecord?.lastVisitAt && !topic && page === 0
+  const showColdStart = topics.length > 0 && topics.length < 3 && !topic && page === 0
 
   return (
     <div className="bg-app-bg dark:bg-[#0D1117] min-h-full">
@@ -102,6 +104,9 @@ export default async function DashboardPage({ searchParams }: Props) {
             </div>
           )}
         </div>
+
+        {/* ── Cold-start nudge (< 3 topics) ───────────────────── */}
+        {showColdStart && <ColdStartNudge topicCount={topics.length} />}
 
         {/* ── New articles since last visit ────────────────────── */}
         {showNewBanner && <NewArticlesBanner count={newCount} since={userRecord!.lastVisitAt!} />}
