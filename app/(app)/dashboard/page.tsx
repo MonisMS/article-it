@@ -4,10 +4,12 @@ import { redirect } from "next/navigation"
 import { headers } from "next/headers"
 import { auth } from "@/lib/auth"
 import { getArticlesForUser, getArticlesCountForUser, getUserTopicsWithMeta, getBookmarkedArticleIds, getReadArticleIds, hasReceivedDigest, getDailyQueue } from "@/lib/db/queries/articles"
+import { getReadingStreak } from "@/lib/db/queries/streak"
 import { ArticleCard, type ArticleCardData } from "@/components/article-card"
 import { TopicFilter } from "@/components/topic-filter"
 import { DigestPreview } from "@/components/digest-preview"
 import { DailyQueue } from "@/components/daily-queue"
+import { ReadingStreak } from "@/components/reading-streak"
 import { Rss } from "lucide-react"
 import { TriggerIngestButton } from "@/components/trigger-ingest-button"
 import Link from "next/link"
@@ -33,7 +35,7 @@ export default async function DashboardPage({ searchParams }: Props) {
   const { topic, page: pageParam } = await searchParams
   const page = Math.max(0, Number(pageParam ?? 0))
 
-  const [userTopics, articleRows, totalCount, bookmarkedIds, readIds, digestReceived, queueRows] = await Promise.all([
+  const [userTopics, articleRows, totalCount, bookmarkedIds, readIds, digestReceived, queueRows, streakData] = await Promise.all([
     getUserTopicsWithMeta(session.user.id),
     getArticlesForUser(session.user.id, topic, page),
     getArticlesCountForUser(session.user.id, topic),
@@ -41,6 +43,7 @@ export default async function DashboardPage({ searchParams }: Props) {
     getReadArticleIds(session.user.id),
     hasReceivedDigest(session.user.id),
     !topic && page === 0 ? getDailyQueue(session.user.id) : Promise.resolve([]),
+    !topic && page === 0 ? getReadingStreak(session.user.id) : Promise.resolve(null),
   ])
 
   const topics = userTopics.map((ut) => ut.topic)
@@ -58,6 +61,7 @@ export default async function DashboardPage({ searchParams }: Props) {
   const totalPages = Math.max(1, Math.ceil(totalCount / 20))
   const showQueue = topics.length > 0 && totalCount > 0 && !topic && page === 0 && queueArticles.length > 0
   const showDigestBanner = !digestReceived && articles.length > 0 && !topic && page === 0
+  const showStreak = streakData !== null && topics.length > 0 && totalCount > 0 && !topic && page === 0
 
   return (
     <div className="bg-app-bg dark:bg-[#0D1117] min-h-full">
@@ -85,6 +89,9 @@ export default async function DashboardPage({ searchParams }: Props) {
             </div>
           )}
         </div>
+
+        {/* ── Reading streak ───────────────────────────────────── */}
+        {showStreak && <ReadingStreak data={streakData!} />}
 
         {/* ── Digest setup banner ──────────────────────────────── */}
         {showDigestBanner && <DigestPreview />}
