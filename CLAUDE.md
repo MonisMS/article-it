@@ -287,7 +287,7 @@ Market research confirmed: personalized email digest aggregators have a durable 
 | 5 | SEO landing pages (Pocket alt, personalized digest, etc.) | 2 — Revenue | Distribution is the hard problem; Pocket users are searching now | Low (content) |
 | 6 | Feed staleness detection + re-onboarding prompt | 3 — Retention | #2 cause of RSS abandonment; sources drift silently | Low |
 | 7 | Cold-start guard (min 3 topics, pre-curated best-of) | 3 — Retention | 72% of app churn in first 72 hours | Low |
-| 8 | Lapsed user re-engagement email (21+ days no reads) | 3 — Retention | 8-14% churn reduction; no such mechanism exists yet | Medium |
+| 8 | ~~Lapsed user re-engagement email (21+ days no reads)~~ | 3 — Retention | ~~8-14% churn reduction; no such mechanism exists yet~~ | ~~Medium~~ |
 | 9 | Reddit subreddit sources (seed data only) | 4 — Content | Zero code change; infrastructure handles it | Very Low |
 | 10 | Hacker News feeds (seed data only) | 4 — Content | Target audience uses HN daily | Very Low |
 | 11 | YouTube channel feeds (seed data only) | 4 — Content | RSS-native; image extraction already handles YT thumbnails | Very Low |

@@ -90,6 +90,11 @@ export const auth = betterAuth({
         required: false,
         input: false,
       },
+      lastReengagementAt: {
+        type: "date",
+        required: false,
+        input: false,
+      },
     },
   },
 })

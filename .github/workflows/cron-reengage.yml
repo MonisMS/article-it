@@ -1,0 +1,28 @@
+name: Re-engagement Emails
+
+on:
+  schedule:
+    - cron: "0 10 * * 1" # Monday 10:00 UTC — weekly, morning send
+  workflow_dispatch: # allow manual trigger from GitHub UI
+
+jobs:
+  reengage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send re-engagement emails to lapsed users
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          if [ -z "$APP_URL" ]; then
+            echo "APP_URL secret not set — skipping."
+            exit 0
+          fi
+          STATUS=$(curl -sSL -o /dev/null -w "%{http_code}" \
+            -X GET "$APP_URL/api/cron/reengage" \
+            -H "Authorization: Bearer $CRON_SECRET")
+          echo "Response status: $STATUS"
+          if [ "${STATUS:0:1}" != "2" ]; then
+            echo "Re-engagement cron failed with status $STATUS"
+            exit 1
+          fi

@@ -1,12 +1,32 @@
 import Link from "next/link"
 import { BookOpen } from "lucide-react"
+import { db } from "@/lib/db"
+import { topics } from "@/lib/db/schema"
+import { eq } from "drizzle-orm"
 
-export function Footer() {
+const SEO_LINKS = [
+  { href: "/pocket-alternative", label: "Pocket Alternative" },
+  { href: "/feedly-alternative", label: "Feedly Alternative" },
+  { href: "/mailbrew-alternative", label: "Mailbrew Alternative" },
+  { href: "/readwise-alternative", label: "Readwise Alternative" },
+  { href: "/personalized-email-digest", label: "Email Digest" },
+  { href: "/rss-reader-email", label: "RSS to Email" },
+  { href: "/stay-informed", label: "Stay Informed" },
+]
+
+export async function Footer() {
+  const allTopics = await db
+    .select({ slug: topics.slug, name: topics.name, icon: topics.icon })
+    .from(topics)
+    .where(eq(topics.isActive, true))
+    .limit(12)
+
   return (
     <footer className="border-t border-lp-border bg-lp-bg">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 py-12">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-          <div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 mb-10">
+          {/* Brand */}
+          <div className="col-span-2 sm:col-span-1">
             <Link href="/" className="flex items-center gap-2 font-semibold text-lp-text">
               <span className="flex items-center justify-center w-7 h-7 rounded-md bg-lp-accent">
                 <BookOpen className="w-3.5 h-3.5 text-lp-bg" />
@@ -18,13 +38,43 @@ export function Footer() {
             </p>
           </div>
 
-          <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-lp-text-subtle">
-            <Link href="/sign-up" className="hover:text-lp-text transition-colors">Get Started</Link>
-            <Link href="/sign-in" className="hover:text-lp-text transition-colors">Sign In</Link>
-          </nav>
+          {/* Product */}
+          <div>
+            <p className="text-xs font-semibold text-lp-text uppercase tracking-widest mb-3">Product</p>
+            <nav className="flex flex-col gap-2 text-sm text-lp-text-subtle">
+              <Link href="/sign-up" className="hover:text-lp-text transition-colors">Get Started</Link>
+              <Link href="/sign-in" className="hover:text-lp-text transition-colors">Sign In</Link>
+              <Link href="/personalized-email-digest" className="hover:text-lp-text transition-colors">Email Digest</Link>
+              <Link href="/rss-reader-email" className="hover:text-lp-text transition-colors">RSS to Email</Link>
+            </nav>
+          </div>
+
+          {/* Alternatives */}
+          <div>
+            <p className="text-xs font-semibold text-lp-text uppercase tracking-widest mb-3">Alternatives</p>
+            <nav className="flex flex-col gap-2 text-sm text-lp-text-subtle">
+              {SEO_LINKS.slice(0, 5).map((link) => (
+                <Link key={link.href} href={link.href} className="hover:text-lp-text transition-colors">
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+
+          {/* Topics */}
+          <div>
+            <p className="text-xs font-semibold text-lp-text uppercase tracking-widest mb-3">Topics</p>
+            <nav className="flex flex-col gap-2 text-sm text-lp-text-subtle">
+              {allTopics.map((t) => (
+                <Link key={t.slug} href={`/topics/${t.slug}`} className="hover:text-lp-text transition-colors">
+                  {t.icon} {t.name}
+                </Link>
+              ))}
+            </nav>
+          </div>
         </div>
 
-        <div className="mt-10 pt-6 border-t border-lp-border text-xs text-lp-text-subtle">
+        <div className="pt-6 border-t border-lp-border text-xs text-lp-text-subtle">
           © {new Date().getFullYear()} ArticleIt. All rights reserved.
         </div>
       </div>

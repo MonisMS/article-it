@@ -15,6 +15,8 @@ export const user = pgTable("user", {
   plan: text("plan").notNull().default("free"), // "free" | "pro"
   // Additional field — used to compute "new articles since last visit"
   lastVisitAt: timestamp("last_visit_at"),
+  // Additional field — tracks when we last sent a re-engagement email (prevents spam)
+  lastReengagementAt: timestamp("last_reengagement_at"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 })
