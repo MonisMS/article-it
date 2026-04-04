@@ -21,6 +21,11 @@ const TOPICS = [
   { name: "Science",      slug: "science",        icon: "🧬",  description: "Breakthroughs across biology, physics, and space." },
   { name: "Marketing",    slug: "marketing",      icon: "💼",  description: "Growth, SEO, content, and brand strategy." },
   { name: "Open Source",  slug: "open-source",    icon: "🌍",  description: "OSS projects, releases, and community." },
+  // ── New topics ────────────────────────────────────────────────────────────
+  { name: "Python",       slug: "python",         icon: "🐍",  description: "Python language, libraries, frameworks, and ecosystem." },
+  { name: "Productivity", slug: "productivity",   icon: "🎯",  description: "Tools, systems, and habits for deep work and efficiency." },
+  { name: "Blockchain",   slug: "blockchain",     icon: "⛓️",  description: "Crypto, DeFi, Web3 protocols, and on-chain news." },
+  { name: "Data Science", slug: "data-science",   icon: "📊",  description: "Data analysis, statistics, visualization, and ML engineering." },
 ]
 
 // ─── RSS Sources ──────────────────────────────────────────────────────────────
@@ -189,7 +194,110 @@ const SOURCES = [
   { name: "Ship It (Changelog)",  url: "https://changelog.com/shipit/feed",       topics: ["devops"] },
   { name: "Practical AI",         url: "https://changelog.com/practicalai/feed",  topics: ["ai-ml"] },
 
-  // ── GitHub Releases ───────────────────────────────────────────────────────
+  // ── Python ────────────────────────────────────────────────────────────────
+  { name: "Real Python",             url: "https://realpython.com/atom.xml",                    topics: ["python"] },
+  { name: "Planet Python",           url: "https://planetpython.org/rss20.xml",                 topics: ["python", "open-source"] },
+  { name: "Mouse vs Python",         url: "https://www.blog.pythonlibrary.org/feed/",           topics: ["python"] },
+  { name: "Python Bytes Podcast",    url: "https://pythonbytes.fm/episodes/rss",                topics: ["python", "open-source"] },
+  { name: "Talk Python to Me",       url: "https://talkpython.fm/episodes/rss",                 topics: ["python"] },
+  { name: "Full Stack Python",       url: "https://www.fullstackpython.com/feed.rss",           topics: ["python", "devops"] },
+  { name: "PyCoders Weekly",         url: "https://pycoders.com/feed",                          topics: ["python"] },
+  { name: "YouTube – Corey Schafer", url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCCTVrRJOwpEBDrH5Uh8XyWw", topics: ["python"] },
+  { name: "YouTube – Arjan Codes",   url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCVhsj9gnmFWP4yKyU1rXHJQ", topics: ["python"] },
+  { name: "YouTube – mCoding",       url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCaiL2GDNpLYH6Wokkk1VNcg", topics: ["python", "open-source"] },
+  { name: "Reddit r/learnpython",    url: "https://www.reddit.com/r/learnpython/top.rss?t=day", topics: ["python"] },
+
+  // ── Productivity ──────────────────────────────────────────────────────────
+  { name: "Ness Labs",               url: "https://nesslabs.com/feed",                          topics: ["productivity"] },
+  { name: "Lifehacker",              url: "https://lifehacker.com/rss",                         topics: ["productivity"] },
+  { name: "Asian Efficiency",        url: "https://www.asianefficiency.com/feed/",              topics: ["productivity"] },
+  { name: "Zapier Blog",             url: "https://zapier.com/blog/feeds/latest/",              topics: ["productivity", "product"] },
+  { name: "The Sweet Setup",         url: "https://thesweetsetup.com/feed/",                   topics: ["productivity", "design"] },
+  { name: "Todoist Blog",            url: "https://todoist.com/inspiration/rss",                topics: ["productivity"] },
+  { name: "Notion Blog",             url: "https://www.notion.so/blog/rss.xml",                 topics: ["productivity", "product"] },
+  { name: "YouTube – Ali Abdaal",    url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCoOae5nYA7VqaXzerajD0lg", topics: ["productivity"] },
+  { name: "YouTube – Thomas Frank",  url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCG-KntY7aVnIGXYEBQvmBAQ", topics: ["productivity"] },
+  { name: "Reddit r/productivity",   url: "https://www.reddit.com/r/productivity/top.rss?t=day", topics: ["productivity"] },
+
+  // ── Blockchain / Web3 ─────────────────────────────────────────────────────
+  { name: "CoinDesk",                url: "https://www.coindesk.com/arc/outboundfeeds/rss/",    topics: ["blockchain", "finance"] },
+  { name: "Decrypt",                 url: "https://decrypt.co/feed",                            topics: ["blockchain"] },
+  { name: "The Defiant",             url: "https://thedefiant.io/feed",                         topics: ["blockchain"] },
+  { name: "Week in Ethereum",        url: "https://weekinethereumnews.com/feed/",               topics: ["blockchain", "open-source"] },
+  { name: "Bankless",                url: "https://bankless.substack.com/feed",                 topics: ["blockchain", "finance"] },
+  { name: "Unchained Podcast",       url: "https://unchainedpodcast.com/feed/",                 topics: ["blockchain", "startups"] },
+  { name: "YouTube – Coin Bureau",   url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCqK_GSMbpiV8spgD3ZGloSw", topics: ["blockchain", "finance"] },
+  { name: "Reddit r/CryptoCurrency", url: "https://www.reddit.com/r/CryptoCurrency/top.rss?t=day", topics: ["blockchain", "finance"] },
+  { name: "Reddit r/ethereum",       url: "https://www.reddit.com/r/ethereum/top.rss?t=day",   topics: ["blockchain", "open-source"] },
+
+  // ── Data Science ──────────────────────────────────────────────────────────
+  { name: "KDnuggets",               url: "https://www.kdnuggets.com/feed",                     topics: ["data-science", "ai-ml"] },
+  { name: "Flowing Data",            url: "https://flowingdata.com/feed",                       topics: ["data-science", "design"] },
+  { name: "Simply Statistics",       url: "https://simplystatistics.org/index.xml",             topics: ["data-science", "science"] },
+  { name: "Towards Data Science",    url: "https://towardsdatascience.com/feed",                topics: ["data-science", "ai-ml"] },
+  { name: "O'Reilly Radar",          url: "https://www.oreilly.com/radar/feed.xml",             topics: ["data-science", "ai-ml", "startups"] },
+  { name: "Data Elixir",             url: "https://dataelixir.com/feed/",                       topics: ["data-science"] },
+  { name: "YouTube – StatQuest",     url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCtYLUTtgS3k1Fg4y5tAhLbw", topics: ["data-science", "ai-ml"] },
+  { name: "YouTube – Kaggle",        url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCSNeZleDn9c74yQc-EKnVTA", topics: ["data-science", "ai-ml"] },
+  { name: "Reddit r/datascience",    url: "https://www.reddit.com/r/datascience/top.rss?t=day", topics: ["data-science"] },
+
+  // ── Extra sources for existing topics ────────────────────────────────────
+  // AI / ML (more)
+  { name: "Anthropic Blog",          url: "https://www.anthropic.com/news/rss",                 topics: ["ai-ml", "startups"] },
+  { name: "Microsoft Research Blog", url: "https://www.microsoft.com/en-us/research/feed/",     topics: ["ai-ml", "science"] },
+  { name: "The Batch (deeplearning.ai)", url: "https://www.deeplearning.ai/the-batch/feed/",   topics: ["ai-ml"] },
+  { name: "Last Week in AI",         url: "https://lastweekin.ai/feed",                         topics: ["ai-ml"] },
+  { name: "YouTube – Andrej Karpathy",url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCXUPKJO5MZQN11PqgIvyuvQ", topics: ["ai-ml"] },
+  { name: "Reddit r/artificial",     url: "https://www.reddit.com/r/artificial/top.rss?t=day",  topics: ["ai-ml"] },
+
+  // DevOps / Cloud
+  { name: "AWS News Blog",           url: "https://aws.amazon.com/blogs/aws/feed/",             topics: ["devops", "open-source"] },
+  { name: "Google Cloud Blog",       url: "https://cloudblog.withgoogle.com/rss/",              topics: ["devops"] },
+  { name: "Cloudflare Blog",         url: "https://blog.cloudflare.com/rss/",                   topics: ["devops", "cybersecurity", "open-source"] },
+  { name: "HashiCorp Blog",          url: "https://www.hashicorp.com/blog/feed.xml",            topics: ["devops", "open-source"] },
+  { name: "Fly.io Blog",             url: "https://fly.io/blog/feed.xml",                       topics: ["devops", "startups"] },
+
+  // Cybersecurity (more)
+  { name: "Dark Reading",            url: "https://www.darkreading.com/rss.xml",                topics: ["cybersecurity"] },
+  { name: "SANS Internet Storm",     url: "https://isc.sans.edu/rssfeed.xml",                   topics: ["cybersecurity"] },
+  { name: "Troy Hunt",               url: "https://www.troyhunt.com/rss/",                      topics: ["cybersecurity"] },
+  { name: "Malwarebytes Labs",       url: "https://www.malwarebytes.com/blog/feed/index.xml",   topics: ["cybersecurity"] },
+
+  // Startups (more)
+  { name: "Indie Hackers",           url: "https://www.indiehackers.com/feed.xml",              topics: ["startups", "product"] },
+  { name: "a16z Blog",               url: "https://a16z.com/feed/",                             topics: ["startups", "ai-ml", "finance"] },
+  { name: "Y Combinator Blog",       url: "https://www.ycombinator.com/blog/rss.xml",           topics: ["startups"] },
+  { name: "Crunchbase News",         url: "https://news.crunchbase.com/feed/",                  topics: ["startups", "finance"] },
+  { name: "SaaStr Blog",             url: "https://www.saastr.com/feed/",                       topics: ["startups", "product", "marketing"] },
+
+  // React / JS (more)
+  { name: "Vercel Blog",             url: "https://vercel.com/blog/rss.xml",                    topics: ["react", "javascript", "devops"] },
+  { name: "Deno Blog",               url: "https://deno.com/feed",                              topics: ["javascript", "open-source"] },
+  { name: "Bun Blog",                url: "https://bun.sh/blog/rss.xml",                        topics: ["javascript", "open-source"] },
+  { name: "Bytes.dev",               url: "https://bytes.dev/api/rss",                          topics: ["javascript", "react"] },
+  { name: "LogRocket Blog",          url: "https://blog.logrocket.com/feed/",                   topics: ["react", "javascript"] },
+
+  // Design (more)
+  { name: "Sidebar.io",              url: "https://sidebar.io/feed.xml",                        topics: ["design"] },
+  { name: "Muzli Design",            url: "https://medium.muz.li/feed",                         topics: ["design"] },
+  { name: "Design Better",           url: "https://www.designbetter.co/rss",                    topics: ["design", "product"] },
+
+  // Finance (more)
+  { name: "Abnormal Returns",        url: "https://abnormalreturns.com/feed/",                  topics: ["finance"] },
+  { name: "Reddit r/personalfinance",url: "https://www.reddit.com/r/personalfinance/top.rss?t=day", topics: ["finance"] },
+  { name: "Kiplinger",               url: "https://www.kiplinger.com/rss/allkiplinger.rss",     topics: ["finance"] },
+
+  // Science (more)
+  { name: "Reddit r/space",          url: "https://www.reddit.com/r/space/top.rss?t=day",      topics: ["science"] },
+  { name: "Quanta Magazine",         url: "https://www.quantamagazine.org/feed/",               topics: ["science", "ai-ml"] },
+  { name: "Nature News",             url: "https://www.nature.com/nature.rss",                  topics: ["science"] },
+
+  // Marketing (more)
+  { name: "Backlinko Blog",          url: "https://backlinko.com/blog/feed",                    topics: ["marketing"] },
+  { name: "SparkToro Blog",          url: "https://sparktoro.com/blog/feed/",                   topics: ["marketing", "product"] },
+  { name: "Marketing Examples",      url: "https://marketingexamples.com/feed.rss",             topics: ["marketing", "startups"] },
+
+
   // Atom feeds for key OSS repos. Format: github.com/{owner}/{repo}/releases.atom
   // Tagged to relevant topics so they surface in existing user feeds automatically.
   // JS / React ecosystem
