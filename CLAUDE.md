@@ -2,6 +2,9 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Git
+- **Never add `Co-Authored-By: Claude` to commit messages.** Commits are authored by the user only.
+
 ## What This Is
 ArticleIt — a personalized article aggregator. RSS feeds are ingested into Postgres daily. Users pick topics, get a personalized feed ranked by source quality, and receive scheduled email digests via Resend.
 
@@ -56,6 +59,7 @@ app/
   rss-reader-email/
   stay-informed/    ← 8 SEO landing pages (static, no auth)
   feedback/         ← public HMAC-gated article feedback (thumbs up/down from digest email)
+  p/[username]/     ← PUBLIC shareable reading profile (SSR, no auth — 404 if publicProfile=false)
   api/              ← API routes
   page.tsx          ← landing page (JSON-LD WebApplication + FAQPage structured data)
   robots.ts         ← blocks auth/admin/api from indexing
@@ -102,7 +106,7 @@ Better Auth with Drizzle adapter. **No mock users** — all protected routes req
 - Client-side: `useSession()`, `signIn()`, `signOut()` from `@/lib/auth-client`
 - Google + GitHub OAuth: `signInWithGoogle()` / `signInWithGitHub()` — env-gated (only active when `GOOGLE_CLIENT_ID` / `GITHUB_CLIENT_ID` are set)
 - Auth tables in `lib/db/schema/auth.ts` — **do not rename columns**, Better Auth owns them
-- `user` table has extra fields: `plan` ("free"|"pro"), `lastVisitAt`, `lastReengagementAt` — declared in both the schema and `lib/auth.ts` `additionalFields`
+- `user` table has extra fields: `plan` ("free"|"pro"), `lastVisitAt`, `lastReengagementAt`, `username` (unique), `publicProfile` (boolean) — declared in both the schema and `lib/auth.ts` `additionalFields`
 - Session cookie cached for 5 minutes to avoid a DB hit on every page load
 - **Never import `lib/auth.ts` in Edge routes or `middleware.ts`** — Better Auth requires Node.js `crypto`
 
@@ -158,6 +162,8 @@ Two separate HMAC-signed URL systems, both using `BETTER_AUTH_SECRET` as the key
 | `/api/topics/suggest` | session | Submit topic suggestion (POST) |
 | `/api/user/digest-preview` | session | Preview digest email HTML (POST) |
 | `/api/user/digest-history/[logId]` | session | Articles in a past digest (GET) |
+| `/api/user/public-profile` | session | Set username + toggle publicProfile (PATCH) |
+| `/api/user/sources/import` | session | OPML file import → upsert RSS sources (POST) |
 | `/api/admin/topics` | ADMIN_EMAIL | Create topic (POST) |
 | `/api/admin/topics/[id]` | ADMIN_EMAIL | Toggle active / update topic (PATCH) |
 | `/api/admin/sources` | ADMIN_EMAIL | Create RSS source (POST) |
@@ -252,13 +258,15 @@ Market positioning: email-first article aggregator for developers/founders/resea
 - SEO: robots.ts, sitemap.ts, public topic pages (`/topics/[slug]`), 8 SEO landing pages, JSON-LD, MotionConfig
 - Lapsed user re-engagement email (21-day threshold, 30-day cooldown, `app/api/cron/reengage/`)
 - Extended seed: 16 topics + 211 sources (Reddit, YouTube, HN, Substack, Medium, Lobste.rs, TLDR, Changelog, GitHub Releases)
+- Dark mode — ThemeToggle in sidebar + system preference detection (`components/theme-provider.tsx`, `components/theme-toggle.tsx`)
+- "Top source" quality badge on article cards (`components/article-card.tsx`) — shown when `qualityScore >= 0.75`
+- OPML import (`app/api/user/sources/import/route.ts`, `components/settings-opml-import.tsx`) — parses Feedly/Inoreader exports, fuzzy-matches folders to followed topics
+- Shareable reading profile (`app/p/[username]/page.tsx`) — public SSR page with topics + recent articles + sign-up CTA; username/visibility managed via `components/settings-share-profile.tsx`
 
 ### Remaining
 | # | Feature | Why |
 |---|---|---|
 | 13 | Referral system | 40% of indie SaaS growth is WOM |
-| 14 | OPML import | Unlocks Feedly/Inoreader refugees |
-| 15 | Dark mode | Table stakes |
 | 16 | Article highlights / annotations | Readwise territory — v3 |
 | 17 | Digest sponsorship | At 5K+ subscribers |
 | 18 | Niche feed sets ("HN for X") | v3 positioning |
