@@ -95,6 +95,17 @@ export const auth = betterAuth({
         required: false,
         input: false,
       },
+      username: {
+        type: "string",
+        required: false,
+        input: false,
+      },
+      publicProfile: {
+        type: "boolean",
+        required: false,
+        defaultValue: false,
+        input: false,
+      },
     },
   },
 })

@@ -46,6 +46,7 @@ export async function getArticlesForUser(
       imageUrl: articles.imageUrl,
       publishedAt: articles.publishedAt,
       sourceName: rssSources.name,
+      sourceQualityScore: rssSources.qualityScore,
     })
     .from(articles)
     .innerJoin(rssSources, eq(rssSources.id, articles.sourceId))
@@ -106,7 +107,7 @@ export async function getArticlesForUser(
           ...allTopics.filter((t) => t.id !== primaryTopicId),
         ]
       : allTopics
-    return { ...row, source: { name: row.sourceName }, articleTopics: sorted }
+    return { ...row, source: { name: row.sourceName, qualityScore: row.sourceQualityScore }, articleTopics: sorted }
   })
 }
 
@@ -273,6 +274,7 @@ export async function getDailyQueue(userId: string): Promise<ArticleWithMeta[]> 
       imageUrl: articles.imageUrl,
       publishedAt: articles.publishedAt,
       sourceName: rssSources.name,
+      sourceQualityScore: rssSources.qualityScore,
     })
     .from(articles)
     .innerJoin(rssSources, eq(rssSources.id, articles.sourceId))
@@ -318,7 +320,7 @@ export async function getDailyQueue(userId: string): Promise<ArticleWithMeta[]> 
 
   return rows.map((row) => ({
     ...row,
-    source: { name: row.sourceName },
+    source: { name: row.sourceName, qualityScore: row.sourceQualityScore },
     articleTopics: topicMap.get(row.id) ?? [],
   }))
 }

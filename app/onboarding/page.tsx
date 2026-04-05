@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { BookOpen, Check, Loader2 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
@@ -258,6 +258,7 @@ function SelectionShelf({
 
 export default function OnboardingPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [topics, setTopics] = useState<Topic[]>([])
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
@@ -267,10 +268,20 @@ export default function OnboardingPage() {
   useEffect(() => {
     fetch("/api/topics")
       .then((r) => r.json())
-      .then(({ data }) => {
-        if (data) setTopics(data)
+      .then(({ data }: { data: Topic[] }) => {
+        if (data) {
+          setTopics(data)
+          // Pre-select topics from ?topics= param (comma-separated slugs)
+          const slugParam = searchParams.get("topics")
+          if (slugParam) {
+            const slugs = new Set(slugParam.split(",").map((s) => s.trim()).filter(Boolean))
+            const preSelected = new Set(data.filter((t) => slugs.has(t.slug)).map((t) => t.id))
+            if (preSelected.size > 0) setSelected(preSelected)
+          }
+        }
       })
       .finally(() => setLoading(false))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   function toggle(id: string) {

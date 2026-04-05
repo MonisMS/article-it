@@ -5,6 +5,8 @@ import { ReadingInsights } from "@/components/reading-insights"
 import { SettingsAccount } from "@/components/settings-account"
 import { SettingsTopics } from "@/components/settings-topics"
 import { SettingsSchedules } from "@/components/settings-schedules"
+import { SettingsOpmlImport } from "@/components/settings-opml-import"
+import { SettingsShareProfile } from "@/components/settings-share-profile"
 import type { ReadingInsightsData } from "@/lib/db/queries/insights"
 
 type Topic = { id: string; name: string; slug: string; icon: string | null }
@@ -37,6 +39,8 @@ export function ProfileTabs({
   name,
   email,
   plan,
+  username,
+  publicProfile,
   allTopics,
   followedIds,
   followedTopics,
@@ -48,6 +52,8 @@ export function ProfileTabs({
   name: string
   email: string
   plan: string
+  username: string | null
+  publicProfile: boolean
   allTopics: Topic[]
   followedIds: string[]
   followedTopics: Topic[]
@@ -98,8 +104,13 @@ export function ProfileTabs({
         )}
 
         {activeTab === "topics" && (
-          <div className="rounded-2xl border border-stone-200 dark:border-[#1E2A3A] bg-white dark:bg-[#161C26] p-6">
-            <SettingsTopics allTopics={allTopics} followedIds={followedIds} />
+          <div className="space-y-4">
+            <div className="rounded-2xl border border-stone-200 dark:border-[#1E2A3A] bg-white dark:bg-[#161C26] p-6">
+              <SettingsTopics allTopics={allTopics} followedIds={followedIds} />
+            </div>
+            <div className="rounded-2xl border border-stone-200 dark:border-[#1E2A3A] bg-white dark:bg-[#161C26] p-6">
+              <SettingsOpmlImport />
+            </div>
           </div>
         )}
 
@@ -124,8 +135,13 @@ export function ProfileTabs({
         )}
 
         {activeTab === "account" && (
-          <div className="rounded-2xl border border-stone-200 dark:border-[#1E2A3A] bg-white dark:bg-[#161C26] p-6">
-            <SettingsAccount name={name} email={email} plan={plan} />
+          <div className="space-y-4">
+            <div className="rounded-2xl border border-stone-200 dark:border-[#1E2A3A] bg-white dark:bg-[#161C26] p-6">
+              <SettingsShareProfile initialUsername={username} initialPublic={publicProfile} />
+            </div>
+            <div className="rounded-2xl border border-stone-200 dark:border-[#1E2A3A] bg-white dark:bg-[#161C26] p-6">
+              <SettingsAccount name={name} email={email} plan={plan} />
+            </div>
           </div>
         )}
       </div>

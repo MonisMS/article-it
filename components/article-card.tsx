@@ -16,7 +16,7 @@ export type ArticleCardData = {
   description: string | null
   imageUrl?: string | null
   publishedAt: Date | null
-  source: { name: string }
+  source: { name: string; qualityScore?: number | null }
   articleTopics: Topic[]
   isBookmarked?: boolean
   isRead?: boolean
@@ -81,6 +81,15 @@ export function ArticleCard({
         <div className="flex items-center justify-between mt-auto pt-2 border-t border-stone-100 dark:border-[#1E2A3A]">
           <div className="flex items-center gap-2 text-xs text-stone-400 dark:text-[#6B7585]">
             <span className="font-medium text-stone-500 dark:text-[#B8C0CC]">{article.source.name}</span>
+            {(article.source.qualityScore ?? 0) >= 0.75 && (
+              <span
+                title="This source ranks highly because readers frequently bookmark and read articles from it."
+                className="inline-flex items-center gap-1 text-[10px] font-semibold text-amber-600 dark:text-[#E8A838] bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700/40 rounded-full px-1.5 py-0.5 cursor-default select-none"
+              >
+                <span className="w-1 h-1 rounded-full bg-amber-500 dark:bg-[#E8A838]" />
+                Top source
+              </span>
+            )}
             {article.publishedAt && (
               <>
                 <span>·</span>

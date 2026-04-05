@@ -17,6 +17,9 @@ export const user = pgTable("user", {
   lastVisitAt: timestamp("last_visit_at"),
   // Additional field — tracks when we last sent a re-engagement email (prevents spam)
   lastReengagementAt: timestamp("last_reengagement_at"),
+  // Additional fields — public shareable reading profile
+  username: text("username").unique(),
+  publicProfile: boolean("public_profile").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 })
