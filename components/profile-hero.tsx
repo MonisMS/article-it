@@ -23,19 +23,19 @@ export function ProfileHero({
 
   return (
     <div className="border-b border-stone-200 bg-stone-50/60 dark:border-lp-border dark:bg-lp-bg">
-      <div className="px-4 sm:px-6 py-5">
+      <div className="px-4 sm:px-6 py-6">
         {/* Profile header */}
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="h-11 w-11 shrink-0 rounded-full bg-stone-200 dark:bg-lp-elevated flex items-center justify-center">
-              <span className="text-sm font-semibold text-stone-700 dark:text-lp-text">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-5">
+          <div className="flex items-start gap-4 min-w-0">
+            <div className="h-20 w-20 shrink-0 rounded-full bg-stone-200 dark:bg-lp-elevated flex items-center justify-center">
+              <span className="text-xl font-semibold text-stone-700 dark:text-lp-text">
                 {initials(name)}
               </span>
             </div>
 
-            <div className="min-w-0">
+            <div className="min-w-0 pt-1">
               <div className="flex items-center gap-2.5 flex-wrap">
-                <h1 className="text-[15px] sm:text-[16px] font-semibold text-stone-900 dark:text-lp-text truncate">
+                <h1 className="text-[18px] sm:text-[19px] font-semibold text-stone-900 dark:text-lp-text truncate">
                   {name}
                 </h1>
                 <span
@@ -48,14 +48,14 @@ export function ProfileHero({
                   {isPro ? "Pro" : "Free"}
                 </span>
               </div>
-              <p className="mt-0.5 text-xs text-stone-500 dark:text-lp-text-muted truncate">{email}</p>
+              <p className="mt-1 text-sm text-stone-500 dark:text-lp-text-muted truncate">{email}</p>
             </div>
           </div>
 
           {!isPro ? (
             <Link
               href="/upgrade"
-              className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-stone-900 transition-colors hover:bg-stone-50 dark:border-lp-border dark:bg-lp-surface dark:text-lp-text dark:hover:bg-lp-elevated"
+              className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg border border-stone-200 bg-white px-3.5 py-2.5 text-sm font-medium text-stone-900 transition-colors hover:bg-stone-50 dark:border-lp-border dark:bg-lp-surface dark:text-lp-text dark:hover:bg-lp-elevated"
             >
               <Zap className="h-4 w-4" />
               Upgrade to Pro
@@ -66,7 +66,7 @@ export function ProfileHero({
         </div>
 
         {/* Metric row */}
-        <div className="mt-4 pt-4 border-t border-stone-200 dark:border-lp-border">
+        <div className="mt-6 pt-4 border-t border-stone-200 dark:border-lp-border">
           <div className="grid grid-cols-3 divide-x divide-stone-200 dark:divide-lp-border">
             {[
               { value: totalReads, label: "Articles read" },
@@ -74,7 +74,7 @@ export function ProfileHero({
               { value: topicCount, label: "Topics" },
             ].map(({ value, label }) => (
               <div key={label} className="px-4 first:pl-0 last:pr-0">
-                <div className="text-[17px] font-semibold text-stone-900 leading-none dark:text-lp-text">
+                <div className="text-[18px] font-semibold text-stone-900 leading-none dark:text-lp-text">
                   {value}
                 </div>
                 <div className="mt-1 text-xs text-stone-500 dark:text-lp-text-muted">{label}</div>

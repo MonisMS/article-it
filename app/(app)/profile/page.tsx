@@ -56,7 +56,6 @@ export default async function ProfilePage({ searchParams }: Props) {
       <ProfileTabs
         initialTab={tab ?? "overview"}
         insights={insights}
-        bookmarkCount={bookmarkCount}
         name={session.user.name}
         email={session.user.email}
         plan={plan}

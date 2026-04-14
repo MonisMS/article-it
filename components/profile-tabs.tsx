@@ -35,7 +35,6 @@ function isValidTab(t: string | undefined): t is TabId {
 export function ProfileTabs({
   initialTab,
   insights,
-  bookmarkCount,
   name,
   email,
   plan,
@@ -47,7 +46,6 @@ export function ProfileTabs({
 }: {
   initialTab: string
   insights: ReadingInsightsData
-  bookmarkCount: number
   name: string
   email: string
   plan: string
@@ -60,6 +58,9 @@ export function ProfileTabs({
   const [activeTab, setActiveTab] = useState<TabId>(
     isValidTab(initialTab) ? initialTab : "overview"
   )
+
+  const digestTotal = schedules.length
+  const digestActive = schedules.filter((s) => s.isActive).length
 
   function navigate(tab: TabId) {
     setActiveTab(tab)
@@ -96,7 +97,11 @@ export function ProfileTabs({
       {/* Tab content */}
       <div className="px-4 sm:px-6 py-6">
         {activeTab === "overview" && (
-          <ReadingInsights insights={insights} bookmarkCount={bookmarkCount} />
+          <ReadingInsights
+            insights={insights}
+            digestTotal={digestTotal}
+            digestActive={digestActive}
+          />
         )}
 
         {activeTab === "topics" && (
