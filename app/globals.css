@@ -13,6 +13,7 @@
   --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.08);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.08);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+  --shadow-card: 0 10px 30px rgb(0 0 0 / 0.08), 0 2px 6px rgb(0 0 0 / 0.04);
 
   /* ── Gradient tokens ──────────────────────────────────────────── */
   --gradient-card: linear-gradient(to bottom, #ffffff, #fafaf9);
@@ -229,6 +230,13 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+  }
+  input:-webkit-autofill,
+  textarea:-webkit-autofill,
+  select:-webkit-autofill {
+    box-shadow: 0 0 0px 1000px var(--color-app-surface) inset;
+    -webkit-text-fill-color: var(--color-app-text);
+    caret-color: var(--color-app-text);
   }
   body {
     @apply bg-background text-foreground;
