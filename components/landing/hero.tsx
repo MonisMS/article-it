@@ -2,217 +2,158 @@
 
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { ArrowRight, Bookmark, BookOpen, Compass, LayoutDashboard } from "lucide-react"
+import { ArrowRight } from "lucide-react"
+import { LandingArticleCard, type LandingArticleCardData } from "@/components/landing/landing-article-card"
 
-const WORDS = ["Your", "internet.", "Curated.", "Delivered."]
-
-const MOCK_ARTICLES = [
+const HERO_ARTICLES: LandingArticleCardData[] = [
   {
-    topic: "AI & ML",
-    title: "GPT-5 and the new frontier of reasoning models",
-    source: "The Verge",
-    time: "4 min",
-    color: "from-violet-400 to-purple-500",
+    topic: "AI",
+    title: "A practical guide to evaluating LLM features",
+    description: "How to keep the magic while still being honest about reliability — without turning your app into a lab.",
+    source: "Paper & Ink",
+    published: "2h ago",
+    readTime: "7 min",
+  },
+  {
+    topic: "Design",
+    title: "The quiet craft of readable interfaces",
+    description: "Small typographic choices that make long-form reading feel effortless.",
+    source: "Studio Notes",
+    published: "Yesterday",
+    readTime: "5 min",
   },
   {
     topic: "Startups",
-    title: "Why YC's latest batch is doubling down on infra",
-    source: "TechCrunch",
-    time: "3 min",
-    color: "from-amber-400 to-orange-500",
+    title: "Build for retention without stealing attention",
+    description: "A thoughtful alternative to engagement hacks — and why users notice.",
+    source: "Signal Journal",
+    published: "3d ago",
+    readTime: "6 min",
   },
   {
     topic: "React",
-    title: "Server Components in the wild: one year later",
-    source: "Smashing Magazine",
-    time: "6 min",
-    color: "from-cyan-400 to-blue-500",
+    title: "Patterns for Server Components that stay boring",
+    description: "What’s working in production, what’s not, and how to keep your codebase calm.",
+    source: "Craft Weekly",
+    published: "1w ago",
+    readTime: "9 min",
   },
 ]
 
-function ProductMock() {
+function FloatingCards() {
+  const cards = [
+    { a: HERO_ARTICLES[0], className: "absolute left-0 top-8 w-[320px] -rotate-2", delay: 0.15, float: 6 },
+    { a: HERO_ARTICLES[1], className: "absolute right-0 top-0 w-[320px] rotate-2", delay: 0.22, float: 7 },
+    { a: HERO_ARTICLES[2], className: "absolute left-10 bottom-8 w-[330px] rotate-1", delay: 0.28, float: 5 },
+    { a: HERO_ARTICLES[3], className: "absolute right-8 bottom-0 w-[300px] -rotate-1", delay: 0.34, float: 6 },
+  ]
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 32, scale: 0.97 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.7, delay: 1.0, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="relative w-full max-w-3xl mx-auto mt-14"
-    >
-      {/* Glow under mock */}
-      <div
-        className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-3/4 h-16 opacity-40 pointer-events-none"
-        style={{ background: "radial-gradient(ellipse, #f59e0b 0%, transparent 70%)", filter: "blur(24px)" }}
-      />
+    <div className="relative h-[520px] w-full max-w-[560px]">
+      {cards.map(({ a, className, delay, float }) => (
+        <motion.div
+          key={a.title}
+          initial={{ opacity: 0, y: 18, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.55, delay }}
+          className={className}
+        >
+          <motion.div
+            animate={{ y: [0, -float, 0] }}
+            transition={{ duration: 6 + delay * 2, repeat: Infinity, ease: "easeInOut" }}
+            className="pointer-events-auto"
+          >
+            <LandingArticleCard article={a} />
+          </motion.div>
+        </motion.div>
+      ))}
 
-      {/* Browser frame */}
-      <div className="relative rounded-2xl border border-lp-border overflow-hidden shadow-2xl shadow-black/40">
-        {/* Title bar */}
-        <div className="flex items-center gap-3 px-4 py-3 bg-lp-elevated border-b border-lp-border">
-          <div className="flex gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-400/60" />
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400/60" />
-          </div>
-          <div className="flex-1 flex justify-center">
-            <span className="text-[11px] text-lp-text-subtle bg-lp-surface border border-lp-border rounded-md px-3 py-0.5">
-              articleit.app/dashboard
-            </span>
-          </div>
-        </div>
-
-        {/* App layout */}
-        <div className="flex bg-lp-surface" style={{ height: "340px" }}>
-
-          {/* Sidebar */}
-          <div className="w-44 flex-shrink-0 border-r border-lp-border bg-lp-elevated px-2 py-3 flex flex-col gap-0.5 hidden sm:flex">
-            <div className="flex items-center gap-2 px-3 py-2 mb-2">
-              <span className="w-5 h-5 rounded-md bg-lp-accent flex items-center justify-center flex-shrink-0">
-                <BookOpen className="w-3 h-3 text-lp-bg" />
-              </span>
-              <span className="text-xs font-semibold text-lp-text">ArticleIt</span>
-            </div>
-            {[
-              { icon: LayoutDashboard, label: "Feed", active: true },
-              { icon: Compass, label: "Discover", active: false },
-              { icon: Bookmark, label: "Bookmarks", active: false },
-            ].map(({ icon: Icon, label, active }) => (
-              <div
-                key={label}
-                className={`flex items-center gap-2 rounded-lg px-3 py-1.5 ${
-                  active ? "bg-lp-surface text-lp-text" : "text-lp-text-subtle"
-                }`}
-              >
-                <Icon className={`w-3.5 h-3.5 flex-shrink-0 ${active ? "text-lp-accent" : ""}`} />
-                <span className="text-xs font-medium">{label}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Content */}
-          <div className="flex-1 overflow-hidden px-4 py-4">
-            <p className="text-xs font-bold text-lp-text mb-3">Your Feed</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              {MOCK_ARTICLES.map((a, i) => (
-                <motion.div
-                  key={a.title}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.2 + i * 0.1, duration: 0.35 }}
-                  className="rounded-xl border border-lp-border bg-lp-bg overflow-hidden"
-                >
-                  <div className={`h-0.5 w-full bg-gradient-to-r ${a.color}`} />
-                  <div className="p-3">
-                    <div className="flex items-center gap-1.5 mb-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-lp-accent flex-shrink-0" />
-                      <span className="text-[10px] text-lp-text-subtle">{a.topic}</span>
-                    </div>
-                    <p className="text-xs font-semibold text-lp-text leading-snug line-clamp-2">{a.title}</p>
-                    <div className="flex items-center gap-1.5 mt-2 text-[10px] text-lp-text-subtle">
-                      <span>{a.source}</span>
-                      <span>·</span>
-                      <span>{a.time} read</span>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-              {/* Placeholder 3rd card on small screens */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.35 }}
-                transition={{ delay: 1.5, duration: 0.4 }}
-                className="rounded-xl border border-lp-border bg-lp-bg p-3 hidden sm:block"
-              >
-                <div className="h-2 w-1/3 rounded bg-lp-border mb-2" />
-                <div className="h-2.5 w-full rounded bg-lp-border mb-1" />
-                <div className="h-2.5 w-4/5 rounded bg-lp-border" />
-              </motion.div>
-            </div>
-          </div>
-        </div>
+      <div aria-hidden className="absolute inset-0 pointer-events-none">
+        <div className="absolute -left-24 -top-16 h-64 w-64 rounded-full bg-app-accent/10 blur-[60px]" />
+        <div className="absolute -right-28 top-10 h-64 w-64 rounded-full bg-app-accent/8 blur-[70px]" />
+        <div className="absolute left-24 bottom-0 h-48 w-48 rounded-full bg-app-accent/6 blur-[70px]" />
       </div>
-
-      {/* Side fade out at bottom — implies more content below */}
-      <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-lp-bg to-transparent rounded-b-2xl pointer-events-none" />
-    </motion.div>
+    </div>
   )
 }
 
 export function Hero() {
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-start overflow-hidden bg-lp-bg px-4 sm:px-6 pt-28 pb-0">
-      <AuroraBackground />
+    <section className="relative overflow-hidden bg-app-bg px-4 sm:px-6 pt-28 pb-16">
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        <div className="absolute left-1/2 top-[-220px] h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-app-accent/8 blur-[80px]" />
+        <div className="absolute right-[-220px] top-[120px] h-[420px] w-[420px] rounded-full bg-app-accent/6 blur-[90px]" />
+      </div>
 
-      <div className="relative z-10 max-w-4xl mx-auto w-full text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 rounded-full border border-lp-border bg-lp-surface/60 backdrop-blur-sm px-4 py-1.5 text-xs font-medium text-lp-text-muted mb-10"
-        >
-          <span className="flex h-1.5 w-1.5 rounded-full bg-lp-accent" />
-          107 sources · 12 topics · Free to start
-        </motion.div>
+      <div className="relative mx-auto max-w-6xl grid lg:grid-cols-12 gap-12 items-center">
+        <div className="lg:col-span-6">
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 rounded-full bg-app-surface px-4 py-2 shadow-xs shadow-black/5 text-xs font-semibold text-app-text-muted"
+          >
+            <span className="h-1.5 w-1.5 rounded-full bg-app-accent" />
+            Calm, curated reading — free to start
+          </motion.p>
 
-        <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.08] mb-6">
-          {WORDS.map((word, i) => (
-            <motion.span
-              key={word}
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.15 + i * 0.1 }}
-              className={`inline-block mr-[0.25em] ${
-                word === "Curated." ? "text-lp-accent" : "text-lp-text"
-              }`}
+          <motion.h1
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.06 }}
+            className="mt-6 text-5xl sm:text-6xl font-semibold tracking-tight text-app-text leading-[1.05]"
+          >
+            Read what matters.
+            <span className="block text-app-text-muted">Skip everything else.</span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.14 }}
+            className="mt-5 text-[16px] sm:text-[17px] leading-relaxed text-app-text-muted max-w-xl"
+          >
+            A calm, curated feed of high-quality articles across your interests.
+            No noise. No endless scrolling.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.22 }}
+            className="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-3"
+          >
+            <Link
+              href="/sign-up"
+              className="group inline-flex items-center gap-2 rounded-2xl bg-app-accent px-6 py-3 text-sm font-semibold text-white shadow-sm shadow-black/10 hover:opacity-95 transition-all"
             >
-              {word}
-            </motion.span>
-          ))}
-        </h1>
+              Start reading for free
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            </Link>
+            <Link
+              href="#how-it-works"
+              className="inline-flex items-center rounded-2xl bg-app-surface px-6 py-3 text-sm font-semibold text-app-text shadow-xs shadow-black/5 hover:-translate-y-0.5 hover:shadow-sm transition-all"
+            >
+              See how it works
+            </Link>
+          </motion.div>
 
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-          className="text-lg sm:text-xl text-lp-text-muted leading-relaxed max-w-xl mx-auto mb-10"
-        >
-          Pick topics you care about. We pull from hundreds of sources and deliver
-          the best articles to your feed — or your inbox, on your schedule.
-        </motion.p>
+          <div className="mt-10 text-xs text-app-text-subtle">
+            Trusted sources. Quality-ranked. Built for focus.
+          </div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.75 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-3"
-        >
-          <Link
-            href="/sign-up"
-            className="group relative flex items-center gap-2 rounded-xl bg-lp-accent px-7 py-3.5 text-sm font-semibold text-lp-bg hover:bg-lp-accent-hover transition-colors overflow-hidden"
+        <div className="lg:col-span-6">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.18 }}
+            className="mx-auto flex justify-center"
           >
-            Start reading for free
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-          </Link>
-          <Link
-            href="/sign-in"
-            className="flex items-center gap-2 rounded-xl border border-lp-border bg-lp-surface/40 backdrop-blur-sm px-7 py-3.5 text-sm font-medium text-lp-text-muted hover:text-lp-text hover:border-lp-border-strong transition-colors"
-          >
-            Sign in
-          </Link>
-        </motion.div>
-
-        <ProductMock />
+            <FloatingCards />
+          </motion.div>
+        </div>
       </div>
     </section>
-  )
-}
-
-function AuroraBackground() {
-  return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-      <div className="animate-aurora absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-[#E8A838]/10 blur-[120px]" />
-      <div className="animate-aurora-slow absolute -top-20 -right-40 w-[500px] h-[500px] rounded-full bg-[#3B82F6]/8 blur-[100px]" />
-      <div className="animate-aurora absolute bottom-0 left-1/4 w-[400px] h-[400px] rounded-full bg-[#E8A838]/6 blur-[90px]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,#0D1117_80%)]" />
-    </div>
   )
 }

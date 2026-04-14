@@ -1,23 +1,22 @@
 import type { Metadata } from "next"
-import { AnimatedDigest } from "@/components/landing/animated-digest"
-import { BentoFeatures } from "@/components/landing/bento-features"
-import { FinalCta } from "@/components/landing/final-cta"
 import { Hero } from "@/components/landing/hero"
 import { HowItWorks } from "@/components/landing/how-it-works"
 import { MotionProvider } from "@/components/landing/motion-provider"
 import { SourceMarquee } from "@/components/landing/source-marquee"
-import { StatsSection } from "@/components/landing/stats-section"
-import { TopicsStrip } from "@/components/landing/topics-strip"
+import { FeedPreview } from "@/components/landing/feed-preview"
+import { BentoFeatures } from "@/components/landing/bento-features"
+import { CalmReading } from "@/components/landing/calm-reading"
+import { FinalCta } from "@/components/landing/final-cta"
 import { Footer } from "@/components/footer"
 import { Nav } from "@/components/nav"
 
 export const metadata: Metadata = {
-  title: "ArticleIt — Personalized Article Digests",
+  title: "ArticleIt — Calm, Curated Reading",
   description:
-    "Pick your topics, get the best articles from the web delivered to your inbox on your schedule. The Pocket alternative that sends curated digests to your email.",
+    "Read what matters. Skip everything else. A calm, curated feed of high-quality articles across your interests — no noise, no endless scrolling.",
   openGraph: {
-    title: "ArticleIt — Personalized Article Digests",
-    description: "Pick your topics, get the best articles from the web delivered to your inbox on your schedule.",
+    title: "ArticleIt — Calm, Curated Reading",
+    description: "A calm, curated feed of high-quality articles across your interests — no noise, no endless scrolling.",
   },
   alternates: {
     canonical: "/",
@@ -32,7 +31,7 @@ const jsonLd = {
       "@id": "https://articleit.com/#webapp",
       name: "ArticleIt",
       description:
-        "Personalized article digest service. Pick topics, get quality-ranked articles from curated RSS sources delivered to your inbox on your schedule.",
+        "A calm, curated reading platform. Pick topics, get quality-ranked articles from curated sources in a clean feed — with optional email digests.",
       url: "https://articleit.com",
       applicationCategory: "NewsApplication",
       operatingSystem: "Web",
@@ -95,7 +94,7 @@ const jsonLd = {
 export default function LandingPage() {
   return (
     <MotionProvider>
-      <div className="bg-lp-bg">
+      <div className="bg-app-bg">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -103,11 +102,10 @@ export default function LandingPage() {
         <Nav />
         <Hero />
         <SourceMarquee />
-        <StatsSection />
         <HowItWorks />
+        <FeedPreview />
         <BentoFeatures />
-        <AnimatedDigest />
-        <TopicsStrip />
+        <CalmReading />
         <FinalCta />
         <Footer />
       </div>

@@ -1,33 +1,40 @@
 const SOURCES = [
-  "TechCrunch", "Ars Technica", "The Verge", "Wired", "MIT Tech Review",
-  "Hacker News", "Hugging Face", "GitHub Blog", "OpenAI", "DeepMind",
-  "Smashing Magazine", "CSS-Tricks", "Dev.to", "Lobste.rs", "TLDR",
-  "Krebs on Security", "Schneier", "Towards Data Science", "Lenny's Newsletter",
-  "The Pragmatic Engineer", "ByteByteGo", "Not Boring", "Noahpinion",
+  "Paper & Ink",
+  "Signal Journal",
+  "Studio Notes",
+  "Field Guide",
+  "Craft Weekly",
+  "Atlas Review",
+  "Longform Digest",
+  "Practical Research",
+  "Quiet Tech",
+  "The Editorial",
+  "Morning Brief",
+  "The Reading Room",
 ]
 
 export function SourceMarquee() {
   const doubled = [...SOURCES, ...SOURCES]
 
   return (
-    <div className="bg-lp-surface border-y border-lp-border py-5 overflow-hidden">
-      <p className="text-center text-xs font-medium text-lp-text-subtle tracking-widest uppercase mb-4">
-        Pulling from 130+ trusted sources
+    <div className="bg-app-bg py-10 overflow-hidden">
+      <p className="text-center text-xs font-semibold text-app-text-subtle tracking-widest uppercase mb-5">
+        Trusted sources
       </p>
       <div className="relative">
-        <div className="flex gap-8 animate-marquee whitespace-nowrap">
+        <div className="flex gap-3 animate-marquee whitespace-nowrap">
           {doubled.map((source, i) => (
             <span
               key={i}
-              className="text-sm font-medium text-lp-text-muted shrink-0 flex items-center gap-2"
+              className="shrink-0 inline-flex items-center gap-2 rounded-full bg-app-surface px-4 py-2 text-sm font-medium text-app-text-muted shadow-xs shadow-black/5"
             >
-              <span className="w-1 h-1 rounded-full bg-lp-accent/60 inline-block" />
+              <span className="w-1.5 h-1.5 rounded-full bg-app-accent inline-block" />
               {source}
             </span>
           ))}
         </div>
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-lp-surface to-transparent" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-lp-surface to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-app-bg to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-app-bg to-transparent" />
       </div>
     </div>
   )
