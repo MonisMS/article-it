@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { headers } from "next/headers"
 import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
-import { digestSchedules, userTopics } from "@/lib/db/schema"
+import { digestSchedules, userTopics, topics } from "@/lib/db/schema"
 import { eq, and } from "drizzle-orm"
 import { z } from "zod"
 
@@ -31,6 +31,13 @@ export async function POST(req: Request) {
   // Determine which topic IDs to upsert
   let topicIds: string[]
   if (topicId) {
+    const topic = await db.query.topics.findFirst({
+      where: and(eq(topics.id, topicId), eq(topics.isActive, true)),
+      columns: { id: true },
+    })
+    if (!topic) {
+      return NextResponse.json({ data: null, error: "Topic not found" }, { status: 404 })
+    }
     topicIds = [topicId]
   } else {
     const followed = await db.query.userTopics.findMany({ where: eq(userTopics.userId, userId) })

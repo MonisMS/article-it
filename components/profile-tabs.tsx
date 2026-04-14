@@ -43,7 +43,6 @@ export function ProfileTabs({
   publicProfile,
   allTopics,
   followedIds,
-  followedTopics,
   schedules,
 }: {
   initialTab: string
@@ -56,7 +55,6 @@ export function ProfileTabs({
   publicProfile: boolean
   allTopics: Topic[]
   followedIds: string[]
-  followedTopics: Topic[]
   schedules: ScheduleRow[]
 }) {
   const [activeTab, setActiveTab] = useState<TabId>(
@@ -116,21 +114,10 @@ export function ProfileTabs({
 
         {activeTab === "digests" && (
           <div className="rounded-2xl border border-stone-200 dark:border-[#1E2A3A] bg-white dark:bg-[#161C26] p-6">
-            {followedTopics.length === 0 ? (
-              <div className="py-4 text-center">
-                <p className="text-sm text-stone-400">
-                  You need to follow at least one topic before setting up digest schedules.
-                </p>
-                <button
-                  onClick={() => navigate("topics")}
-                  className="mt-3 text-sm font-medium text-amber-600 hover:text-amber-700 transition-colors"
-                >
-                  Go to Topics →
-                </button>
-              </div>
-            ) : (
-              <SettingsSchedules topics={followedTopics} schedules={schedules} />
-            )}
+            <p className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-200">
+              You can set a digest for any active topic, even if you do not follow it yet. A warning will appear before saving.
+            </p>
+            <SettingsSchedules topics={allTopics} followedIds={followedIds} schedules={schedules} />
           </div>
         )}
 

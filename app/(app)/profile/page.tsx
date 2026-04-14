@@ -39,7 +39,6 @@ export default async function ProfilePage({ searchParams }: Props) {
   ])
 
   const followedIds = followed.map((f) => f.topicId)
-  const followedTopics = allTopics.filter((t) => followedIds.includes(t.id))
   const plan = (session.user as { plan?: string }).plan ?? "free"
   const username = (session.user as { username?: string | null }).username ?? null
   const publicProfile = (session.user as { publicProfile?: boolean }).publicProfile ?? false
@@ -65,7 +64,6 @@ export default async function ProfilePage({ searchParams }: Props) {
         publicProfile={publicProfile}
         allTopics={allTopics}
         followedIds={followedIds}
-        followedTopics={followedTopics}
         schedules={schedules.map((s) => ({
           topicId: s.topicId,
           frequency: s.frequency,

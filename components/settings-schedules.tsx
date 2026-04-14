@@ -57,6 +57,7 @@ type ScheduleRow = {
 
 type TopicState = {
   topicId: string
+  isFollowing: boolean
   // schedule values
   frequency: "daily" | "weekly"
   dayOfWeek: number
@@ -74,12 +75,13 @@ type TopicState = {
   error: string | null
 }
 
-function buildState(topics: Topic[], schedules: ScheduleRow[]): TopicState[] {
+function buildState(topics: Topic[], schedules: ScheduleRow[], followedIds: string[]): TopicState[] {
   const scheduleMap = new Map(schedules.map((s) => [s.topicId, s]))
   return topics.map((t) => {
     const s = scheduleMap.get(t.id)
     return {
       topicId: t.id,
+      isFollowing: followedIds.includes(t.id),
       frequency: (s?.frequency as "daily" | "weekly") ?? "weekly",
       dayOfWeek: s?.dayOfWeek ?? 1,
       hour: s?.hour ?? 9,
@@ -99,12 +101,14 @@ function buildState(topics: Topic[], schedules: ScheduleRow[]): TopicState[] {
 
 export function SettingsSchedules({
   topics,
+  followedIds,
   schedules: initialSchedules,
 }: {
   topics: Topic[]
+  followedIds: string[]
   schedules: ScheduleRow[]
 }) {
-  const [rows, setRows] = useState<TopicState[]>(() => buildState(topics, initialSchedules))
+  const [rows, setRows] = useState<TopicState[]>(() => buildState(topics, initialSchedules, followedIds))
 
   function patch(topicId: string, update: Partial<TopicState>) {
     setRows((prev) => prev.map((r) => r.topicId === topicId ? { ...r, ...update } : r))
@@ -119,6 +123,12 @@ export function SettingsSchedules({
   async function save(topicId: string) {
     const row = rows.find((r) => r.topicId === topicId)
     if (!row) return
+    if (!row.isFollowing) {
+      const confirmed = window.confirm(
+        "You are not following this topic yet. Do you want to set up a digest for it anyway?"
+      )
+      if (!confirmed) return
+    }
     patch(topicId, { saving: true, error: null })
     const res = await fetch("/api/user/schedule", {
       method: "POST",
@@ -179,6 +189,11 @@ export function SettingsSchedules({
               <div className="flex items-center gap-2 min-w-0 flex-1">
                 <span className="text-lg leading-none flex-shrink-0">{topic.icon ?? "📄"}</span>
                 <span className="text-sm font-medium text-stone-800 dark:text-[#F0EDE6] truncate">{topic.name}</span>
+                  {!row.isFollowing && (
+                    <span className="ml-1 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-amber-700 dark:bg-amber-500/15 dark:text-amber-300">
+                      Not following
+                    </span>
+                  )}
               </div>
 
               {/* Schedule summary / status */}
