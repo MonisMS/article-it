@@ -1,8 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { motion } from "framer-motion"
-import { BookOpen, Bookmark, Layers, Zap } from "lucide-react"
+import { Zap } from "lucide-react"
 import { initials } from "@/lib/utils"
 
 export function ProfileHero({
@@ -22,74 +21,67 @@ export function ProfileHero({
 }) {
   const isPro = plan === "pro"
 
-  const stats = [
-    { icon: BookOpen, value: totalReads, label: "articles read" },
-    { icon: Bookmark, value: bookmarkCount, label: "bookmarked" },
-    { icon: Layers, value: topicCount, label: "topics" },
-  ]
-
   return (
-    <div className="bg-gradient-to-b from-stone-50 dark:from-[#161C26] to-white dark:to-[#0D1117] border-b border-stone-200 dark:border-[#1E2A3A]">
-      <div className="relative px-4 sm:px-6 pt-10 pb-8">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
-          className="flex flex-col sm:flex-row sm:items-end gap-5"
-        >
-          {/* Avatar */}
-          <div className="relative flex-shrink-0">
-            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-200/50">
-              <span className="text-2xl font-bold text-white">{initials(name)}</span>
-            </div>
-            {isPro && (
-              <div className="absolute -bottom-1.5 -right-1.5 w-6 h-6 rounded-full bg-amber-500 border-2 border-white flex items-center justify-center">
-                <Zap className="w-3 h-3 text-white fill-white" />
-              </div>
-            )}
-          </div>
-
-          {/* Name + email + plan */}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2.5 flex-wrap">
-              <h1 className="text-2xl font-bold text-stone-900 dark:text-[#F0EDE6] tracking-tight">{name}</h1>
-              <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                isPro
-                  ? "bg-amber-100 text-amber-700 border border-amber-300"
-                  : "bg-stone-100 text-stone-500 border border-stone-200"
-              }`}>
-                {isPro ? "Pro" : "Free"}
+    <div className="border-b border-stone-200 bg-stone-50/60 dark:border-lp-border dark:bg-lp-bg">
+      <div className="px-4 sm:px-6 py-5">
+        {/* Profile header */}
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="h-11 w-11 shrink-0 rounded-full bg-stone-200 dark:bg-lp-elevated flex items-center justify-center">
+              <span className="text-sm font-semibold text-stone-700 dark:text-lp-text">
+                {initials(name)}
               </span>
             </div>
-            <p className="text-sm text-stone-400 dark:text-[#6B7585] mt-0.5">{email}</p>
-            {!isPro && (
-              <Link
-                href="/upgrade"
-                className="inline-flex items-center gap-1.5 mt-2 text-xs font-semibold text-amber-600 hover:text-amber-700 transition-colors"
-              >
-                <Zap className="w-3 h-3" />
-                Upgrade to Pro
-              </Link>
-            )}
-          </div>
-        </motion.div>
 
-        {/* Stats row */}
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
-          className="flex items-center gap-6 mt-6 pt-6 border-t border-stone-200 dark:border-[#1E2A3A]"
-        >
-          {stats.map(({ icon: Icon, value, label }, i) => (
-            <div key={label} className="flex items-center gap-2">
-              <Icon className="w-3.5 h-3.5 text-stone-400 dark:text-[#6B7585]" />
-              <span className="text-sm font-bold text-stone-900 dark:text-[#F0EDE6]">{value}</span>
-              <span className="text-xs text-stone-400 dark:text-[#6B7585] hidden sm:block">{label}</span>
-              {i < stats.length - 1 && <div className="w-px h-3.5 bg-stone-200 dark:bg-[#1E2A3A] ml-4 hidden sm:block" />}
+            <div className="min-w-0">
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <h1 className="text-[15px] sm:text-[16px] font-semibold text-stone-900 dark:text-lp-text truncate">
+                  {name}
+                </h1>
+                <span
+                  className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-semibold ${
+                    isPro
+                      ? "border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-200"
+                      : "border-stone-200 bg-stone-100 text-stone-600 dark:border-lp-border dark:bg-lp-elevated dark:text-lp-text-muted"
+                  }`}
+                >
+                  {isPro ? "Pro" : "Free"}
+                </span>
+              </div>
+              <p className="mt-0.5 text-xs text-stone-500 dark:text-lp-text-muted truncate">{email}</p>
             </div>
-          ))}
-        </motion.div>
+          </div>
+
+          {!isPro ? (
+            <Link
+              href="/upgrade"
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-stone-900 transition-colors hover:bg-stone-50 dark:border-lp-border dark:bg-lp-surface dark:text-lp-text dark:hover:bg-lp-elevated"
+            >
+              <Zap className="h-4 w-4" />
+              Upgrade to Pro
+            </Link>
+          ) : (
+            <div aria-hidden className="h-10" />
+          )}
+        </div>
+
+        {/* Metric row */}
+        <div className="mt-4 pt-4 border-t border-stone-200 dark:border-lp-border">
+          <div className="grid grid-cols-3 divide-x divide-stone-200 dark:divide-lp-border">
+            {[
+              { value: totalReads, label: "Articles read" },
+              { value: bookmarkCount, label: "Bookmarked" },
+              { value: topicCount, label: "Topics" },
+            ].map(({ value, label }) => (
+              <div key={label} className="px-4 first:pl-0 last:pr-0">
+                <div className="text-[17px] font-semibold text-stone-900 leading-none dark:text-lp-text">
+                  {value}
+                </div>
+                <div className="mt-1 text-xs text-stone-500 dark:text-lp-text-muted">{label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   )

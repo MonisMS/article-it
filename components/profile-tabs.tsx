@@ -69,7 +69,7 @@ export function ProfileTabs({
   return (
     <div>
       {/* Tab bar */}
-      <div className="border-b border-stone-200 dark:border-[#1E2A3A] px-4 sm:px-6">
+      <div className="border-b border-stone-200 dark:border-lp-border px-4 sm:px-6">
         <div className="flex">
           {TABS.map((tab) => {
             const active = activeTab === tab.id
@@ -77,10 +77,10 @@ export function ProfileTabs({
               <button
                 key={tab.id}
                 onClick={() => navigate(tab.id)}
-                className={`relative px-4 py-3.5 text-sm font-medium transition-colors ${
+                className={`relative px-3.5 py-3 text-sm font-medium transition-colors ${
                   active
-                    ? "text-stone-900 dark:text-[#F0EDE6]"
-                    : "text-stone-400 dark:text-[#6B7585] hover:text-stone-600 dark:hover:text-[#B8C0CC]"
+                    ? "text-stone-900 dark:text-lp-text"
+                    : "text-stone-400 dark:text-lp-text-subtle hover:text-stone-600 dark:hover:text-lp-text-muted"
                 }`}
               >
                 {tab.label}
@@ -94,26 +94,24 @@ export function ProfileTabs({
       </div>
 
       {/* Tab content */}
-      <div className="px-4 sm:px-6 py-7">
+      <div className="px-4 sm:px-6 py-6">
         {activeTab === "overview" && (
-          <div className="rounded-2xl border border-stone-200 dark:border-[#1E2A3A] bg-white dark:bg-[#161C26] overflow-hidden">
-            <ReadingInsights insights={insights} bookmarkCount={bookmarkCount} />
-          </div>
+          <ReadingInsights insights={insights} bookmarkCount={bookmarkCount} />
         )}
 
         {activeTab === "topics" && (
           <div className="space-y-4">
-            <div className="rounded-2xl border border-stone-200 dark:border-[#1E2A3A] bg-white dark:bg-[#161C26] p-6">
+            <div className="rounded-2xl border border-stone-200 dark:border-lp-border bg-white dark:bg-lp-surface p-5">
               <SettingsTopics allTopics={allTopics} followedIds={followedIds} />
             </div>
-            <div className="rounded-2xl border border-stone-200 dark:border-[#1E2A3A] bg-white dark:bg-[#161C26] p-6">
+            <div className="rounded-2xl border border-stone-200 dark:border-lp-border bg-white dark:bg-lp-surface p-5">
               <SettingsOpmlImport />
             </div>
           </div>
         )}
 
         {activeTab === "digests" && (
-          <div className="rounded-2xl border border-stone-200 dark:border-[#1E2A3A] bg-white dark:bg-[#161C26] p-6">
+          <div className="rounded-2xl border border-stone-200 dark:border-lp-border bg-white dark:bg-lp-surface p-5">
             <p className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-200">
               You can set a digest for any active topic, even if you do not follow it yet. A warning will appear before saving.
             </p>
@@ -123,10 +121,10 @@ export function ProfileTabs({
 
         {activeTab === "account" && (
           <div className="space-y-4">
-            <div className="rounded-2xl border border-stone-200 dark:border-[#1E2A3A] bg-white dark:bg-[#161C26] p-6">
+            <div className="rounded-2xl border border-stone-200 dark:border-lp-border bg-white dark:bg-lp-surface p-5">
               <SettingsShareProfile initialUsername={username} initialPublic={publicProfile} />
             </div>
-            <div className="rounded-2xl border border-stone-200 dark:border-[#1E2A3A] bg-white dark:bg-[#161C26] p-6">
+            <div className="rounded-2xl border border-stone-200 dark:border-lp-border bg-white dark:bg-lp-surface p-5">
               <SettingsAccount name={name} email={email} plan={plan} />
             </div>
           </div>

@@ -44,7 +44,7 @@ export default async function ProfilePage({ searchParams }: Props) {
   const publicProfile = (session.user as { publicProfile?: boolean }).publicProfile ?? false
 
   return (
-    <div className="max-w-3xl mx-auto pb-16">
+    <div className="mx-auto max-w-6xl pb-16">
       <ProfileHero
         name={session.user.name}
         email={session.user.email}
