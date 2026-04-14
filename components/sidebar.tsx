@@ -15,7 +15,6 @@ import {
   ShieldCheck,
   Search,
   ChevronsLeft,
-  ChevronsRight,
   ChevronUp,
   CreditCard,
 } from "lucide-react"
@@ -39,27 +38,31 @@ const SECONDARY_NAV = [
 type Props = {
   user: { name: string; email: string }
   isAdmin?: boolean
+  variant?: "desktop" | "drawer"
+  onRequestClose?: () => void
 }
 
 function isItemActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`)
 }
 
-export function Sidebar({ user, isAdmin }: Props) {
+export function Sidebar({ user, isAdmin, variant = "desktop", onRequestClose }: Props) {
   const pathname = usePathname()
   const router = useRouter()
-  const [collapsed, setCollapsed] = useState(false)
+  const isDrawer = variant === "drawer"
+  const [collapsed, setCollapsed] = useState(() => {
+    if (variant === "drawer") return false
+    if (typeof window === "undefined") return false
+    return window.localStorage.getItem("articleit-sidebar-collapsed") === "1"
+  })
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const userMenuRef = useRef<HTMLDivElement | null>(null)
 
-  useEffect(() => {
-    const saved = window.localStorage.getItem("articleit-sidebar-collapsed")
-    if (saved === "1") setCollapsed(true)
-  }, [])
-
-  useEffect(() => {
-    window.localStorage.setItem("articleit-sidebar-collapsed", collapsed ? "1" : "0")
-  }, [collapsed])
+  function setCollapsedPersist(next: boolean) {
+    setCollapsed(next)
+    if (isDrawer) return
+    window.localStorage.setItem("articleit-sidebar-collapsed", next ? "1" : "0")
+  }
 
   useEffect(() => {
     function onMouseDown(e: MouseEvent) {
@@ -127,7 +130,7 @@ export function Sidebar({ user, isAdmin }: Props) {
 
   return (
     <aside
-      className={`sticky top-0 flex h-screen flex-col justify-between border-r border-[#EAE4D8] bg-[#F8F6F1] py-5 transition-[width,padding] duration-200 ease-out dark:border-app-border dark:bg-app-surface ${collapsed ? "w-19 px-3" : "w-68 px-4"}`}
+      className={`${isDrawer ? "flex h-full" : "sticky top-0 flex h-screen"} flex-col justify-between border-r border-[#EAE4D8] bg-[#F8F6F1] py-5 transition-[width,padding] duration-200 ease-out dark:border-app-border dark:bg-app-surface ${collapsed ? "w-19 px-3" : "w-68 px-4"}`}
     >
       <div>
         <div
@@ -144,20 +147,32 @@ export function Sidebar({ user, isAdmin }: Props) {
                 </span>
               </Link>
 
-              <button
-                onClick={() => setCollapsed(true)}
-                aria-label="Collapse sidebar"
-                title="Collapse sidebar"
-                className="group relative flex h-8 w-8 items-center justify-center rounded-md text-[#8A8173] transition-colors duration-150 hover:bg-[#F1ECE1] hover:text-[#4F463B] dark:text-[#8E99AA] dark:hover:bg-[#1F2936] dark:hover:text-[#D7E0EE]"
-              >
-                <ChevronsLeft className="h-4 w-4" />
-              </button>
+              {isDrawer ? (
+                <button
+                  type="button"
+                  onClick={onRequestClose}
+                  aria-label="Close sidebar"
+                  title="Close"
+                  className="group relative flex h-8 w-8 items-center justify-center rounded-md text-[#8A8173] transition-colors duration-150 hover:bg-[#F1ECE1] hover:text-[#4F463B] dark:text-[#8E99AA] dark:hover:bg-[#1F2936] dark:hover:text-[#D7E0EE]"
+                >
+                  <ChevronsLeft className="h-4 w-4" />
+                </button>
+              ) : (
+                <button
+                  onClick={() => setCollapsedPersist(true)}
+                  aria-label="Collapse sidebar"
+                  title="Collapse sidebar"
+                  className="group relative flex h-8 w-8 items-center justify-center rounded-md text-[#8A8173] transition-colors duration-150 hover:bg-[#F1ECE1] hover:text-[#4F463B] dark:text-[#8E99AA] dark:hover:bg-[#1F2936] dark:hover:text-[#D7E0EE]"
+                >
+                  <ChevronsLeft className="h-4 w-4" />
+                </button>
+              )}
             </>
           ) : (
             <>
               <button
                 type="button"
-                onClick={() => setCollapsed(false)}
+                onClick={() => setCollapsedPersist(false)}
                 aria-label="Expand sidebar"
                 title="Expand sidebar"
                 className="group relative flex h-9 w-9 items-center justify-center rounded-xl bg-[#EFE8DB] text-[#7A5A2A] transition-colors duration-150 hover:bg-[#E7E0D1] dark:bg-app-surface-hover dark:text-app-accent dark:hover:bg-app-surface-active"
