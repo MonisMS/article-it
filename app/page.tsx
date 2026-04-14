@@ -7,7 +7,6 @@ import { FeedPreview } from "@/components/landing/feed-preview"
 import { BentoFeatures } from "@/components/landing/bento-features"
 import { CalmReading } from "@/components/landing/calm-reading"
 import { FinalCta } from "@/components/landing/final-cta"
-import { Footer } from "@/components/footer"
 import { Nav } from "@/components/nav"
 
 export const metadata: Metadata = {
@@ -107,7 +106,6 @@ export default function LandingPage() {
         <BentoFeatures />
         <CalmReading />
         <FinalCta />
-        <Footer />
       </div>
     </MotionProvider>
   )

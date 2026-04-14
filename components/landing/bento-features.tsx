@@ -28,7 +28,7 @@ const FEATURES = [
 
 export function BentoFeatures() {
   return (
-    <section className="bg-app-bg py-24 px-4 sm:px-6">
+    <section id="features" className="bg-app-bg py-24 px-4 sm:px-6">
       <div className="mx-auto max-w-6xl">
         <div className="text-center mb-16">
           <p className="text-xs font-semibold tracking-widest uppercase text-app-text-subtle mb-3">
