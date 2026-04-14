@@ -1,9 +1,7 @@
 import Link from "next/link"
 import { BookOpen, CheckCircle, XCircle } from "lucide-react"
-import { db } from "@/lib/db"
-import { digestSchedules } from "@/lib/db/schema"
-import { eq } from "drizzle-orm"
 import { verifyUnsubscribeToken } from "@/lib/unsubscribe-token"
+import { UnsubscribeAction } from "@/components/unsubscribe-action"
 
 type Props = {
   searchParams: Promise<{ id?: string; sig?: string }>
@@ -12,28 +10,7 @@ type Props = {
 export default async function UnsubscribePage({ searchParams }: Props) {
   const { id, sig } = await searchParams
 
-  let success = false
-  let topicName = ""
-
-  if (id && sig && verifyUnsubscribeToken(id, sig)) {
-    const schedule = await db.query.digestSchedules.findFirst({
-      where: eq(digestSchedules.id, id),
-      with: { topic: { columns: { name: true } } },
-    })
-
-    if (schedule && schedule.isActive) {
-      await db
-        .update(digestSchedules)
-        .set({ isActive: false })
-        .where(eq(digestSchedules.id, id))
-      topicName = schedule.topic.name
-      success = true
-    } else if (schedule && !schedule.isActive) {
-      // Already unsubscribed — still show success
-      topicName = schedule.topic.name
-      success = true
-    }
-  }
+  const valid = !!(id && sig && verifyUnsubscribeToken(id, sig))
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-zinc-50">
@@ -45,16 +22,13 @@ export default async function UnsubscribePage({ searchParams }: Props) {
           ArticleIt
         </Link>
 
-        {success ? (
+        {valid ? (
           <>
             <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-zinc-100 mx-auto mb-6">
               <CheckCircle className="w-6 h-6 text-zinc-600" />
             </div>
-            <h1 className="text-2xl font-bold text-zinc-900 mb-2">Unsubscribed</h1>
-            <p className="text-sm text-zinc-500 leading-relaxed mb-8">
-              You won&apos;t receive any more <span className="font-medium text-zinc-700">{topicName}</span> digest emails.
-              You can re-enable this at any time from your settings.
-            </p>
+            <h1 className="text-2xl font-bold text-zinc-900 mb-2">Confirm unsubscribe</h1>
+            <UnsubscribeAction id={id!} sig={sig!} />
           </>
         ) : (
           <>

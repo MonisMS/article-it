@@ -1,10 +1,8 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { BookOpen, ThumbsUp, ThumbsDown, XCircle } from "lucide-react"
-import { db } from "@/lib/db"
-import { articleFeedback } from "@/lib/db/schema"
 import { verifyFeedbackToken, type FeedbackRating } from "@/lib/feedback-token"
-import { eq, and } from "drizzle-orm"
+import { FeedbackAction } from "@/components/feedback-action"
 
 export const metadata: Metadata = { title: "Feedback — ArticleIt" }
 
@@ -21,26 +19,9 @@ type Props = {
 export default async function FeedbackPage({ searchParams }: Props) {
   const { userId, articleId, digestLogId, rating, sig } = await searchParams
 
-  let success = false
-  let isUp = false
-
   const validRating = rating === "up" || rating === "down"
-
-  if (userId && articleId && digestLogId && validRating && sig) {
-    const r = rating as FeedbackRating
-    if (verifyFeedbackToken(userId, articleId, digestLogId, r, sig)) {
-      isUp = r === "up"
-      // Upsert — if they rated before, update it
-      await db
-        .insert(articleFeedback)
-        .values({ userId, articleId, digestLogId, rating: r })
-        .onConflictDoUpdate({
-          target: [articleFeedback.userId, articleFeedback.articleId, articleFeedback.digestLogId],
-          set: { rating: r },
-        })
-      success = true
-    }
-  }
+  const valid = !!(userId && articleId && digestLogId && validRating && sig) &&
+    verifyFeedbackToken(userId!, articleId!, digestLogId!, rating as FeedbackRating, sig!)
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-stone-50">
@@ -52,25 +33,26 @@ export default async function FeedbackPage({ searchParams }: Props) {
           ArticleIt
         </Link>
 
-        {success ? (
+        {valid ? (
           <>
             <div className={`flex items-center justify-center w-14 h-14 rounded-2xl mx-auto mb-6 ${
-              isUp ? "bg-amber-50" : "bg-stone-100"
+              rating === "up" ? "bg-amber-50" : "bg-stone-100"
             }`}>
-              {isUp
+              {rating === "up"
                 ? <ThumbsUp className="w-6 h-6 text-amber-600" />
                 : <ThumbsDown className="w-6 h-6 text-stone-500" />
               }
             </div>
             <h1 className="text-2xl font-bold text-stone-900 mb-2">
-              {isUp ? "Glad you liked it!" : "Thanks for the feedback"}
+              {rating === "up" ? "Confirm thumbs up" : "Confirm thumbs down"}
             </h1>
-            <p className="text-sm text-stone-500 leading-relaxed mb-8">
-              {isUp
-                ? "We'll use this to surface more articles like this in your digest."
-                : "We'll use this to improve what lands in your digest."
-              }
-            </p>
+            <FeedbackAction
+              userId={userId!}
+              articleId={articleId!}
+              digestLogId={digestLogId!}
+              rating={rating as FeedbackRating}
+              sig={sig!}
+            />
           </>
         ) : (
           <>

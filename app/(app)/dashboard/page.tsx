@@ -20,6 +20,7 @@ import Link from "next/link"
 import { db } from "@/lib/db"
 import { user as userTable } from "@/lib/db/schema/auth"
 import { eq } from "drizzle-orm"
+import { isAdmin as isAdminEmail } from "@/lib/admin"
 
 export const metadata: Metadata = {
   title: "Feed — ArticleIt",
@@ -38,6 +39,10 @@ export default async function DashboardPage({ searchParams }: Props) {
     redirect("/sign-in")
   }
   if (!session) redirect("/sign-in")
+
+  const canTriggerIngest = (process.env.NODE_ENV === "development" && !process.env.ADMIN_EMAIL)
+    ? true
+    : isAdminEmail(session.user.email)
 
   const { topic, page: pageParam } = await searchParams
   const page = Math.max(0, Number(pageParam ?? 0))
@@ -125,7 +130,7 @@ export default async function DashboardPage({ searchParams }: Props) {
 
         {/* ── Article grid ─────────────────────────────────────── */}
         {articles.length === 0 ? (
-          <EmptyState hasTopics={topics.length > 0} />
+          <EmptyState hasTopics={topics.length > 0} canTriggerIngest={canTriggerIngest} />
         ) : (
           <>
             <div className="flex items-center gap-3 px-4 sm:px-6 mb-5">
@@ -165,7 +170,7 @@ export default async function DashboardPage({ searchParams }: Props) {
   )
 }
 
-function EmptyState({ hasTopics }: { hasTopics: boolean }) {
+function EmptyState({ hasTopics, canTriggerIngest }: { hasTopics: boolean; canTriggerIngest: boolean }) {
   if (!hasTopics) {
     return (
       <div className="py-24 text-center px-4 sm:px-6">
@@ -192,11 +197,15 @@ function EmptyState({ hasTopics }: { hasTopics: boolean }) {
       </div>
       <h2 className="text-xl font-semibold text-app-text mt-4">No articles yet</h2>
       <p className="text-app-text-muted text-sm mt-2 max-w-sm mx-auto">
-        The ingestion pipeline hasn&apos;t run yet. Trigger it manually to fetch articles now.
+        {canTriggerIngest
+          ? "The ingestion pipeline hasn't run yet. Trigger it manually to fetch articles now."
+          : "The ingestion pipeline runs automatically. Check back soon."}
       </p>
-      <div className="mt-6">
-        <TriggerIngestButton />
-      </div>
+      {canTriggerIngest && (
+        <div className="mt-6">
+          <TriggerIngestButton />
+        </div>
+      )}
     </div>
   )
 }

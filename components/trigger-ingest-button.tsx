@@ -6,13 +6,14 @@ import { Loader2, RefreshCw, LogIn } from "lucide-react"
 
 export function TriggerIngestButton() {
   const router = useRouter()
-  const [status, setStatus] = useState<"idle" | "loading" | "done" | "error" | "unauth">("idle")
+  const [status, setStatus] = useState<"idle" | "loading" | "done" | "error" | "unauth" | "forbidden">("idle")
 
   async function handleClick() {
     setStatus("loading")
     try {
       const res = await fetch("/api/ingest", { method: "POST" })
       if (res.status === 401) { setStatus("unauth"); return }
+      if (res.status === 403 || res.status === 404) { setStatus("forbidden"); return }
       if (!res.ok) { setStatus("error"); return }
       setStatus("done")
       router.refresh()
@@ -39,6 +40,17 @@ export function TriggerIngestButton() {
         className="mt-4 flex items-center gap-2 rounded-lg border border-zinc-200 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors"
       >
         <RefreshCw className="w-4 h-4" /> Refresh feed
+      </button>
+    )
+  }
+
+  if (status === "forbidden") {
+    return (
+      <button
+        disabled
+        className="mt-4 flex items-center gap-2 rounded-lg border border-zinc-200 px-4 py-2 text-sm font-medium text-zinc-700 opacity-60 cursor-not-allowed"
+      >
+        Fetch articles now
       </button>
     )
   }
