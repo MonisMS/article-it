@@ -4,6 +4,7 @@ import { and, eq, ilike, inArray, asc, desc, sql } from "drizzle-orm"
 
 export type ArticleWithMeta = Awaited<ReturnType<typeof getArticlesForUser>>[number]
 export type TopicSearchMatch = { id: string; name: string; slug: string; icon: string | null }
+type ArticleTopicTag = { id: string; name: string; icon: string | null; slug: string }
 
 export async function getArticlesForUser(
   userId: string,
@@ -22,6 +23,7 @@ export async function getArticlesForUser(
   if (followed.length === 0) return []
 
   const userTopicIds = followed.map((f) => f.topicId)
+  const followedTopicSet = new Set(userTopicIds)
 
   // 2. Resolve filter topic IDs
   let filterTopicIds = userTopicIds
@@ -88,8 +90,9 @@ export async function getArticlesForUser(
     .where(inArray(articleTopics.articleId, articleIds))
 
   // Build a map articleId → topics[]
-  const topicMap = new Map<string, { id: string; name: string; icon: string | null; slug: string }[]>()
+  const topicMap = new Map<string, ArticleTopicTag[]>()
   for (const row of tagRows) {
+    if (!followedTopicSet.has(row.topicId)) continue
     if (!topicMap.has(row.articleId)) topicMap.set(row.articleId, [])
     topicMap.get(row.articleId)!.push({
       id: row.topicId,
@@ -265,6 +268,7 @@ export async function searchFeedForUser(userId: string, query: string, page = 0)
 
   if (followed.length === 0) return { articles: [], topics: [] }
   const followedTopicIds = followed.map((row) => row.topicId)
+  const followedTopicSet = new Set(followedTopicIds)
 
   const topicMatches = await db
     .select({
@@ -344,8 +348,9 @@ export async function searchFeedForUser(userId: string, query: string, page = 0)
     .innerJoin(topics, eq(topics.id, articleTopics.topicId))
     .where(inArray(articleTopics.articleId, articleIds))
 
-  const topicMap = new Map<string, { id: string; name: string; icon: string | null; slug: string }[]>()
+  const topicMap = new Map<string, ArticleTopicTag[]>()
   for (const row of tagRows) {
+    if (!followedTopicSet.has(row.topicId)) continue
     if (!topicMap.has(row.articleId)) topicMap.set(row.articleId, [])
     topicMap.get(row.articleId)!.push({ id: row.topicId, name: row.topicName, icon: row.topicIcon, slug: row.topicSlug })
   }
@@ -374,6 +379,7 @@ export async function getDailyQueue(userId: string): Promise<ArticleWithMeta[]> 
   if (followed.length === 0) return []
 
   const userTopicIds = followed.map((f) => f.topicId)
+  const followedTopicSet = new Set(userTopicIds)
 
   const rows = await db
     .select({
@@ -422,8 +428,9 @@ export async function getDailyQueue(userId: string): Promise<ArticleWithMeta[]> 
     .innerJoin(topics, eq(topics.id, articleTopics.topicId))
     .where(inArray(articleTopics.articleId, articleIds))
 
-  const topicMap = new Map<string, { id: string; name: string; icon: string | null; slug: string }[]>()
+  const topicMap = new Map<string, ArticleTopicTag[]>()
   for (const row of tagRows) {
+    if (!followedTopicSet.has(row.topicId)) continue
     if (!topicMap.has(row.articleId)) topicMap.set(row.articleId, [])
     topicMap.get(row.articleId)!.push({ id: row.topicId, name: row.topicName, icon: row.topicIcon, slug: row.topicSlug })
   }
