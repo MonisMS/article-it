@@ -3,12 +3,12 @@ import { Mail, Rss, Zap, BookOpen } from "lucide-react"
 import { SeoLanding } from "@/components/seo-landing"
 
 export const metadata: Metadata = {
-  title: "Stay Informed Without Doom-Scrolling — ArticleIt",
+  title: "Stay Informed Without Doom-Scrolling — Curio",
   description:
-    "Stay up to date on what matters without social media noise. ArticleIt delivers quality-ranked articles from your chosen topics straight to your inbox.",
+    "Stay up to date on what matters without social media noise. Curio delivers quality-ranked articles from your chosen topics straight to your inbox.",
   alternates: { canonical: "/stay-informed" },
   openGraph: {
-    title: "Stay Informed Without Doom-Scrolling — ArticleIt",
+    title: "Stay Informed Without Doom-Scrolling — Curio",
     description: "Quality articles on your topics, delivered to your inbox. No algorithm, no noise.",
   },
 }
@@ -22,7 +22,7 @@ const jsonLd = {
       name: "How can I stay informed without social media?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "ArticleIt delivers quality-ranked articles on your chosen topics to your inbox — no algorithm, no doom-scrolling, no noise.",
+        text: "Curio delivers quality-ranked articles on your chosen topics to your inbox — no algorithm, no doom-scrolling, no noise.",
       },
     },
     {
@@ -30,7 +30,7 @@ const jsonLd = {
       name: "How do I stay up to date on industry news?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "ArticleIt curates 200+ sources across topics like AI, Startups, Design, and more. Get a daily or weekly digest sent to your email.",
+        text: "Curio curates 200+ sources across topics like AI, Startups, Design, and more. Get a daily or weekly digest sent to your email.",
       },
     },
   ],
@@ -76,7 +76,7 @@ export default function StayInformedPage() {
         },
         {
           q: "How is this different from Google News?",
-          a: "ArticleIt pulls from RSS sources with no ad targeting or engagement optimization. Quality is determined by reader behavior, not ad revenue.",
+          a: "Curio pulls from RSS sources with no ad targeting or engagement optimization. Quality is determined by reader behavior, not ad revenue.",
         },
         {
           q: "Can I try it for free?",

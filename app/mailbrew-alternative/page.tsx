@@ -3,13 +3,13 @@ import { Mail, Rss, Zap, BookOpen } from "lucide-react"
 import { SeoLanding } from "@/components/seo-landing"
 
 export const metadata: Metadata = {
-  title: "Best Mailbrew Alternative — ArticleIt",
+  title: "Best Mailbrew Alternative — Curio",
   description:
-    "Mailbrew shut down. ArticleIt is the best Mailbrew alternative — personalized article digests from curated sources, delivered to your inbox on your schedule.",
+    "Mailbrew shut down. Curio is the best Mailbrew alternative — personalized article digests from curated sources, delivered to your inbox on your schedule.",
   alternates: { canonical: "/mailbrew-alternative" },
   openGraph: {
-    title: "Best Mailbrew Alternative — ArticleIt",
-    description: "Mailbrew shut down. ArticleIt delivers personalized article digests to your inbox.",
+    title: "Best Mailbrew Alternative — Curio",
+    description: "Mailbrew shut down. Curioivers personalized article digests to your inbox.",
   },
 }
 
@@ -30,7 +30,7 @@ const jsonLd = {
       name: "What is the best Mailbrew alternative?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "ArticleIt is one of the best Mailbrew alternatives. It curates articles from 200+ sources by topic and delivers them on your chosen schedule.",
+        text: "Curioone of the best Mailbrew alternatives. It curates articles from 200+ sources by topic and delivers them on your chosen schedule.",
       },
     },
   ],
@@ -40,7 +40,7 @@ export default function MailbrewAlternativePage() {
   return (
     <SeoLanding
       h1="The Mailbrew Alternative You've Been Looking For"
-      subheadline="Mailbrew is gone. ArticleIt delivers curated article digests from 200+ sources to your inbox — daily, weekly, or on your own schedule."
+      subheadline="Mailbrew is gone. Curioivers curated article digests from 200+ sources to your inbox — daily, weekly, or on your own schedule."
       ctaText="Replace Mailbrew — free"
       jsonLd={jsonLd}
       features={[
@@ -67,8 +67,8 @@ export default function MailbrewAlternativePage() {
       ]}
       faqs={[
         {
-          q: "Is ArticleIt an exact Mailbrew replacement?",
-          a: "ArticleIt focuses on article digests from RSS sources. If you used Mailbrew mainly for newsletter and article curation, ArticleIt is an excellent replacement.",
+          q: "Is Curio an exact Mailbrew replacement?",
+          a: "Curio focuses on article digests from RSS sources. If you used Mailbrew mainly for newsletter and article curation, Curio is an excellent replacement.",
         },
         {
           q: "Can I choose when my digest arrives?",
@@ -80,7 +80,7 @@ export default function MailbrewAlternativePage() {
         },
         {
           q: "Is there a free plan?",
-          a: "Yes. ArticleIt's free tier includes up to 5 topics and email digests. No credit card required.",
+          a: "Yes. Curio's free tier includes up to 5 topics and email digests. No credit card required.",
         },
       ]}
     />

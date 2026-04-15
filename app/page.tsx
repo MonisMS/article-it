@@ -10,11 +10,11 @@ import { FinalCta } from "@/components/landing/final-cta"
 import { Nav } from "@/components/nav"
 
 export const metadata: Metadata = {
-  title: "ArticleIt — Calm, Curated Reading",
+  title: "Curio — Calm, Curated Reading",
   description:
     "Read what matters. Skip everything else. A calm, curated feed of high-quality articles across your interests — no noise, no endless scrolling.",
   openGraph: {
-    title: "ArticleIt — Calm, Curated Reading",
+    title: "Curio — Calm, Curated Reading",
     description: "A calm, curated feed of high-quality articles across your interests — no noise, no endless scrolling.",
   },
   alternates: {
@@ -28,7 +28,7 @@ const jsonLd = {
     {
       "@type": "WebApplication",
       "@id": "https://articleit.com/#webapp",
-      name: "ArticleIt",
+      name: "Curio",
       description:
         "A calm, curated reading platform. Pick topics, get quality-ranked articles from curated sources in a clean feed — with optional email digests.",
       url: "https://articleit.com",
@@ -55,26 +55,26 @@ const jsonLd = {
       mainEntity: [
         {
           "@type": "Question",
-          name: "What is ArticleIt?",
+          name: "What is Curio?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "ArticleIt is a personalized article aggregator that pulls from 200+ curated RSS sources, ranks articles by source quality, and delivers a daily or weekly digest to your inbox.",
+            text: "Curio is a personalized article aggregator that pulls from 200+ curated RSS sources, ranks articles by source quality, and delivers a daily or weekly digest to your inbox.",
           },
         },
         {
           "@type": "Question",
-          name: "Is ArticleIt free?",
+          name: "Is Curio free?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Yes. ArticleIt has a free tier that lets you follow up to 5 topics and receive email digests. No credit card required.",
+            text: "Yes. Curio has a free tier that lets you follow up to 5 topics and receive email digests. No credit card required.",
           },
         },
         {
           "@type": "Question",
-          name: "Is ArticleIt a good Pocket alternative?",
+          name: "Is Curio a good Pocket alternative?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Yes. Since Pocket shut down in July 2025, ArticleIt is one of the best replacements — it combines a reading feed with email digests, quality-ranked sources, and bookmarking.",
+            text: "Yes. Since Pocket shut down in July 2025, Curio is one of the best replacements — it combines a reading feed with email digests, quality-ranked sources, and bookmarking.",
           },
         },
         {
@@ -82,7 +82,7 @@ const jsonLd = {
           name: "How often are articles updated?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "ArticleIt ingests articles daily at 06:00 UTC from 200+ RSS sources across 12+ topics.",
+            text: "Curio ingests articles daily at 06:00 UTC from 200+ RSS sources across 12+ topics.",
           },
         },
       ],

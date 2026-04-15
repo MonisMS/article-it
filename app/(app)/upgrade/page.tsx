@@ -5,7 +5,7 @@ import { ArrowLeft, Check } from "lucide-react"
 import { auth } from "@/lib/auth"
 
 export const metadata: Metadata = {
-  title: "Upgrade to Pro - ArticleIt",
+  title: "Upgrade to Pro - Curio",
   description: "Unlock unlimited topics, priority delivery, and advanced reading analytics.",
 }
 

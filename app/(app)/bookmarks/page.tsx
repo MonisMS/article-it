@@ -9,7 +9,7 @@ import { getReadArticleIds } from "@/lib/db/queries/articles"
 import { bookmarks } from "@/lib/db/schema"
 
 export const metadata: Metadata = {
-  title: "Bookmarks - ArticleIt",
+  title: "Bookmarks - Curio",
   description: "Your saved articles, organized by topic.",
 }
 

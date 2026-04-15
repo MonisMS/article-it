@@ -24,7 +24,7 @@ export function Nav() {
           <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-app-accent">
             <BookOpen className="w-3.5 h-3.5 text-white" />
           </span>
-          ArticleIt
+          Curio
         </Link>
 
         <div className="flex items-center gap-2">

@@ -82,7 +82,7 @@ export default async function TopicPage({ params }: Props) {
     url: `${process.env.NEXT_PUBLIC_APP_URL ?? "https://articleit.com"}/topics/${slug}`,
     isPartOf: {
       "@type": "WebSite",
-      name: "ArticleIt",
+      name: "Curio",
       url: process.env.NEXT_PUBLIC_APP_URL ?? "https://articleit.com",
     },
   }
@@ -189,7 +189,7 @@ export default async function TopicPage({ params }: Props) {
             Get the best {topic.name} content in your inbox
           </h2>
           <p className="text-stone-400 text-sm mb-6 max-w-sm mx-auto">
-            ArticleIt curates {topic.name} articles from the web&apos;s best sources and delivers them on your schedule.
+            Curio curates {topic.name} articles from the web&apos;s best sources and delivers them on your schedule.
           </p>
           <Link
             href="/sign-up"

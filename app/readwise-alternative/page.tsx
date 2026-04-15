@@ -3,12 +3,12 @@ import { Mail, Rss, Zap, BookOpen } from "lucide-react"
 import { SeoLanding } from "@/components/seo-landing"
 
 export const metadata: Metadata = {
-  title: "Readwise Alternative for Article Discovery — ArticleIt",
+  title: "Readwise Alternative for Article Discovery — Curio",
   description:
-    "Looking for a Readwise alternative focused on article discovery? ArticleIt curates articles from 200+ sources by topic and delivers quality-ranked digests to your inbox.",
+    "Looking for a Readwise alternative focused on article discovery? Curio curates articles from 200+ sources by topic and delivers quality-ranked digests to your inbox.",
   alternates: { canonical: "/readwise-alternative" },
   openGraph: {
-    title: "Readwise Alternative for Article Discovery — ArticleIt",
+    title: "Readwise Alternative for Article Discovery — Curio",
     description: "Article discovery and email digests from 200+ curated sources. Free to start.",
   },
 }
@@ -22,15 +22,15 @@ const jsonLd = {
       name: "What is a good Readwise alternative for article discovery?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "ArticleIt is a great alternative for the article discovery and digest side of Readwise Reader — it curates 200+ sources by topic and delivers quality articles to your inbox.",
+        text: "Curio is a great alternative for the article discovery and digest side of Readwise Reader — it curates 200+ sources by topic and delivers quality articles to your inbox.",
       },
     },
     {
       "@type": "Question",
-      name: "How does ArticleIt compare to Readwise Reader?",
+      name: "How does Curio compare to Readwise Reader?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Readwise Reader is a read-later + highlighting tool. ArticleIt focuses on article discovery and email delivery — finding the best articles for you from curated sources.",
+        text: "Readwise Reader is a read-later + highlighting tool. Curio focuses on article discovery and email delivery — finding the best articles for you from curated sources.",
       },
     },
   ],
@@ -40,7 +40,7 @@ export default function ReadwiseAlternativePage() {
   return (
     <SeoLanding
       h1="A Readwise Alternative That Finds Articles for You"
-      subheadline="Readwise is great for highlights. ArticleIt handles the harder part — finding quality articles from 200+ curated sources and delivering them to your inbox."
+      subheadline="Readwise is great for highlights. Curio handles the harder part — finding quality articles from 200+ curated sources and delivering them to your inbox."
       ctaText="Discover articles — free"
       jsonLd={jsonLd}
       features={[
@@ -76,15 +76,15 @@ export default function ReadwiseAlternativePage() {
       competitorName="Readwise"
       faqs={[
         {
-          q: "Does ArticleIt do highlights like Readwise?",
-          a: "Not yet. ArticleIt focuses on article discovery and digest delivery. Highlights are on the long-term roadmap.",
+          q: "Does Curio do highlights like Readwise?",
+          a: "Not yet. Curio focuses on article discovery and digest delivery. Highlights are on the long-term roadmap.",
         },
         {
-          q: "Can I use both Readwise and ArticleIt?",
-          a: "Yes. Many users use ArticleIt for discovery (finding articles) and Readwise for retention (highlighting and reviewing).",
+          q: "Can I use both Readwise and Curio?",
+          a: "Yes. Many users use Curio for discovery (finding articles) and Readwise for retention (highlighting and reviewing).",
         },
         {
-          q: "What topics does ArticleIt cover?",
+          q: "What topics does Curio cover?",
           a: "AI, Startups, React, Design, Productivity, Crypto, Science, and more — 12+ topics with new ones added regularly.",
         },
         {

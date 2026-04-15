@@ -70,7 +70,7 @@ export default function SignUpPage() {
                 <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-app-accent text-white shadow-sm shadow-black/10">
                   <BookOpen className="h-5 w-5" />
                 </span>
-                <span className="text-[15px] font-semibold">ArticleIt</span>
+                <span className="text-[15px] font-semibold">Curio</span>
               </Link>
 
             <div className="flex flex-1 items-center">
@@ -102,7 +102,7 @@ export default function SignUpPage() {
             <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-app-accent text-white shadow-sm shadow-black/10">
               <BookOpen className="h-4.5 w-4.5" />
             </span>
-            ArticleIt
+            Curio
           </Link>
 
           <div className="rounded-[28px] bg-white p-9 sm:p-10 shadow-[0_20px_60px_rgba(17,17,17,0.08),0_6px_20px_rgba(17,17,17,0.04)]">

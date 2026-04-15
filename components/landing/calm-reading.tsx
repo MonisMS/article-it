@@ -14,7 +14,7 @@ export function CalmReading() {
             A calmer way to stay informed.
           </h2>
           <p className="mt-4 text-[15px] leading-relaxed text-app-text-muted max-w-xl">
-            ArticleIt is built for focus. No infinite feeds, no attention traps — just a clean place to read and return later.
+            Curio is built for focus. No infinite feeds, no attention traps — just a clean place to read and return later.
           </p>
 
           <div className="mt-8 grid gap-3">

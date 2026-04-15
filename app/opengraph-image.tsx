@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og"
 
-export const alt = "ArticleIt - Personalized Article Digests"
+export const alt = "Curio - Personalized Article Digests"
 export const size = {
   width: 1200,
   height: 630,
@@ -34,7 +34,7 @@ export default function OpenGraphImage() {
             color: "#E8A838",
           }}
         >
-          <span>ArticleIt</span>
+          <span>Curio</span>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "18px", maxWidth: "900px" }}>
           <h1 style={{ margin: 0, fontSize: 66, lineHeight: 1.1 }}>Personalized article digests for your interests</h1>

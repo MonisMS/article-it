@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!profile?.publicProfile) return { title: "Profile not found" }
   return {
     title: `${profile.name}'s reading list`,
-    description: `Follow ${profile.name}'s curated reading topics on ArticleIt.`,
+    description: `Follow ${profile.name}'s curated reading topics on Curio.`,
   }
 }
 
@@ -82,7 +82,7 @@ export default async function PublicProfilePage({ params }: Props) {
             <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-stone-900 dark:bg-[#E8A838] text-white dark:text-[#0D1117] flex-shrink-0">
               <BookOpen className="w-3.5 h-3.5" />
             </span>
-            ArticleIt
+            Curio
           </Link>
           <Link
             href={signUpUrl}
@@ -102,7 +102,7 @@ export default async function PublicProfilePage({ params }: Props) {
           <div>
             <h1 className="text-xl font-bold text-stone-900 dark:text-[#F0EDE6]">{profile.name}’s reading list</h1>
             <p className="text-sm text-stone-500 dark:text-[#6B7585] mt-0.5">
-              {followedTopics.length} topic{followedTopics.length !== 1 ? "s" : ""} · curated on ArticleIt
+              {followedTopics.length} topic{followedTopics.length !== 1 ? "s" : ""} · curated on Curio
             </p>
           </div>
         </div>

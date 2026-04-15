@@ -15,21 +15,21 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "ArticleIt — Personalized Article Digests",
-    template: "%s — ArticleIt",
+    default: "Curio — Personalized Article Digests",
+    template: "%s — Curio",
   },
   description:
     "Pick your topics, get the best articles from the web delivered to your inbox on your schedule. A personalized reading digest built for curious people.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://articleit.com"),
   openGraph: {
-    title: "ArticleIt — Personalized Article Digests",
+    title: "Curio — Personalized Article Digests",
     description: "Pick your topics, get the best articles from the web delivered to your inbox on your schedule.",
     type: "website",
-    siteName: "ArticleIt",
+    siteName: "Curio",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ArticleIt — Personalized Article Digests",
+    title: "Curio — Personalized Article Digests",
     description: "Pick your topics, get the best articles from the web delivered to your inbox on your schedule.",
   },
   robots: {

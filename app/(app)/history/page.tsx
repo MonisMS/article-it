@@ -6,7 +6,7 @@ import { auth } from "@/lib/auth"
 import { getDigestLogsForUser, getDigestTotals } from "@/lib/db/queries/history"
 
 export const metadata: Metadata = {
-  title: "Digest History - ArticleIt",
+  title: "Digest History - Curio",
   description: "Every digest we've sent you, and what was in it.",
 }
 

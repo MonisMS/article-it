@@ -3,12 +3,12 @@ import { Mail, Rss, Zap, BookOpen } from "lucide-react"
 import { SeoLanding } from "@/components/seo-landing"
 
 export const metadata: Metadata = {
-  title: "Personalized Email Digest — ArticleIt",
+  title: "Personalized Email Digest — Curio",
   description:
-    "Get a personalized email digest of the best articles on your topics. ArticleIt curates 200+ RSS sources and delivers quality-ranked articles to your inbox daily or weekly.",
+    "Get a personalized email digest of the best articles on your topics. Curio curates 200+ RSS sources and delivers quality-ranked articles to your inbox daily or weekly.",
   alternates: { canonical: "/personalized-email-digest" },
   openGraph: {
-    title: "Personalized Email Digest — ArticleIt",
+    title: "Personalized Email Digest — Curio",
     description: "Quality-ranked articles on your topics, delivered to your inbox on your schedule.",
   },
 }
@@ -18,7 +18,7 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "WebApplication",
-      name: "ArticleIt",
+      name: "Curio",
       description: "Personalized article email digest service. Choose topics, get quality-ranked articles in your inbox.",
       url: "https://articleit.com",
       applicationCategory: "NewsApplication",
@@ -32,7 +32,7 @@ const jsonLd = {
           name: "How do I get a personalized email digest?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Sign up at ArticleIt, pick your topics during onboarding, and set your preferred digest time and frequency. That's it.",
+            text: "Sign up at Curio, pick your topics during onboarding, and set your preferred digest time and frequency. That's it.",
           },
         },
         {
@@ -40,7 +40,7 @@ const jsonLd = {
           name: "How often is the digest sent?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "You choose — daily or weekly, at any hour you prefer. ArticleIt sends digests from 06:00 to 22:00 UTC.",
+            text: "You choose — daily or weekly, at any hour you prefer. Curio sends digests from 06:00 to 22:00 UTC.",
           },
         },
       ],
@@ -52,7 +52,7 @@ export default function PersonalizedEmailDigestPage() {
   return (
     <SeoLanding
       h1="Your Personalized Email Digest, Built Around Your Interests"
-      subheadline="Pick topics you care about. ArticleIt pulls from 200+ curated RSS sources, ranks by quality, and sends you the best articles on your schedule."
+      subheadline="Pick topics you care about. Curio pulls from 200+ curated RSS sources, ranks by quality, and sends you the best articles on your schedule."
       ctaText="Get my free digest"
       jsonLd={jsonLd}
       features={[
@@ -80,7 +80,7 @@ export default function PersonalizedEmailDigestPage() {
       faqs={[
         {
           q: "What topics can I get a digest for?",
-          a: "ArticleIt covers 12+ topics including AI & ML, Startups, React, Productivity, Design, Crypto, and more.",
+          a: "Curio covers 12+ topics including AI & ML, Startups, React, Productivity, Design, Crypto, and more.",
         },
         {
           q: "Can I set different digest times for different topics?",

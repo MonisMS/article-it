@@ -3,12 +3,12 @@ import { Mail, Rss, Zap, BookOpen } from "lucide-react"
 import { SeoLanding } from "@/components/seo-landing"
 
 export const metadata: Metadata = {
-  title: "Best Feedly Alternative — ArticleIt",
+  title: "Best Feedly Alternative — Curio",
   description:
-    "Looking for a simpler Feedly alternative? ArticleIt delivers quality-ranked articles from your favourite topics to your feed and inbox — no RSS management needed.",
+    "Looking for a simpler Feedly alternative? Curio delivers quality-ranked articles from your favourite topics to your feed and inbox — no RSS management needed.",
   alternates: { canonical: "/feedly-alternative" },
   openGraph: {
-    title: "Best Feedly Alternative — ArticleIt",
+    title: "Best Feedly Alternative — Curio",
     description: "Simpler than Feedly. Quality-ranked articles from curated sources, delivered to your inbox.",
   },
 }
@@ -22,15 +22,15 @@ const jsonLd = {
       name: "What is a good Feedly alternative?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "ArticleIt is a great Feedly alternative for people who want a curated, email-first reading experience without managing individual RSS feeds.",
+        text: "Curio is a great Feedly alternative for people who want a curated, email-first reading experience without managing individual RSS feeds.",
       },
     },
     {
       "@type": "Question",
-      name: "Is ArticleIt free like Feedly?",
+      name: "Is Curio free like Feedly?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes. ArticleIt has a generous free tier. Unlike Feedly's free plan, ArticleIt's free tier includes email digests.",
+        text: "Yes. Curio has a generous free tier. Unlike Feedly's free plan, Curio's free tier includes email digests.",
       },
     },
   ],
@@ -40,7 +40,7 @@ export default function FeedlyAlternativePage() {
   return (
     <SeoLanding
       h1="A Feedly Alternative That Emails You the Best Articles"
-      subheadline="Feedly makes you manage RSS feeds. ArticleIt curates them for you — pick topics, get quality-ranked articles in your feed and inbox."
+      subheadline="Feedly makes you manage RSS feeds. Curio curates them for you — pick topics, get quality-ranked articles in your feed and inbox."
       ctaText="Try free — no RSS setup needed"
       jsonLd={jsonLd}
       features={[
@@ -52,7 +52,7 @@ export default function FeedlyAlternativePage() {
         {
           icon: <Mail className="w-5 h-5 text-amber-500" />,
           title: "Inbox delivery included free",
-          description: "Unlike Feedly, ArticleIt sends email digests on all plans — daily or weekly, your choice.",
+          description: "Unlike Feedly, Curio sends email digests on all plans — daily or weekly, your choice.",
         },
         {
           icon: <Zap className="w-5 h-5 text-amber-500" />,
@@ -77,11 +77,11 @@ export default function FeedlyAlternativePage() {
       faqs={[
         {
           q: "Do I need to add RSS feeds manually?",
-          a: "No. ArticleIt maintains over 200 curated RSS sources across 12+ topics. You just pick the topics you care about.",
+          a: "No. Curio maintains over 200 curated RSS sources across 12+ topics. You just pick the topics you care about.",
         },
         {
-          q: "Does ArticleIt have a mobile app?",
-          a: "ArticleIt is a web app that works great on mobile. A native app is on the roadmap.",
+          q: "Does Curio have a mobile app?",
+          a: "Curio is a web app that works great on mobile. A native app is on the roadmap.",
         },
         {
           q: "Can I still add my own RSS sources?",

@@ -19,7 +19,7 @@ export default async function UnsubscribePage({ searchParams }: Props) {
           <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-zinc-900 text-white">
             <BookOpen className="w-4 h-4" />
           </span>
-          ArticleIt
+          Curio
         </Link>
 
         {valid ? (

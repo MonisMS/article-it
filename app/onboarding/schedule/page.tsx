@@ -232,7 +232,7 @@ function DigestPreviewCard({
           <Mail className="w-3 h-3 text-black" />
         </div>
         <div className="min-w-0">
-          <p className="text-xs font-semibold text-white/80 truncate">Your ArticleIt digest</p>
+          <p className="text-xs font-semibold text-white/80 truncate">Your Curio digest</p>
           <p className="text-[10px] text-white/35 truncate">digest@m0nis.com</p>
         </div>
         <span className="ml-auto text-[10px] text-white/25 flex-shrink-0">preview</span>
@@ -333,7 +333,7 @@ export default function SchedulePage() {
           <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-amber-500 text-black">
             <BookOpen className="w-3.5 h-3.5" />
           </span>
-          <span className="text-white/90">ArticleIt</span>
+          <span className="text-white/90">Curio</span>
         </div>
         <StepIndicator current={2} />
       </header>

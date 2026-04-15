@@ -6,7 +6,7 @@ export function Footer() {
       <div className="border-t border-app-border">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 py-5 flex items-center justify-between gap-6">
           <Link href="/" className="text-sm font-semibold text-app-text">
-            ArticleIt
+            Curio
           </Link>
 
           <nav className="flex items-center gap-5 text-xs font-medium text-app-text-muted">
@@ -21,7 +21,7 @@ export function Footer() {
 
       <div className="px-4 sm:px-6 pb-8">
         <div className="mx-auto max-w-6xl text-center text-xs text-app-text-subtle">
-          © 2026 ArticleIt — Built for focused reading
+          © 2026 Curio — Built for focused reading
         </div>
       </div>
     </footer>

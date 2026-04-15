@@ -3,13 +3,13 @@ import { Bookmark, Mail, Rss, Zap } from "lucide-react"
 import { SeoLanding } from "@/components/seo-landing"
 
 export const metadata: Metadata = {
-  title: "Best Pocket Alternative in 2025 — ArticleIt",
+  title: "Best Pocket Alternative in 2025 — Curio",
   description:
-    "Pocket shut down in July 2025. ArticleIt is the best Pocket alternative — save articles, get a personalized email digest, and discover great content from 200+ curated sources.",
+    "Pocket shut down in July 2025. Curio is the best Pocket alternative — save articles, get a personalized email digest, and discover great content from 200+ curated sources.",
   alternates: { canonical: "/pocket-alternative" },
   openGraph: {
-    title: "Best Pocket Alternative in 2025 — ArticleIt",
-    description: "Pocket shut down in July 2025. ArticleIt is the best free replacement.",
+    title: "Best Pocket Alternative in 2025 — Curio",
+    description: "Pocket shut down in July 2025. Curio is the best free replacement.",
   },
 }
 
@@ -30,15 +30,15 @@ const jsonLd = {
       name: "What is the best Pocket alternative?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "ArticleIt is one of the best Pocket alternatives. It offers a personalized article feed, bookmarking, and email digests from 200+ curated sources — all free to start.",
+        text: "Curio is one of the best Pocket alternatives. It offers a personalized article feed, bookmarking, and email digests from 200+ curated sources — all free to start.",
       },
     },
     {
       "@type": "Question",
-      name: "Is ArticleIt free like Pocket was?",
+      name: "Is Curio free like Pocket was?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes. ArticleIt's free tier lets you follow up to 5 topics, bookmark articles, and receive email digests. No credit card required.",
+        text: "Yes. Curio's free tier lets you follow up to 5 topics, bookmark articles, and receive email digests. No credit card required.",
       },
     },
   ],
@@ -48,7 +48,7 @@ export default function PocketAlternativePage() {
   return (
     <SeoLanding
       h1="The Best Pocket Alternative That Actually Delivers"
-      subheadline="Pocket shut down in July 2025. ArticleIt replaces it with a curated article feed, bookmarking, and scheduled email digests — free to start."
+      subheadline="Pocket shut down in July 2025. Curio replaces it with a curated article feed, bookmarking, and scheduled email digests — free to start."
       ctaText="Switch from Pocket — free"
       jsonLd={jsonLd}
       features={[
@@ -89,15 +89,15 @@ export default function PocketAlternativePage() {
         },
         {
           q: "Can I import my Pocket bookmarks?",
-          a: "ArticleIt is working on OPML and bookmark import. For now, you can re-discover great content through the curated topic feeds.",
+          a: "Curio is working on OPML and bookmark import. For now, you can re-discover great content through the curated topic feeds.",
         },
         {
-          q: "Is ArticleIt better than Pocket?",
-          a: "ArticleIt adds what Pocket was missing: curated source quality ranking and email digests. Your feed isn't just recency — it's the best content first.",
+          q: "Is Curio better than Pocket?",
+          a: "Curio adds what Pocket was missing: curated source quality ranking and email digests. Your feed isn't just recency — it's the best content first.",
         },
         {
-          q: "How is ArticleIt different from Instapaper?",
-          a: "Instapaper is a read-later tool. ArticleIt is a content discovery + delivery service — it finds the articles for you and sends them to your inbox.",
+          q: "How is Curio different from Instapaper?",
+          a: "Instapaper is a read-later tool. Curio is a content discovery + delivery service — it finds the articles for you and sends them to your inbox.",
         },
       ]}
     />

@@ -10,7 +10,7 @@ import { ProfileTabs } from "@/components/profile-tabs"
 import { getReadingInsights } from "@/lib/db/queries/insights"
 
 export const metadata: Metadata = {
-  title: "Profile — ArticleIt",
+  title: "Profile — Curio",
   description: "Manage your topics, digests, and account settings.",
 }
 

@@ -32,7 +32,7 @@ import { TriggerIngestButton } from "@/components/trigger-ingest-button"
 import { VisitTracker } from "@/components/visit-tracker"
 
 export const metadata: Metadata = {
-  title: "Feed - ArticleIt",
+  title: "Feed - Curio",
   description: "Your personalized article feed, ranked by source quality.",
 }
 

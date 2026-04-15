@@ -8,7 +8,7 @@ import { getArticlesByTopicSlug } from "@/lib/db/queries/articles"
 import { articleTopics, topics } from "@/lib/db/schema"
 
 export const metadata: Metadata = {
-  title: "Discover - ArticleIt",
+  title: "Discover - Curio",
   description: "Browse all topics and find articles that interest you.",
 }
 

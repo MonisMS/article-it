@@ -9,7 +9,7 @@ import { auth } from "@/lib/auth"
 import { searchFeedForUser } from "@/lib/db/queries/articles"
 
 export const metadata: Metadata = {
-  title: "Search - ArticleIt",
+  title: "Search - Curio",
   description: "Search across articles and followed topics in your feed.",
 }
 

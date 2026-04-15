@@ -3,12 +3,12 @@ import { Mail, Rss, Zap, BookOpen } from "lucide-react"
 import { SeoLanding } from "@/components/seo-landing"
 
 export const metadata: Metadata = {
-  title: "Simple Inoreader Alternative — ArticleIt",
+  title: "Simple Inoreader Alternative — Curio",
   description:
-    "Tired of managing RSS feeds in Inoreader? ArticleIt curates 200+ sources by topic and delivers quality-ranked articles to your inbox — zero setup.",
+    "Tired of managing RSS feeds in Inoreader? Curio curates 200+ sources by topic and delivers quality-ranked articles to your inbox — zero setup.",
   alternates: { canonical: "/inoreader-alternative" },
   openGraph: {
-    title: "Simple Inoreader Alternative — ArticleIt",
+    title: "Simple Inoreader Alternative — Curio",
     description: "Curated sources, quality ranking, email digests. No RSS management needed.",
   },
 }
@@ -22,15 +22,15 @@ const jsonLd = {
       name: "What is a good simple Inoreader alternative?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "ArticleIt is a simpler Inoreader alternative — no RSS feed management, just pick topics and get quality articles in your feed and inbox.",
+        text: "Curio is a simpler Inoreader alternative — no RSS feed management, just pick topics and get quality articles in your feed and inbox.",
       },
     },
     {
       "@type": "Question",
-      name: "Does ArticleIt require managing RSS feeds like Inoreader?",
+      name: "Does Curio require managing RSS feeds like Inoreader?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "No. ArticleIt maintains 200+ curated RSS sources for you. You pick topics, not individual feeds.",
+        text: "No. Curio maintains 200+ curated RSS sources for you. You pick topics, not individual feeds.",
       },
     },
   ],
@@ -40,8 +40,8 @@ export default function InoreaderAlternativePage() {
   return (
     <SeoLanding
       h1="A Simpler Inoreader Alternative — No RSS Management"
-      subheadline="Inoreader requires you to manage hundreds of RSS feeds. ArticleIt curates them for you — pick topics, get quality articles in your feed and inbox."
-      ctaText="Switch to ArticleIt — free"
+      subheadline="Inoreader requires you to manage hundreds of RSS feeds. Curio curates them for you — pick topics, get quality articles in your feed and inbox."
+      ctaText="Switch to Curio — free"
       jsonLd={jsonLd}
       features={[
         {
@@ -84,7 +84,7 @@ export default function InoreaderAlternativePage() {
           a: "Yes. The free plan includes 5 topics, full feed access, bookmarking, and email digests — no restrictions on core features.",
         },
         {
-          q: "What makes ArticleIt's quality ranking different?",
+          q: "What makes Curio's quality ranking different?",
           a: "Each source gets a score based on bookmark and read rates over 90 days. Articles from higher-quality sources rank higher, regardless of publish time.",
         },
         {

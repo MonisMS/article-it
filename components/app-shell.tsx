@@ -56,7 +56,7 @@ export function AppShell({ user, isAdmin, children }: Props) {
             >
               <Menu className="h-5 w-5" />
             </button>
-            <div className="text-[14px] font-semibold text-app-text">ArticleIt</div>
+            <div className="text-[14px] font-semibold text-app-text">Curio</div>
           </div>
         </div>
 

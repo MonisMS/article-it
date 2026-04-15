@@ -70,7 +70,7 @@ function SignInForm() {
             <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-app-accent text-white shadow-sm shadow-black/10">
               <BookOpen className="w-4.5 h-4.5" />
             </span>
-            ArticleIt
+            Curio
           </Link>
 
           <div className="flex-1 flex items-center">
@@ -105,7 +105,7 @@ function SignInForm() {
             <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-app-accent text-white shadow-sm shadow-black/10">
               <BookOpen className="w-4.5 h-4.5" />
             </span>
-            ArticleIt
+            Curio
           </Link>
 
           <div className="relative rounded-4xl bg-white shadow-(--shadow-card) p-9 sm:p-10 animate-in fade-in duration-500">

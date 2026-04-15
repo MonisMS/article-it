@@ -76,13 +76,13 @@ export function SeoLanding({ h1, subheadline, ctaText = "Start free — no card 
         {comparisons && competitorName && (
           <section className="max-w-2xl mx-auto px-4 sm:px-6 py-16">
             <h2 className="text-2xl font-bold text-stone-900 dark:text-[#F0EDE6] text-center mb-8">
-              ArticleIt vs {competitorName}
+              Curio vs {competitorName}
             </h2>
             <div className="rounded-2xl border border-stone-200 dark:border-[#1E2A3A] overflow-hidden">
               <div className="grid grid-cols-3 bg-stone-100 dark:bg-[#161C26] px-4 py-3 text-xs font-semibold text-stone-500 dark:text-[#6B7585] uppercase tracking-wide">
                 <span>Feature</span>
                 <span className="text-center">{competitorName}</span>
-                <span className="text-center text-amber-600 dark:text-amber-400">ArticleIt</span>
+                <span className="text-center text-amber-600 dark:text-amber-400">Curio</span>
               </div>
               {comparisons.map((row, i) => (
                 <div
@@ -158,7 +158,7 @@ export function SeoLanding({ h1, subheadline, ctaText = "Start free — no card 
           <div className="rounded-2xl bg-gradient-to-br from-stone-900 to-amber-950 p-10 text-center">
             <h2 className="text-2xl font-bold text-white mb-3">Ready to upgrade your reading?</h2>
             <p className="text-stone-400 text-sm mb-6">
-              Join thousands of curious people who use ArticleIt to stay on top of what matters.
+              Join thousands of curious people who use Curio to stay on top of what matters.
             </p>
             <Link
               href="/sign-up"

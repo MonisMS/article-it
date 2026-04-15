@@ -26,7 +26,7 @@ export default async function SuggestPage() {
             Help shape the library
           </h1>
           <p className="mt-3 text-[15px] leading-7 text-stone-600 dark:text-[#B8C0CC] sm:text-base">
-            Send us a topic you think belongs in ArticleIt. Strong suggestions help expand the library for everyone.
+            Send us a topic you think belongs in Curio. Strong suggestions help expand the library for everyone.
           </p>
         </div>
 

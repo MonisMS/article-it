@@ -51,7 +51,7 @@ export function AnimatedDigest() {
                 <span className="w-2.5 h-2.5 rounded-full bg-lp-border-strong" />
                 <span className="w-2.5 h-2.5 rounded-full bg-lp-border-strong" />
               </div>
-              <span className="text-xs text-lp-text-subtle ml-2">ArticleIt notifications</span>
+              <span className="text-xs text-lp-text-subtle ml-2">Curio notifications</span>
             </div>
 
             <div className="p-4 space-y-2 min-h-[180px]">

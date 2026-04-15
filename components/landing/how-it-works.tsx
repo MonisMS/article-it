@@ -9,7 +9,7 @@ const STEPS = [
     icon: Sparkles,
     step: "01",
     title: "Choose what you care about",
-    description: "Pick a few topics. ArticleIt stays quiet — and only pulls from sources that match your interests.",
+    description: "Pick a few topics. Curio stays quiet — and only pulls from sources that match your interests.",
   },
   {
     icon: Bookmark,

@@ -327,7 +327,7 @@ export default function OnboardingPage() {
           <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-amber-500 text-black">
             <BookOpen className="w-3.5 h-3.5" />
           </span>
-          <span className="text-white/90">ArticleIt</span>
+          <span className="text-white/90">Curio</span>
         </div>
         <StepIndicator current={1} />
       </header>

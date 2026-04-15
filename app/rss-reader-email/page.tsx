@@ -3,12 +3,12 @@ import { Mail, Rss, Zap, BookOpen } from "lucide-react"
 import { SeoLanding } from "@/components/seo-landing"
 
 export const metadata: Metadata = {
-  title: "RSS Reader That Sends Email — ArticleIt",
+  title: "RSS Reader That Sends Email — Curio",
   description:
-    "An RSS reader that sends you email digests. ArticleIt aggregates 200+ RSS feeds by topic and delivers quality-ranked articles to your inbox daily or weekly.",
+    "An RSS reader that sends you email digests. Curio aggregates 200+ RSS feeds by topic and delivers quality-ranked articles to your inbox daily or weekly.",
   alternates: { canonical: "/rss-reader-email" },
   openGraph: {
-    title: "RSS Reader That Sends Email — ArticleIt",
+    title: "RSS Reader That Sends Email — Curio",
     description: "200+ RSS feeds → quality-ranked digest → your inbox. Free to start.",
   },
 }
@@ -22,7 +22,7 @@ const jsonLd = {
       name: "Is there an RSS reader that sends emails?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes. ArticleIt aggregates 200+ RSS feeds by topic and delivers a quality-ranked digest to your email on your schedule.",
+        text: "Yes. Curio aggregates 200+ RSS feeds by topic and delivers a quality-ranked digest to your email on your schedule.",
       },
     },
     {
@@ -30,7 +30,7 @@ const jsonLd = {
       name: "Can I get RSS feeds delivered by email for free?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes. ArticleIt's free tier includes email digest delivery for up to 5 topics. No credit card required.",
+        text: "Yes. Curio's free tier includes email digest delivery for up to 5 topics. No credit card required.",
       },
     },
   ],
@@ -40,7 +40,7 @@ export default function RssReaderEmailPage() {
   return (
     <SeoLanding
       h1="An RSS Reader That Sends Articles to Your Email"
-      subheadline="Stop checking RSS readers. ArticleIt aggregates 200+ curated feeds by topic, ranks by quality, and delivers the best articles to your inbox on your schedule."
+      subheadline="Stop checking RSS readers. Curio aggregates 200+ curated feeds by topic, ranks by quality, and delivers the best articles to your inbox on your schedule."
       ctaText="Get RSS to email — free"
       jsonLd={jsonLd}
       features={[
@@ -68,7 +68,7 @@ export default function RssReaderEmailPage() {
       faqs={[
         {
           q: "Do I need to set up RSS feeds?",
-          a: "No. ArticleIt maintains 200+ curated feeds. Just pick your topics and we handle the rest.",
+          a: "No. Curio maintains 200+ curated feeds. Just pick your topics and we handle the rest.",
         },
         {
           q: "What format are the digest emails?",
@@ -80,7 +80,7 @@ export default function RssReaderEmailPage() {
         },
         {
           q: "How is this different from services like Kill the Newsletter?",
-          a: "ArticleIt focuses on web articles and RSS aggregation, not newsletter delivery. It also adds quality ranking and topic filtering.",
+          a: "Curio focuses on web articles and RSS aggregation, not newsletter delivery. It also adds quality ranking and topic filtering.",
         },
       ]}
     />
