@@ -149,7 +149,7 @@ export async function GET(req: Request) {
           totalNew,
           daysSinceRead,
           dashboardUrl: `${appUrl}/dashboard`,
-          settingsUrl: `${appUrl}/settings`,
+          settingsUrl: `${appUrl}/profile`,
         })
 
         const { error } = await resend.emails.send({

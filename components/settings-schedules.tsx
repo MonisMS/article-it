@@ -61,7 +61,6 @@ type ScheduleRow = {
 
 type TopicState = {
   topicId: string
-  isFollowing: boolean
   frequency: "daily" | "weekly"
   dayOfWeek: number
   hour: number
@@ -78,12 +77,12 @@ type TopicState = {
 }
 
 function buildState(topics: Topic[], schedules: ScheduleRow[], followedIds: string[]): TopicState[] {
+  const followedSet = new Set(followedIds)
   const scheduleMap = new Map(schedules.map((schedule) => [schedule.topicId, schedule]))
-  return topics.map((topic) => {
+  return topics.filter((topic) => followedSet.has(topic.id)).map((topic) => {
     const schedule = scheduleMap.get(topic.id)
     return {
       topicId: topic.id,
-      isFollowing: followedIds.includes(topic.id),
       frequency: (schedule?.frequency as "daily" | "weekly") ?? "weekly",
       dayOfWeek: schedule?.dayOfWeek ?? 1,
       hour: schedule?.hour ?? 9,
@@ -125,11 +124,6 @@ export function SettingsSchedules({
   async function save(topicId: string) {
     const row = rows.find((item) => item.topicId === topicId)
     if (!row) return
-
-    if (!row.isFollowing) {
-      const confirmed = window.confirm("You are not following this topic yet. Do you want to set up a digest for it anyway?")
-      if (!confirmed) return
-    }
 
     patch(topicId, { saving: true, error: null })
     const res = await fetch("/api/user/schedule", {
@@ -197,11 +191,6 @@ export function SettingsSchedules({
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="truncate text-sm font-medium text-stone-800 dark:text-[#F0EDE6]">{topic.name}</span>
-                    {!row.isFollowing && (
-                      <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-amber-700 dark:bg-amber-500/15 dark:text-amber-300">
-                        Not following
-                      </span>
-                    )}
                   </div>
                   <p className={`mt-1 text-xs ${row.hasSchedule ? "text-stone-500 dark:text-[#B8C0CC]" : "text-stone-400 dark:text-[#6B7585]"}`}>
                     {row.hasSchedule ? formatSummary(row.frequency, row.dayOfWeek, row.hour) : "No digest schedule yet"}

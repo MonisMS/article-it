@@ -1,8 +1,9 @@
 import { db } from "@/lib/db"
 import { articles, articleTopics, userTopics, topics, rssSources, bookmarks, readArticles, digestLogs } from "@/lib/db/schema"
-import { eq, inArray, desc, sql } from "drizzle-orm"
+import { and, eq, ilike, inArray, asc, desc, sql } from "drizzle-orm"
 
 export type ArticleWithMeta = Awaited<ReturnType<typeof getArticlesForUser>>[number]
+export type TopicSearchMatch = { id: string; name: string; slug: string; icon: string | null }
 
 export async function getArticlesForUser(
   userId: string,
@@ -248,6 +249,115 @@ export async function searchArticles(query: string, page = 0) {
     source: { name: row.sourceName },
     articleTopics: topicMap.get(row.id) ?? [],
   }))
+}
+
+export async function searchFeedForUser(userId: string, query: string, page = 0): Promise<{
+  articles: Awaited<ReturnType<typeof searchArticles>>
+  topics: TopicSearchMatch[]
+}> {
+  const limit = 20
+  const offset = page * limit
+
+  const followed = await db
+    .select({ topicId: userTopics.topicId })
+    .from(userTopics)
+    .where(eq(userTopics.userId, userId))
+
+  if (followed.length === 0) return { articles: [], topics: [] }
+  const followedTopicIds = followed.map((row) => row.topicId)
+
+  const topicMatches = await db
+    .select({
+      id: topics.id,
+      name: topics.name,
+      slug: topics.slug,
+      icon: topics.icon,
+    })
+    .from(topics)
+    .innerJoin(userTopics, eq(userTopics.topicId, topics.id))
+    .where(and(eq(userTopics.userId, userId), ilike(topics.name, `%${query}%`)))
+    .orderBy(asc(topics.name))
+    .limit(8)
+
+  const tsQuery = sql`plainto_tsquery('english', ${query})`
+  const tsVector = sql`to_tsvector('english', coalesce(${articles.title}, '') || ' ' || coalesce(${articles.description}, ''))`
+
+  const rows = await db
+    .select({
+      id: articles.id,
+      title: articles.title,
+      url: articles.url,
+      description: articles.description,
+      imageUrl: articles.imageUrl,
+      publishedAt: articles.publishedAt,
+      sourceName: rssSources.name,
+    })
+    .from(articles)
+    .innerJoin(rssSources, eq(rssSources.id, articles.sourceId))
+    .where(
+      sql`
+        EXISTS (
+          SELECT 1 FROM ${articleTopics}
+          WHERE ${articleTopics.articleId} = ${articles.id}
+          AND ${articleTopics.topicId} IN ${sql.raw(`('${followedTopicIds.join("','")}')`)}
+        )
+        AND (
+          ${tsVector} @@ ${tsQuery}
+          OR ${rssSources.name} ILIKE ${`%${query}%`}
+          OR EXISTS (
+            SELECT 1
+            FROM article_topics at2
+            INNER JOIN topics t2 ON t2.id = at2.topic_id
+            WHERE at2.article_id = ${articles.id}
+            AND at2.topic_id IN ${sql.raw(`('${followedTopicIds.join("','")}')`)}
+            AND t2.name ILIKE ${`%${query}%`}
+          )
+        )
+      `
+    )
+    .orderBy(
+      desc(
+        sql`
+          ts_rank(
+            ${tsVector},
+            ${tsQuery}
+          )
+        `
+      ),
+      desc(articles.publishedAt)
+    )
+    .limit(limit)
+    .offset(offset)
+
+  if (rows.length === 0) return { articles: [], topics: topicMatches }
+
+  const articleIds = rows.map((r) => r.id)
+  const tagRows = await db
+    .select({
+      articleId: articleTopics.articleId,
+      topicId: topics.id,
+      topicName: topics.name,
+      topicIcon: topics.icon,
+      topicSlug: topics.slug,
+    })
+    .from(articleTopics)
+    .innerJoin(topics, eq(topics.id, articleTopics.topicId))
+    .where(inArray(articleTopics.articleId, articleIds))
+
+  const topicMap = new Map<string, { id: string; name: string; icon: string | null; slug: string }[]>()
+  for (const row of tagRows) {
+    if (!topicMap.has(row.articleId)) topicMap.set(row.articleId, [])
+    topicMap.get(row.articleId)!.push({ id: row.topicId, name: row.topicName, icon: row.topicIcon, slug: row.topicSlug })
+  }
+
+  return {
+    topics: topicMatches,
+    articles: rows.map((row) => ({
+      ...row,
+      source: { name: row.sourceName },
+      articleTopics: topicMap.get(row.id) ?? [],
+    })),
+  }
 }
 
 /**

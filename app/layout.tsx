@@ -26,13 +26,11 @@ export const metadata: Metadata = {
     description: "Pick your topics, get the best articles from the web delivered to your inbox on your schedule.",
     type: "website",
     siteName: "ArticleIt",
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "ArticleIt — Personalized Article Digests" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "ArticleIt — Personalized Article Digests",
     description: "Pick your topics, get the best articles from the web delivered to your inbox on your schedule.",
-    images: ["/og.png"],
   },
   robots: {
     index: true,

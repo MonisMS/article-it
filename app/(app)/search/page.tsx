@@ -1,13 +1,16 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { headers } from "next/headers"
+import { redirect } from "next/navigation"
 import { Search } from "lucide-react"
 import { ArticleCard, type ArticleCardData } from "@/components/article-card"
 import { SearchBarHero } from "@/components/search-bar"
-import { searchArticles } from "@/lib/db/queries/articles"
+import { auth } from "@/lib/auth"
+import { searchFeedForUser } from "@/lib/db/queries/articles"
 
 export const metadata: Metadata = {
   title: "Search - ArticleIt",
-  description: "Search across all articles in your feed.",
+  description: "Search across articles and followed topics in your feed.",
 }
 
 type Props = { searchParams: Promise<{ q?: string; page?: string }> }
@@ -22,11 +25,20 @@ const SUGGESTIONS = [
 ]
 
 export default async function SearchPage({ searchParams }: Props) {
+  let session
+  try {
+    session = await auth.api.getSession({ headers: await headers() })
+  } catch {
+    redirect("/sign-in")
+  }
+  if (!session) redirect("/sign-in")
+
   const { q, page: pageParam } = await searchParams
   const query = q?.trim() ?? ""
   const page = Math.max(0, Number(pageParam ?? 0))
 
-  const articles = query.length >= 2 ? await searchArticles(query, page) : []
+  const searchResult = query.length >= 2 ? await searchFeedForUser(session.user.id, query, page) : { articles: [], topics: [] }
+  const { articles, topics } = searchResult
 
   return (
     <div className="mx-auto max-w-5xl px-4 pb-10 pt-8 sm:px-6">
@@ -76,6 +88,26 @@ export default async function SearchPage({ searchParams }: Props) {
 
         {query.length >= 2 && (
           <>
+            {topics.length > 0 && (
+              <div className="mb-6 rounded-2xl border border-stone-200/80 bg-white/80 p-4 dark:border-[#1E2A3A] dark:bg-[#161C26]">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-stone-400 dark:text-[#6B7585]">
+                  Matching topics in your feed
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {topics.map((topic) => (
+                    <Link
+                      key={topic.id}
+                      href={`/dashboard?topic=${topic.slug}`}
+                      className="inline-flex items-center gap-1 rounded-full border border-stone-200/80 bg-white px-3 py-1.5 text-[13px] font-medium text-stone-600 transition-colors hover:border-stone-300 hover:text-stone-900 dark:border-[#2D3B4F] dark:bg-[#0D1117] dark:text-[#B8C0CC] dark:hover:border-[#E8A838] dark:hover:text-[#F0EDE6]"
+                    >
+                      <span>{topic.icon ?? "*"}</span>
+                      <span>{topic.name}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {articles.length === 0 ? (
               <div className="py-20 text-center">
                 <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-stone-100 dark:bg-[#1E2533]">

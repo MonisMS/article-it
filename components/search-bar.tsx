@@ -26,7 +26,7 @@ export function SearchBar({ initialValue = "" }: { initialValue?: string }) {
         type="text"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder="Search articles..."
+        placeholder="Search your feed..."
         className="w-full rounded-xl border border-stone-200/80 bg-white pl-9 pr-3 py-2.5 text-sm text-stone-900 transition-colors placeholder:text-stone-400 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-500/15 dark:border-[#1E2A3A] dark:bg-[#161C26] dark:text-[#F0EDE6] dark:placeholder:text-[#6B7585]"
       />
     </form>
@@ -56,7 +56,7 @@ export function SearchBarHero({ initialValue = "" }: { initialValue?: string }) 
         type="text"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder="Search articles, topics, and sources"
+        placeholder="Search your feed and followed topics"
         className="w-full rounded-[1.35rem] border border-stone-200/80 bg-white pl-12 pr-4 py-3.5 text-[15px] text-stone-900 transition-colors placeholder:text-stone-400 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-500/15 dark:border-[#1E2A3A] dark:bg-[#161C26] dark:text-[#F0EDE6] dark:placeholder:text-[#6B7585]"
       />
     </form>

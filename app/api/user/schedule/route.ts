@@ -31,6 +31,14 @@ export async function POST(req: Request) {
   // Determine which topic IDs to upsert
   let topicIds: string[]
   if (topicId) {
+    const followedTopic = await db.query.userTopics.findFirst({
+      where: and(eq(userTopics.userId, userId), eq(userTopics.topicId, topicId)),
+      columns: { topicId: true },
+    })
+    if (!followedTopic) {
+      return NextResponse.json({ data: null, error: "Follow topic first to set a digest" }, { status: 403 })
+    }
+
     const topic = await db.query.topics.findFirst({
       where: and(eq(topics.id, topicId), eq(topics.isActive, true)),
       columns: { id: true },

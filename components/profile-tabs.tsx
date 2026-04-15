@@ -114,7 +114,7 @@ export function ProfileTabs({
         {activeTab === "digests" && (
           <div className="rounded-[1.75rem] border border-stone-200/80 bg-white p-5 dark:border-lp-border dark:bg-lp-surface">
             <p className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-200">
-              You can set a digest for any active topic, even if you do not follow it yet. A warning will appear before saving.
+              Digests are only available for topics you currently follow.
             </p>
             <SettingsSchedules topics={allTopics} followedIds={followedIds} schedules={schedules} />
           </div>
