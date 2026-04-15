@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 import { Menu } from "lucide-react"
 import { Sidebar } from "@/components/sidebar"
 import { MobileNav } from "@/components/mobile-nav"
+import { Badge } from "@/components/ui/badge"
 
 type Props = {
   user: { name: string; email: string }
@@ -56,7 +57,12 @@ export function AppShell({ user, isAdmin, children }: Props) {
             >
               <Menu className="h-5 w-5" />
             </button>
-            <div className="text-[14px] font-semibold text-app-text">Curio</div>
+            <div className="flex items-center gap-2 text-[14px] font-semibold text-app-text">
+              Curio
+              <Badge variant="secondary" className="h-5 px-2 text-[0.65rem]">
+                Beta
+              </Badge>
+            </div>
           </div>
         </div>
 

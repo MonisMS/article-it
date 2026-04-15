@@ -17,9 +17,11 @@ import {
   ChevronsLeft,
   ChevronUp,
   CreditCard,
+  Flag,
 } from "lucide-react"
 import { signOut } from "@/lib/auth-client"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { Badge } from "@/components/ui/badge"
 import { initials } from "@/lib/utils"
 
 const PRIMARY_NAV = [
@@ -33,6 +35,7 @@ const PRIMARY_NAV = [
 const SECONDARY_NAV = [
   { href: "/suggest", icon: Lightbulb, label: "Suggest a topic" },
   { href: "/profile", icon: User, label: "Profile" },
+  { href: "/beta", icon: Flag, label: "Beta feedback" },
 ]
 
 type Props = {
@@ -149,8 +152,11 @@ export function Sidebar({ user, isAdmin, variant = "desktop", onRequestClose }: 
                 <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#EFE8DB] text-[#7A5A2A] dark:bg-app-surface-hover dark:text-app-accent">
                   <BookOpen className="h-5 w-5" />
                 </span>
-                <span className="text-[14px] font-semibold text-[#2C2417] dark:text-[#EAE4D8]">
+                <span className="flex items-center gap-2 text-[14px] font-semibold text-[#2C2417] dark:text-[#EAE4D8]">
                   Curio
+                  <Badge variant="secondary" className="h-5 px-2 text-[0.65rem]">
+                    Beta
+                  </Badge>
                 </span>
               </Link>
 
