@@ -5,7 +5,7 @@ import Link from "next/link"
 import { ExternalLink } from "lucide-react"
 import { BookmarkButton } from "@/components/bookmark-button"
 import { ReadButton } from "@/components/read-button"
-import { timeAgo, readingTime } from "@/lib/utils"
+import { readingTime, timeAgo } from "@/lib/utils"
 
 type Topic = { id: string; name: string; icon: string | null; slug: string }
 
@@ -22,113 +22,115 @@ export type ArticleCardData = {
   isRead?: boolean
 }
 
-
 export function ArticleCard({
   article,
   onReadChange,
+  variant = "default",
 }: {
   article: ArticleCardData
   onReadChange?: (articleId: string, isRead: boolean) => void
+  variant?: "default" | "editorial"
 }) {
   const primaryTopic = article.articleTopics[0]
   const [read, setRead] = useState(article.isRead ?? false)
   const [imgError, setImgError] = useState(false)
 
   const showImage = article.imageUrl && !imgError
+  const isEditorial = variant === "editorial"
 
   return (
-    <div className={`group flex flex-col rounded-2xl border overflow-hidden transition-all duration-200
-      ${read
-        ? "bg-stone-50 dark:bg-[#0D1117] border-stone-200 dark:border-[#1E2A3A] border-l-4 border-l-stone-300 dark:border-l-[#2D3B4F]"
-        : "bg-gradient-to-b from-white dark:from-[#161C26] to-stone-50/50 dark:to-[#0D1117] border-stone-200 dark:border-[#1E2A3A] hover:border-stone-300 dark:hover:border-[#2D3B4F] hover:shadow-md hover:shadow-stone-200/60 dark:hover:shadow-black/30 hover:-translate-y-0.5"
-      }`}>
-
-      {showImage ? (
-        <img
-          src={article.imageUrl!}
-          alt={article.title}
-          onError={() => setImgError(true)}
-          className="object-cover aspect-video w-full"
-        />
-      ) : (
-        <div className="h-1 w-full bg-gradient-to-r from-amber-400 to-amber-600" />
-      )}
-
-      <div className="flex flex-col gap-3 flex-1 p-5">
-        {primaryTopic && (
-          <div className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 flex-shrink-0" />
-            <span className="text-xs font-medium text-stone-500 dark:text-[#6B7585]">{primaryTopic.name}</span>
-          </div>
-        )}
+    <div
+      className={
+        isEditorial
+          ? `group relative flex items-start gap-4 rounded-[1.4rem] border border-transparent px-4 py-5 transition-colors ${read ? "opacity-60" : "hover:border-stone-200/80 hover:bg-white/75 dark:hover:border-[#1E2A3A] dark:hover:bg-[#121925]/70"}`
+          : `group flex items-start gap-4 border-b border-stone-100 px-1 py-4 transition-colors ${read ? "opacity-50" : "hover:bg-stone-50/60 dark:hover:bg-[#0F1621]/60"} dark:border-[#1E2A3A]`
+      }
+    >
+      <div className="flex min-w-0 flex-1 flex-col gap-2">
+        <div className="flex flex-wrap items-center gap-1.5 text-[11px] uppercase tracking-[0.14em] text-stone-400 dark:text-[#6B7585]">
+          {primaryTopic && (
+            <>
+              <span className="font-semibold text-stone-500 dark:text-[#8A95A7]">
+                {primaryTopic.icon ? `${primaryTopic.icon} ` : ""}{primaryTopic.name}
+              </span>
+              <span className="text-stone-200 dark:text-[#2A3547]">&bull;</span>
+            </>
+          )}
+          <span>{article.source.name}</span>
+          {(article.source.qualityScore ?? 0) >= 0.75 && (
+            <span
+              title="Frequently bookmarked source"
+              className="rounded-full bg-amber-50 px-1.5 py-0.5 text-[9px] font-semibold tracking-[0.16em] text-amber-700 dark:bg-[#2A3547] dark:text-[#E8A838]"
+            >
+              Saved often
+            </span>
+          )}
+          {article.publishedAt && (
+            <>
+              <span className="text-stone-200 dark:text-[#2A3547]">&bull;</span>
+              <span>{timeAgo(article.publishedAt)}</span>
+            </>
+          )}
+          {article.description && (
+            <>
+              <span className="text-stone-200 dark:text-[#2A3547]">&bull;</span>
+              <span>{readingTime(article.description)}</span>
+            </>
+          )}
+        </div>
 
         <Link
           href={article.url}
           target="_blank"
           rel="noopener noreferrer"
-          className={`text-[15px] font-semibold leading-snug hover:text-amber-700 dark:hover:text-[#E8A838] transition-colors line-clamp-2
-            ${read ? "text-stone-400 dark:text-[#6B7585]" : "text-stone-900 dark:text-[#F0EDE6]"}`}
+          className={`${isEditorial ? "text-lg leading-[1.35] sm:text-[1.2rem]" : "text-[15px] leading-snug"} line-clamp-2 font-semibold transition-colors hover:text-amber-700 dark:hover:text-[#E8A838] ${read ? "text-stone-400 dark:text-[#4A5568]" : "text-stone-900 dark:text-[#F0EDE6]"}`}
         >
           {article.title}
         </Link>
 
         {article.description && (
-          <p className="text-sm text-stone-500 dark:text-[#B8C0CC] leading-relaxed line-clamp-2">
+          <p
+            className={`${isEditorial ? "line-clamp-3 text-[15px] leading-7 text-stone-600 dark:text-[#B8C0CC]" : "line-clamp-1 text-sm leading-snug text-stone-500 dark:text-[#8A95A7]"}`}
+          >
             {article.description}
           </p>
         )}
 
-        <div className="flex items-center justify-between mt-auto pt-2 border-t border-stone-100 dark:border-[#1E2A3A]">
-          <div className="flex items-center gap-2 text-xs text-stone-400 dark:text-[#6B7585]">
-            <span className="font-medium text-stone-500 dark:text-[#B8C0CC]">{article.source.name}</span>
-            {(article.source.qualityScore ?? 0) >= 0.75 && (
-              <span
-                title="This source ranks highly because readers frequently bookmark and read articles from it."
-                className="inline-flex items-center gap-1 text-[10px] font-semibold text-amber-600 dark:text-[#E8A838] bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700/40 rounded-full px-1.5 py-0.5 cursor-default select-none"
-              >
-                <span className="w-1 h-1 rounded-full bg-amber-500 dark:bg-[#E8A838]" />
-                Top source
-              </span>
-            )}
-            {article.publishedAt && (
-              <>
-                <span>·</span>
-                <span>{timeAgo(article.publishedAt)}</span>
-              </>
-            )}
-            {article.description && (
-              <>
-                <span>·</span>
-                <span>{readingTime(article.description)}</span>
-              </>
-            )}
-          </div>
-
-          <div className="flex items-center gap-0.5">
-            <ReadButton
-              articleId={article.id}
-              initialRead={read}
-              onToggle={(isRead) => {
-                setRead(isRead)
-                onReadChange?.(article.id, isRead)
-              }}
-            />
-            <BookmarkButton
-              articleId={article.id}
-              initialBookmarked={article.isBookmarked ?? false}
-            />
-            <Link
-              href={article.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center w-7 h-7 rounded-md text-stone-400 dark:text-[#6B7585] hover:text-stone-700 dark:hover:text-[#F0EDE6] hover:bg-stone-100 dark:hover:bg-[#1E2533] transition-colors"
-              title="Open article"
-            >
-              <ExternalLink className="w-3.5 h-3.5" />
-            </Link>
-          </div>
+        <div className={`${isEditorial ? "mt-1 opacity-70 group-hover:opacity-100" : "mt-1 opacity-0 group-hover:opacity-100"} flex items-center gap-0.5 transition-opacity`}>
+          <ReadButton
+            articleId={article.id}
+            initialRead={read}
+            onToggle={(isRead) => {
+              setRead(isRead)
+              onReadChange?.(article.id, isRead)
+            }}
+          />
+          <BookmarkButton
+            articleId={article.id}
+            initialBookmarked={article.isBookmarked ?? false}
+          />
+          <Link
+            href={article.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex h-7 w-7 items-center justify-center rounded-md text-stone-400 transition-colors hover:bg-stone-100 hover:text-stone-700 dark:text-[#6B7585] dark:hover:bg-[#1E2533] dark:hover:text-[#F0EDE6]"
+            title="Open article"
+          >
+            <ExternalLink className="h-3.5 w-3.5" />
+          </Link>
         </div>
       </div>
+
+      {showImage && (
+        <div className={`${isEditorial ? "mt-1 hidden h-[92px] w-[92px] rounded-2xl sm:block" : "mt-0.5 h-[72px] w-[72px] rounded-[6px]"} shrink-0 overflow-hidden bg-stone-100 dark:bg-[#1E2533]`}>
+          <img
+            src={article.imageUrl!}
+            alt=""
+            onError={() => setImgError(true)}
+            className="h-full w-full object-cover"
+          />
+        </div>
+      )}
     </div>
   )
 }

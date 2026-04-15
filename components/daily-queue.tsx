@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { CheckCircle2, Circle, ChevronDown, ExternalLink } from "lucide-react"
+import { CheckCircle2, Circle, ExternalLink } from "lucide-react"
 import type { ArticleCardData } from "@/components/article-card"
 import { readingTime } from "@/lib/utils"
 
@@ -12,20 +12,25 @@ type Props = {
 export function DailyQueue({ initialArticles }: Props) {
   const total = initialArticles.length
   const [readSet, setReadSet] = useState<Set<string>>(
-    () => new Set(initialArticles.filter((a) => a.isRead).map((a) => a.id))
+    () => new Set(initialArticles.filter((article) => article.isRead).map((article) => article.id))
   )
-  const [open, setOpen] = useState(true)
 
   const readCount = readSet.size
   const allRead = readCount >= total
+  const preview = initialArticles.slice(0, 5)
 
   async function toggle(id: string) {
     const wasRead = readSet.has(id)
     setReadSet((prev) => {
       const next = new Set(prev)
-      wasRead ? next.delete(id) : next.add(id)
+      if (wasRead) {
+        next.delete(id)
+      } else {
+        next.add(id)
+      }
       return next
     })
+
     try {
       const res = await fetch("/api/user/read", {
         method: "POST",
@@ -34,10 +39,13 @@ export function DailyQueue({ initialArticles }: Props) {
       })
       if (!res.ok) throw new Error()
     } catch {
-      // Roll back on failure
       setReadSet((prev) => {
         const next = new Set(prev)
-        wasRead ? next.add(id) : next.delete(id)
+        if (wasRead) {
+          next.add(id)
+        } else {
+          next.delete(id)
+        }
         return next
       })
     }
@@ -46,92 +54,61 @@ export function DailyQueue({ initialArticles }: Props) {
   if (total === 0) return null
 
   return (
-    <div className="mx-4 sm:mx-6 mb-8 rounded-2xl border border-stone-200 dark:border-[#1E2A3A] bg-white dark:bg-[#161C26] overflow-hidden">
-      {/* Header */}
-      <button
-        onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between px-5 py-4 hover:bg-stone-50 dark:hover:bg-[#1A2233] transition-colors"
-      >
-        <div className="flex items-center gap-3">
-          <span className="text-lg leading-none">📚</span>
-          <div className="text-left">
-            <p className="text-sm font-semibold text-stone-800 dark:text-[#F0EDE6]">Today&apos;s Queue</p>
-            {allRead ? (
-              <p className="text-xs text-green-600 dark:text-green-400 font-medium">All done 🎉</p>
-            ) : (
-              <p className="text-xs text-stone-400 dark:text-[#6B7585]">{readCount}/{total} read</p>
-            )}
-          </div>
+    <div className="rounded-[1.75rem] border border-stone-200/80 bg-white/75 p-5 shadow-[0_12px_40px_rgba(28,25,23,0.04)] dark:border-[#1E2A3A] dark:bg-[#121925]/80">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-400 dark:text-[#6B7585]">
+            Today&apos;s queue
+          </p>
+          <h2 className="mt-2 text-lg font-semibold text-stone-900 dark:text-[#F0EDE6]">
+            A short list worth finishing
+          </h2>
         </div>
+        <span className="rounded-full bg-stone-100 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-stone-500 dark:bg-[#1E2533] dark:text-[#8A95A7]">
+          {allRead ? "Complete" : `${readCount}/${total} read`}
+        </span>
+      </div>
 
-        <div className="flex items-center gap-3">
-          {/* Progress bar */}
-          {!allRead && (
-            <div className="w-20 h-1.5 rounded-full bg-stone-100 dark:bg-[#1E2533] overflow-hidden">
-              <div
-                className="h-full rounded-full bg-amber-500 transition-all duration-500"
-                style={{ width: `${total > 0 ? (readCount / total) * 100 : 0}%` }}
-              />
-            </div>
-          )}
-          <ChevronDown
-            className={`w-4 h-4 text-stone-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-          />
-        </div>
-      </button>
-
-      {/* Rows */}
-      {open && (
-        <div className="border-t border-stone-100 dark:border-[#1E2A3A] divide-y divide-stone-100 dark:divide-[#1E2A3A]/60">
-          {allRead ? (
-            <div className="px-5 py-8 text-center">
-              <CheckCircle2 className="w-8 h-8 text-green-500 mx-auto mb-2" />
-              <p className="text-sm font-medium text-stone-700 dark:text-[#C8C4BC]">Queue complete</p>
-              <p className="text-xs text-stone-400 dark:text-[#6B7585] mt-0.5">Come back tomorrow for a fresh batch.</p>
-            </div>
-          ) : (
-            initialArticles.map((article) => {
+      <div className="mt-4">
+        {allRead ? (
+          <p className="text-sm leading-6 text-stone-500 dark:text-[#8A95A7]">
+            Queue complete. Come back tomorrow for a fresh batch.
+          </p>
+        ) : (
+          <div className="divide-y divide-stone-100 dark:divide-[#1A2233]">
+            {preview.map((article) => {
               const isRead = readSet.has(article.id)
+
               return (
                 <div
                   key={article.id}
-                  className={`flex items-start gap-3 px-5 py-3.5 transition-colors ${
-                    isRead ? "opacity-50" : "hover:bg-stone-50 dark:hover:bg-[#1A2233]"
-                  }`}
+                  className={`group flex items-start gap-3 py-3.5 transition-colors ${isRead ? "opacity-55" : "hover:bg-stone-50/40 dark:hover:bg-[#0F1621]/40"}`}
                 >
                   <button
                     onClick={() => toggle(article.id)}
-                    className="mt-0.5 flex-shrink-0 text-stone-300 dark:text-[#2A3547] hover:text-amber-500 transition-colors"
+                    className="mt-0.5 shrink-0 rounded-full text-stone-300 transition-colors hover:text-stone-500 dark:text-[#2A3547] dark:hover:text-[#6B7585]"
                     aria-label={isRead ? "Mark unread" : "Mark read"}
                   >
                     {isRead
-                      ? <CheckCircle2 className="w-4.5 h-4.5 text-amber-500 w-[18px] h-[18px]" />
-                      : <Circle className="w-[18px] h-[18px]" />
-                    }
+                      ? <CheckCircle2 className="h-[15px] w-[15px] text-stone-400 dark:text-[#4A5568]" />
+                      : <Circle className="h-[15px] w-[15px]" />}
                   </button>
 
-                  <div className="flex-1 min-w-0">
+                  <div className="min-w-0 flex-1">
                     <a
                       href={article.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`text-sm font-medium leading-snug line-clamp-1 hover:text-amber-600 transition-colors ${
-                        isRead ? "text-stone-400 dark:text-[#6B7585]" : "text-stone-800 dark:text-[#F0EDE6]"
-                      }`}
+                      className={`line-clamp-2 text-[15px] font-medium leading-6 transition-colors hover:text-amber-600 dark:hover:text-[#E8A838] ${isRead ? "text-stone-400 dark:text-[#4A5568]" : "text-stone-800 dark:text-[#F0EDE6]"}`}
                     >
                       {article.title}
                     </a>
-                    <div className="flex items-center gap-1.5 mt-0.5">
-                      {article.articleTopics[0]?.icon && (
-                        <span className="text-xs leading-none">{article.articleTopics[0].icon}</span>
-                      )}
-                      <span className="text-xs text-stone-400 dark:text-[#6B7585] truncate">{article.source.name}</span>
+                    <div className="mt-1 flex items-center gap-1.5 text-[11px] uppercase tracking-[0.12em] text-stone-400 dark:text-[#6B7585]">
+                      <span>{article.source.name}</span>
                       {article.description && (
                         <>
-                          <span className="text-stone-200 dark:text-[#2A3547]">·</span>
-                          <span className="text-xs text-stone-400 dark:text-[#6B7585]">
-                            {readingTime(article.description)}
-                          </span>
+                          <span className="text-stone-200 dark:text-[#2A3547]">&bull;</span>
+                          <span>{readingTime(article.description)}</span>
                         </>
                       )}
                     </div>
@@ -141,16 +118,22 @@ export function DailyQueue({ initialArticles }: Props) {
                     href={article.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-shrink-0 mt-0.5 text-stone-300 dark:text-[#2A3547] hover:text-stone-500 transition-colors"
+                    className="mt-0.5 shrink-0 text-stone-300 opacity-0 transition-all hover:text-stone-500 group-hover:opacity-100 dark:text-[#2A3547]"
                     aria-label="Open article"
                   >
-                    <ExternalLink className="w-3.5 h-3.5" />
+                    <ExternalLink className="h-3.5 w-3.5" />
                   </a>
                 </div>
               )
-            })
-          )}
-        </div>
+            })}
+          </div>
+        )}
+      </div>
+
+      {!allRead && total > preview.length && (
+        <p className="mt-4 text-[11px] uppercase tracking-[0.14em] text-stone-400 dark:text-[#6B7585]">
+          +{total - preview.length} more in today&apos;s queue
+        </p>
       )}
     </div>
   )
