@@ -1,6 +1,6 @@
 import { db } from "@/lib/db"
 import { topicSuggestions } from "@/lib/db/schema"
-import { eq, desc } from "drizzle-orm"
+import { eq } from "drizzle-orm"
 
 export type SuggestionRow = {
   id: string

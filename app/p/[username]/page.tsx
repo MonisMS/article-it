@@ -2,8 +2,8 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import type { Metadata } from "next"
 import { db } from "@/lib/db"
-import { user, userTopics, topics, articles, articleTopics, rssSources } from "@/lib/db/schema"
-import { eq, desc, sql, inArray } from "drizzle-orm"
+import { user, userTopics, articles, articleTopics, rssSources } from "@/lib/db/schema"
+import { eq, desc, sql } from "drizzle-orm"
 import { initials } from "@/lib/utils"
 import { BookOpen } from "lucide-react"
 
@@ -100,7 +100,7 @@ export default async function PublicProfilePage({ params }: Props) {
             <span className="text-xl font-bold text-amber-700 dark:text-[#E8A838]">{initials(profile.name)}</span>
           </div>
           <div>
-            <h1 className="text-xl font-bold text-stone-900 dark:text-[#F0EDE6]">{profile.name}'s reading list</h1>
+            <h1 className="text-xl font-bold text-stone-900 dark:text-[#F0EDE6]">{profile.name}’s reading list</h1>
             <p className="text-sm text-stone-500 dark:text-[#6B7585] mt-0.5">
               {followedTopics.length} topic{followedTopics.length !== 1 ? "s" : ""} · curated on ArticleIt
             </p>
@@ -154,13 +154,13 @@ export default async function PublicProfilePage({ params }: Props) {
         <div className="rounded-2xl bg-gradient-to-br from-stone-900 to-amber-950 p-8 text-center">
           <h3 className="text-lg font-bold text-white mb-2">Get this reading list in your inbox</h3>
           <p className="text-stone-400 text-sm mb-5">
-            Follow {profile.name}'s {followedTopics.length} topics and get quality-ranked articles delivered to your email on your schedule. Free to start.
+            Follow {profile.name}’s {followedTopics.length} topics and get quality-ranked articles delivered to your email on your schedule. Free to start.
           </p>
           <Link
             href={signUpUrl}
             className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-black font-semibold px-6 py-3 rounded-xl transition-colors text-sm"
           >
-            Follow these topics — it's free →
+            Follow these topics — it’s free →
           </Link>
         </div>
       </main>

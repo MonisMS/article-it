@@ -1,11 +1,11 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { headers } from "next/headers"
+import { ArrowLeft, Check } from "lucide-react"
 import { auth } from "@/lib/auth"
-import { ArrowLeft, Check, Sparkles, Zap } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Upgrade to Pro — ArticleIt",
+  title: "Upgrade to Pro - ArticleIt",
   description: "Unlock unlimited topics, priority delivery, and advanced reading analytics.",
 }
 
@@ -13,7 +13,7 @@ const FREE_FEATURES = [
   "Personalized article feed",
   "Up to 5 followed topics",
   "Daily reading queue",
-  "Bookmarks & reading history",
+  "Bookmarks and reading history",
   "Weekly or daily email digests",
   "Topic suggestions",
 ]
@@ -21,20 +21,18 @@ const FREE_FEATURES = [
 const PRO_FEATURES = [
   "Everything in Free",
   "Unlimited topics",
-  "Priority ingestion (articles arrive first)",
+  "Priority ingestion",
   "Full digest history archive",
   "Multiple digest schedules",
-  "Advanced reading analytics",
+  "Advanced reading insights",
   "Early access to new features",
 ]
 
-function FeatureRow({ text, included = true }: { text: string; included?: boolean }) {
+function FeatureRow({ text, muted = false }: { text: string; muted?: boolean }) {
   return (
-    <li className={`flex items-start gap-3 text-sm ${included ? "text-stone-700" : "text-stone-400"}`}>
-      <span className={`mt-0.5 flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center ${
-        included ? "bg-amber-100 text-amber-600" : "bg-stone-100 text-stone-400"
-      }`}>
-        <Check className="w-2.5 h-2.5" strokeWidth={3} />
+    <li className={`flex items-start gap-3 text-sm leading-6 ${muted ? "text-stone-400 dark:text-[#8A95A7]" : "text-stone-700 dark:text-[#C8C4BC]"}`}>
+      <span className={`mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full ${muted ? "bg-stone-100 text-stone-400 dark:bg-[#1E2533] dark:text-[#6B7585]" : "bg-amber-50 text-amber-700 dark:bg-[#2A3547] dark:text-[#E8A838]"}`}>
+        <Check className="h-2.5 w-2.5" strokeWidth={3} />
       </span>
       {text}
     </li>
@@ -46,123 +44,92 @@ export default async function UpgradePage() {
   try {
     const session = await auth.api.getSession({ headers: await headers() })
     email = session?.user.email ?? ""
-  } catch { /* not critical */ }
+  } catch {
+    // not critical for layout
+  }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      {/* Header */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-stone-900 via-stone-800 to-amber-950 px-4 sm:px-10 pt-12 pb-16 text-center">
-        {/* Glow */}
-        <div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] opacity-30 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse, #f59e0b 0%, transparent 70%)", filter: "blur(60px)" }}
-        />
-        <div className="relative">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/20 border border-amber-500/30 text-amber-400 text-xs font-semibold px-3 py-1 mb-5">
-            <Zap className="w-3 h-3 fill-amber-400" />
-            Coming soon
-          </span>
-          <h1 className="text-4xl font-bold text-white tracking-tight">
-            Upgrade to{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">
-              Pro
-            </span>
+    <div className="mx-auto max-w-5xl px-4 pb-12 pt-8 sm:px-6">
+      <header className="border-b border-stone-200/80 pb-8 dark:border-[#1E2A3A]">
+        <div className="max-w-3xl">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-stone-400 dark:text-[#6B7585]">
+            Upgrade
+          </p>
+          <h1 className="mt-3 text-3xl font-semibold tracking-tight text-stone-900 dark:text-[#F0EDE6] sm:text-[2.4rem]">
+            Pro is on the way
           </h1>
-          <p className="mt-3 text-stone-400 text-base max-w-md mx-auto">
-            More topics, faster delivery, and deeper insights into your reading habits.
+          <p className="mt-3 text-[15px] leading-7 text-stone-600 dark:text-[#B8C0CC] sm:text-base">
+            A future upgrade for readers who want broader coverage, faster delivery, and a deeper archive.
           </p>
         </div>
-      </div>
+      </header>
 
-      {/* Pricing cards */}
-      <div className="px-4 sm:px-6 -mt-8 pb-16">
-        <div className="grid sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
-
-          {/* Free */}
-          <div className="rounded-2xl bg-white border border-stone-200 p-6 flex flex-col">
-            <div className="mb-5">
-              <p className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-1">Free</p>
-              <div className="flex items-end gap-1">
-                <span className="text-4xl font-bold text-stone-900">$0</span>
-                <span className="text-stone-400 text-sm mb-1.5">/month</span>
-              </div>
-              <p className="text-sm text-stone-500 mt-1">Everything you need to get started.</p>
+      <div className="mt-8 grid gap-4 sm:grid-cols-2">
+        <section className="rounded-[1.75rem] border border-stone-200/80 bg-white p-6 dark:border-[#1E2A3A] dark:bg-[#161C26]">
+          <div className="border-b border-stone-200/80 pb-4 dark:border-[#1E2A3A]">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-stone-400 dark:text-[#6B7585]">Free</p>
+            <div className="mt-2 flex items-end gap-1">
+              <span className="text-4xl font-semibold tracking-tight text-stone-900 dark:text-[#F0EDE6]">$0</span>
+              <span className="mb-1 text-sm text-stone-400 dark:text-[#6B7585]">/month</span>
             </div>
+            <p className="mt-2 text-sm text-stone-500 dark:text-[#8A95A7]">Everything you need to get started.</p>
+          </div>
 
-            <ul className="space-y-2.5 flex-1">
-              {FREE_FEATURES.map((f) => <FeatureRow key={f} text={f} />)}
-            </ul>
+          <ul className="mt-5 space-y-3">
+            {FREE_FEATURES.map((feature) => (
+              <FeatureRow key={feature} text={feature} />
+            ))}
+          </ul>
 
-            <div className="mt-6 pt-5 border-t border-stone-100">
-              <span className="block w-full text-center rounded-xl border border-stone-200 bg-stone-50 px-4 py-2.5 text-sm font-semibold text-stone-500">
-                Current plan
+          <div className="mt-6 border-t border-stone-200/80 pt-5 dark:border-[#1E2A3A]">
+            <span className="block rounded-xl border border-stone-200/80 bg-stone-50 px-4 py-2.5 text-center text-sm font-medium text-stone-500 dark:border-[#1E2A3A] dark:bg-[#121925] dark:text-[#8A95A7]">
+              Current plan
+            </span>
+          </div>
+        </section>
+
+        <section className="rounded-[1.75rem] border border-stone-200/80 bg-stone-50/80 p-6 dark:border-[#1E2A3A] dark:bg-[#121925]/80">
+          <div className="border-b border-stone-200/80 pb-4 dark:border-[#1E2A3A]">
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-stone-400 dark:text-[#6B7585]">Pro</p>
+              <span className="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-amber-700 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-200">
+                Coming soon
               </span>
             </div>
+            <div className="mt-2 flex items-end gap-1">
+              <span className="text-4xl font-semibold tracking-tight text-stone-900 dark:text-[#F0EDE6]">$9</span>
+              <span className="mb-1 text-sm text-stone-400 dark:text-[#6B7585]">/month</span>
+            </div>
+            <p className="mt-2 text-sm text-stone-500 dark:text-[#8A95A7]">For readers who want more control and more depth.</p>
           </div>
 
-          {/* Pro */}
-          <div className="relative rounded-2xl bg-gradient-to-b from-stone-900 to-stone-800 border border-stone-700 p-6 flex flex-col overflow-hidden">
-            {/* Subtle glow */}
-            <div
-              className="absolute -top-10 -right-10 w-40 h-40 opacity-20 pointer-events-none"
-              style={{ background: "radial-gradient(circle, #f59e0b 0%, transparent 70%)" }}
-            />
+          <ul className="mt-5 space-y-3">
+            {PRO_FEATURES.map((feature, index) => (
+              <FeatureRow key={feature} text={feature} muted={index === 0} />
+            ))}
+          </ul>
 
-            <div className="relative mb-5">
-              <div className="flex items-center gap-2 mb-1">
-                <p className="text-xs font-semibold text-amber-400 uppercase tracking-widest">Pro</p>
-                <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/20 border border-amber-500/30 text-amber-400 text-xs font-semibold px-2 py-0.5">
-                  <Sparkles className="w-2.5 h-2.5" />
-                  Soon
-                </span>
-              </div>
-              <div className="flex items-end gap-1">
-                <span className="text-4xl font-bold text-white">$9</span>
-                <span className="text-stone-400 text-sm mb-1.5">/month</span>
-              </div>
-              <p className="text-sm text-stone-400 mt-1">For serious readers who want more.</p>
-            </div>
-
-            <ul className="relative space-y-2.5 flex-1">
-              {PRO_FEATURES.map((f, i) => (
-                <li key={f} className={`flex items-start gap-3 text-sm ${i === 0 ? "text-stone-400" : "text-stone-200"}`}>
-                  <span className={`mt-0.5 flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center ${
-                    i === 0 ? "bg-stone-700 text-stone-500" : "bg-amber-500/20 text-amber-400"
-                  }`}>
-                    <Check className="w-2.5 h-2.5" strokeWidth={3} />
-                  </span>
-                  {f}
-                </li>
-              ))}
-            </ul>
-
-            <div className="relative mt-6 pt-5 border-t border-stone-700">
-              <div className="rounded-xl bg-stone-800/60 border border-stone-700 px-4 py-3.5 text-center">
-                <p className="text-xs font-semibold text-amber-400 mb-0.5">Launching soon</p>
-                {email ? (
-                  <p className="text-xs text-stone-400 leading-relaxed">
-                    We'll email <span className="text-stone-300 font-medium">{email}</span> the moment Pro is available.
-                  </p>
-                ) : (
-                  <p className="text-xs text-stone-400 leading-relaxed">
-                    We'll notify you when Pro is ready.
-                  </p>
-                )}
-              </div>
+          <div className="mt-6 border-t border-stone-200/80 pt-5 dark:border-[#1E2A3A]">
+            <div className="rounded-xl border border-stone-200/80 bg-white px-4 py-3.5 dark:border-[#1E2A3A] dark:bg-[#161C26]">
+              <p className="text-xs font-semibold text-stone-900 dark:text-[#F0EDE6]">Launch notification</p>
+              <p className="mt-1 text-xs leading-5 text-stone-500 dark:text-[#8A95A7]">
+                {email
+                  ? `We will email ${email} when Pro is available.`
+                  : "We will notify you when Pro is available."}
+              </p>
             </div>
           </div>
-        </div>
+        </section>
+      </div>
 
-        {/* Back link */}
-        <div className="flex justify-center mt-8">
-          <Link
-            href="/profile"
-            className="inline-flex items-center gap-1.5 text-sm text-stone-400 hover:text-stone-700 transition-colors"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            Back to profile
-          </Link>
-        </div>
+      <div className="mt-8 flex justify-center">
+        <Link
+          href="/profile"
+          className="inline-flex items-center gap-1.5 text-sm text-stone-500 transition-colors hover:text-stone-800 dark:text-[#8A95A7] dark:hover:text-[#F0EDE6]"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          Back to profile
+        </Link>
       </div>
     </div>
   )

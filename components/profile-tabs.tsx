@@ -3,10 +3,10 @@
 import { useState } from "react"
 import { ReadingInsights } from "@/components/reading-insights"
 import { SettingsAccount } from "@/components/settings-account"
-import { SettingsTopics } from "@/components/settings-topics"
-import { SettingsSchedules } from "@/components/settings-schedules"
 import { SettingsOpmlImport } from "@/components/settings-opml-import"
+import { SettingsSchedules } from "@/components/settings-schedules"
 import { SettingsShareProfile } from "@/components/settings-share-profile"
+import { SettingsTopics } from "@/components/settings-topics"
 import type { ReadingInsightsData } from "@/lib/db/queries/insights"
 
 type Topic = { id: string; name: string; slug: string; icon: string | null }
@@ -21,9 +21,9 @@ type ScheduleRow = {
 
 const TABS = [
   { id: "overview", label: "Overview" },
-  { id: "topics",   label: "Topics"   },
-  { id: "digests",  label: "Digests"  },
-  { id: "account",  label: "Account"  },
+  { id: "topics", label: "Topics" },
+  { id: "digests", label: "Digests" },
+  { id: "account", label: "Account" },
 ] as const
 
 type TabId = typeof TABS[number]["id"]
@@ -60,7 +60,7 @@ export function ProfileTabs({
   )
 
   const digestTotal = schedules.length
-  const digestActive = schedules.filter((s) => s.isActive).length
+  const digestActive = schedules.filter((schedule) => schedule.isActive).length
 
   function navigate(tab: TabId) {
     setActiveTab(tab)
@@ -69,33 +69,29 @@ export function ProfileTabs({
 
   return (
     <div>
-      {/* Tab bar */}
-      <div className="border-b border-stone-200 dark:border-lp-border px-4 sm:px-6">
-        <div className="flex">
-          {TABS.map((tab) => {
-            const active = activeTab === tab.id
-            return (
-              <button
-                key={tab.id}
-                onClick={() => navigate(tab.id)}
-                className={`relative px-3.5 py-3 text-sm font-medium transition-colors ${
-                  active
-                    ? "text-stone-900 dark:text-lp-text"
-                    : "text-stone-400 dark:text-lp-text-subtle hover:text-stone-600 dark:hover:text-lp-text-muted"
-                }`}
-              >
-                {tab.label}
-                {active && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 rounded-t-full bg-stone-900 dark:bg-amber-500" />
-                )}
-              </button>
-            )
-          })}
+      <div className="px-4 pt-5 sm:px-6">
+        <div className="overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          <div className="inline-flex min-w-full gap-2 border-b border-stone-200/80 pb-3 dark:border-lp-border">
+            {TABS.map((tab) => {
+              const active = activeTab === tab.id
+
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => navigate(tab.id)}
+                  className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${active
+                    ? "border-stone-300 bg-stone-900 text-white dark:border-amber-500/30 dark:bg-amber-500 dark:text-lp-bg"
+                    : "border-transparent bg-transparent text-stone-500 hover:border-stone-200 hover:bg-stone-50 hover:text-stone-900 dark:text-lp-text-subtle dark:hover:border-lp-border dark:hover:bg-lp-surface dark:hover:text-lp-text"}`}
+                >
+                  {tab.label}
+                </button>
+              )
+            })}
+          </div>
         </div>
       </div>
 
-      {/* Tab content */}
-      <div className="px-4 sm:px-6 py-6">
+      <div className="px-4 py-6 sm:px-6">
         {activeTab === "overview" && (
           <ReadingInsights
             insights={insights}
@@ -106,17 +102,17 @@ export function ProfileTabs({
 
         {activeTab === "topics" && (
           <div className="space-y-4">
-            <div className="rounded-2xl border border-stone-200 dark:border-lp-border bg-white dark:bg-lp-surface p-5">
+            <div className="rounded-[1.75rem] border border-stone-200/80 bg-white p-5 dark:border-lp-border dark:bg-lp-surface">
               <SettingsTopics allTopics={allTopics} followedIds={followedIds} />
             </div>
-            <div className="rounded-2xl border border-stone-200 dark:border-lp-border bg-white dark:bg-lp-surface p-5">
+            <div className="rounded-[1.75rem] border border-stone-200/80 bg-white p-5 dark:border-lp-border dark:bg-lp-surface">
               <SettingsOpmlImport />
             </div>
           </div>
         )}
 
         {activeTab === "digests" && (
-          <div className="rounded-2xl border border-stone-200 dark:border-lp-border bg-white dark:bg-lp-surface p-5">
+          <div className="rounded-[1.75rem] border border-stone-200/80 bg-white p-5 dark:border-lp-border dark:bg-lp-surface">
             <p className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-200">
               You can set a digest for any active topic, even if you do not follow it yet. A warning will appear before saving.
             </p>
@@ -126,10 +122,10 @@ export function ProfileTabs({
 
         {activeTab === "account" && (
           <div className="space-y-4">
-            <div className="rounded-2xl border border-stone-200 dark:border-lp-border bg-white dark:bg-lp-surface p-5">
+            <div className="rounded-[1.75rem] border border-stone-200/80 bg-white p-5 dark:border-lp-border dark:bg-lp-surface">
               <SettingsShareProfile initialUsername={username} initialPublic={publicProfile} />
             </div>
-            <div className="rounded-2xl border border-stone-200 dark:border-lp-border bg-white dark:bg-lp-surface p-5">
+            <div className="rounded-[1.75rem] border border-stone-200/80 bg-white p-5 dark:border-lp-border dark:bg-lp-surface">
               <SettingsAccount name={name} email={email} plan={plan} />
             </div>
           </div>

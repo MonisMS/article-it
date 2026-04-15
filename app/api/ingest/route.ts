@@ -7,7 +7,7 @@ import { ingestAllSources } from "@/lib/ingestion"
 // Manual trigger — requires a logged-in session (for dev/admin use)
 export const maxDuration = 300
 
-export async function POST(req: Request) {
+export async function POST() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })

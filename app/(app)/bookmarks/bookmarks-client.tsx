@@ -1,13 +1,12 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useMemo, useState } from "react"
 import Link from "next/link"
-import { Bookmark, Clock, Compass, ExternalLink, Filter, LayoutList, List } from "lucide-react"
+import Image from "next/image"
+import { Bookmark, Clock, Compass, ExternalLink, Filter } from "lucide-react"
+import { AnimatePresence, motion } from "framer-motion"
 import { BookmarkButton } from "@/components/bookmark-button"
 import { ReadButton } from "@/components/read-button"
-import { motion, AnimatePresence } from "framer-motion"
-
-// ─── Types ────────────────────────────────────────────────────────────────────
 
 type Topic = { id: string; name: string; icon: string | null; slug: string }
 
@@ -23,8 +22,6 @@ export type BookmarkedArticle = {
   articleTopics: Topic[]
   isRead: boolean
 }
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function timeAgo(date: Date | string | null): string {
   if (!date) return ""
@@ -44,9 +41,7 @@ function readingMins(text: string | null): number {
   return Math.max(1, Math.round(words / 200))
 }
 
-// ─── Library card ─────────────────────────────────────────────────────────────
-
-function LibraryCard({
+function LibraryRow({
   article,
   index,
   onReadChange,
@@ -60,108 +55,96 @@ function LibraryCard({
   const [read, setRead] = useState(article.isRead)
   const [imgError, setImgError] = useState(false)
 
-  const showImage = article.imageUrl && !imgError
   const primaryTopic = article.articleTopics[0]
+  const showImage = article.imageUrl && !imgError
   const mins = readingMins(article.description)
 
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.97 }}
-      transition={{ delay: index * 0.03, duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className={`group flex gap-4 rounded-2xl border p-4 transition-all duration-200
-        ${read
-          ? "bg-stone-50 dark:bg-[#0D1117] border-stone-200 dark:border-[#1E2A3A] border-l-4 border-l-stone-300 dark:border-l-[#2D3B4F]"
-          : "bg-white dark:bg-[#161C26] border-stone-200 dark:border-[#1E2A3A] hover:border-stone-300 dark:hover:border-[#2D3B4F] hover:shadow-md hover:shadow-stone-200/50 dark:hover:shadow-black/30 hover:-translate-y-0.5"
-        }`}
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ delay: index * 0.02, duration: 0.28 }}
+      className={`group flex gap-4 rounded-[1.4rem] border border-transparent px-4 py-4 transition-colors ${read ? "opacity-60" : "hover:border-stone-200/80 hover:bg-white/75 dark:hover:border-[#1E2A3A] dark:hover:bg-[#121925]/70"}`}
     >
-      {/* Thumbnail */}
-      <div className="flex-shrink-0">
-        {showImage ? (
-          <img
-            src={article.imageUrl!}
-            alt=""
-            onError={() => setImgError(true)}
-            className="w-20 h-20 rounded-xl object-cover"
-          />
-        ) : (
-          <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-amber-50 to-orange-100 dark:from-[#2A3547] dark:to-[#2A3547] flex items-center justify-center text-2xl">
-            {primaryTopic?.icon ?? "📄"}
-          </div>
-        )}
-      </div>
-
-      {/* Content */}
-      <div className="flex flex-col gap-1.5 flex-1 min-w-0">
-        {primaryTopic && (
-          <div className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 flex-shrink-0" />
-            <span className="text-xs font-medium text-stone-400 dark:text-[#6B7585]">{primaryTopic.name}</span>
-          </div>
-        )}
+      <div className="flex min-w-0 flex-1 flex-col gap-2">
+        <div className="flex flex-wrap items-center gap-1.5 text-[11px] uppercase tracking-[0.14em] text-stone-400 dark:text-[#6B7585]">
+          {primaryTopic && (
+            <>
+              <span className="font-semibold text-stone-500 dark:text-[#8A95A7]">
+                {primaryTopic.icon ? `${primaryTopic.icon} ` : ""}{primaryTopic.name}
+              </span>
+              <span className="text-stone-200 dark:text-[#2A3547]">&bull;</span>
+            </>
+          )}
+          <span>{article.source.name}</span>
+          <span className="text-stone-200 dark:text-[#2A3547]">&bull;</span>
+          <span className="flex items-center gap-1">
+            <Clock className="h-3 w-3" />
+            {mins} min
+          </span>
+          <span className="text-stone-200 dark:text-[#2A3547]">&bull;</span>
+          <span>saved {timeAgo(article.savedAt)}</span>
+        </div>
 
         <Link
           href={article.url}
           target="_blank"
           rel="noopener noreferrer"
-          className={`text-sm font-semibold leading-snug hover:text-amber-700 transition-colors line-clamp-2
-            ${read ? "text-stone-400 dark:text-[#6B7585]" : "text-stone-900 dark:text-[#F0EDE6]"}`}
+          className={`line-clamp-2 text-lg font-semibold leading-[1.35] transition-colors hover:text-amber-700 dark:hover:text-[#E8A838] ${read ? "text-stone-400 dark:text-[#4A5568]" : "text-stone-900 dark:text-[#F0EDE6]"}`}
         >
           {article.title}
         </Link>
 
         {article.description && (
-          <p className="text-xs text-stone-400 dark:text-[#6B7585] leading-relaxed line-clamp-2 hidden sm:block">
+          <p className="line-clamp-2 text-[15px] leading-7 text-stone-600 dark:text-[#B8C0CC]">
             {article.description}
           </p>
         )}
 
-        <div className="flex items-center justify-between mt-auto pt-1">
-          <div className="flex items-center gap-2 text-xs text-stone-400 dark:text-[#6B7585]">
-            <span className="font-medium text-stone-500 dark:text-[#B8C0CC]">{article.source.name}</span>
-            <span>·</span>
-            <span className="flex items-center gap-1">
-              <Clock className="w-3 h-3" />
-              {mins} min
-            </span>
-            <span>·</span>
-            <span>saved {timeAgo(article.savedAt)}</span>
-          </div>
-
-          <div className="flex items-center gap-0.5">
-            <ReadButton
-              articleId={article.id}
-              initialRead={read}
-              onToggle={(isRead) => {
-                setRead(isRead)
-                onReadChange(article.id, isRead)
-              }}
-            />
-            <BookmarkButton
-              articleId={article.id}
-              initialBookmarked={true}
-              onToggle={(isBookmarked) => {
-                if (!isBookmarked) onBookmarkRemove(article.id)
-              }}
-            />
-            <Link
-              href={article.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center w-7 h-7 rounded-md text-stone-400 dark:text-[#6B7585] hover:text-stone-700 dark:hover:text-[#C8C4BC] hover:bg-stone-100 dark:hover:bg-[#1E2533] transition-colors"
-            >
-              <ExternalLink className="w-3.5 h-3.5" />
-            </Link>
-          </div>
+        <div className="mt-1 flex items-center gap-0.5 opacity-70 transition-opacity group-hover:opacity-100">
+          <ReadButton
+            articleId={article.id}
+            initialRead={read}
+            onToggle={(isRead) => {
+              setRead(isRead)
+              onReadChange(article.id, isRead)
+            }}
+          />
+          <BookmarkButton
+            articleId={article.id}
+            initialBookmarked={true}
+            onToggle={(isBookmarked) => {
+              if (!isBookmarked) onBookmarkRemove(article.id)
+            }}
+          />
+          <Link
+            href={article.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex h-7 w-7 items-center justify-center rounded-md text-stone-400 transition-colors hover:bg-stone-100 hover:text-stone-700 dark:text-[#6B7585] dark:hover:bg-[#1E2533] dark:hover:text-[#C8C4BC]"
+          >
+            <ExternalLink className="h-3.5 w-3.5" />
+          </Link>
         </div>
       </div>
+
+      {showImage && (
+        <div className="relative mt-1 hidden h-[88px] w-[88px] shrink-0 overflow-hidden rounded-2xl bg-stone-100 sm:block dark:bg-[#1E2533]">
+          <Image
+            src={article.imageUrl!}
+            alt=""
+            fill
+            sizes="88px"
+            onError={() => setImgError(true)}
+            className="object-cover"
+          />
+        </div>
+      )}
     </motion.div>
   )
 }
-
-// ─── Topic section ────────────────────────────────────────────────────────────
 
 function TopicSection({
   topic,
@@ -177,36 +160,36 @@ function TopicSection({
   onBookmarkRemove: (id: string) => void
 }) {
   return (
-    <div>
-      <div className="flex items-center gap-2.5 mb-3">
-        <span className="text-base leading-none">{topic.icon ?? "📄"}</span>
-        <span className="text-sm font-semibold text-stone-700 dark:text-[#C8C4BC]">{topic.name}</span>
-        <span className="text-xs text-stone-400 dark:text-[#6B7585] bg-stone-100 dark:bg-[#1E2533] px-2 py-0.5 rounded-full">
-          {articles.length}
+    <section>
+      <div className="mb-3 flex items-end justify-between gap-4 border-b border-stone-200/70 pb-3 dark:border-[#1E2A3A]">
+        <div className="flex items-center gap-2.5">
+          <span className="text-lg leading-none">{topic.icon ?? "*"}</span>
+          <h3 className="text-base font-semibold text-stone-800 dark:text-[#F0EDE6]">{topic.name}</h3>
+        </div>
+        <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-stone-400 dark:text-[#6B7585]">
+          {articles.length} saved
         </span>
-        <div className="flex-1 h-px bg-stone-100 dark:bg-[#1E2A3A]/60" />
       </div>
-      <div className="flex flex-col gap-3">
-        {articles.map((a, i) => (
-          <LibraryCard
-            key={a.id}
-            article={a}
-            index={baseIndex + i}
+
+      <div className="space-y-1">
+        {articles.map((article, index) => (
+          <LibraryRow
+            key={article.id}
+            article={article}
+            index={baseIndex + index}
             onReadChange={onReadChange}
             onBookmarkRemove={onBookmarkRemove}
           />
         ))}
       </div>
-    </div>
+    </section>
   )
 }
-
-// ─── Main export ──────────────────────────────────────────────────────────────
 
 export function BookmarksClient({ initialArticles }: { initialArticles: BookmarkedArticle[] }) {
   const [articles, setArticles] = useState(initialArticles)
   const [readStates, setReadStates] = useState<Record<string, boolean>>(
-    Object.fromEntries(initialArticles.map((a) => [a.id, a.isRead]))
+    Object.fromEntries(initialArticles.map((article) => [article.id, article.isRead]))
   )
   const [activeTopicId, setActiveTopicId] = useState<string | null>(null)
   const [sort, setSort] = useState<"newest" | "oldest">("newest")
@@ -217,77 +200,69 @@ export function BookmarksClient({ initialArticles }: { initialArticles: Bookmark
   }
 
   function handleBookmarkRemove(id: string) {
-    setArticles((prev) => prev.filter((a) => a.id !== id))
+    setArticles((prev) => prev.filter((article) => article.id !== id))
   }
 
-  const readCount = useMemo(
-    () => Object.values(readStates).filter(Boolean).length,
-    [readStates]
-  )
+  const readCount = useMemo(() => Object.values(readStates).filter(Boolean).length, [readStates])
   const unreadMins = useMemo(
-    () => articles.filter((a) => !readStates[a.id]).reduce((sum, a) => sum + readingMins(a.description), 0),
+    () => articles.filter((article) => !readStates[article.id]).reduce((sum, article) => sum + readingMins(article.description), 0),
     [articles, readStates]
   )
 
   const allTopics = useMemo(() => {
     const seen = new Map<string, Topic>()
-    for (const a of articles) {
-      const t = a.articleTopics[0]
-      if (t && !seen.has(t.id)) seen.set(t.id, t)
+    for (const article of articles) {
+      const topic = article.articleTopics[0]
+      if (topic && !seen.has(topic.id)) seen.set(topic.id, topic)
     }
     return Array.from(seen.values())
   }, [articles])
 
   const filtered = useMemo(() => {
     const base = activeTopicId
-      ? articles.filter((a) => a.articleTopics[0]?.id === activeTopicId)
+      ? articles.filter((article) => article.articleTopics[0]?.id === activeTopicId)
       : articles
+
     return [...base].sort((a, b) => {
       const da = new Date(a.savedAt).getTime()
-      const db_ = new Date(b.savedAt).getTime()
-      return sort === "newest" ? db_ - da : da - db_
+      const db = new Date(b.savedAt).getTime()
+      return sort === "newest" ? db - da : da - db
     })
   }, [articles, activeTopicId, sort])
 
   const grouped = useMemo(() => {
     if (viewMode === "list") return null
     const map = new Map<string, { topic: Topic; articles: BookmarkedArticle[] }>()
-    for (const a of filtered) {
-      const t = a.articleTopics[0]
-      const key = t?.id ?? "__none__"
+    for (const article of filtered) {
+      const topic = article.articleTopics[0]
+      const key = topic?.id ?? "__none__"
       if (!map.has(key)) {
         map.set(key, {
-          topic: t ?? { id: "__none__", name: "Other", icon: "📄", slug: "" },
+          topic: topic ?? { id: "__none__", name: "Other", icon: "*", slug: "" },
           articles: [],
         })
       }
-      map.get(key)!.articles.push(a)
+      map.get(key)!.articles.push(article)
     }
     return Array.from(map.values())
   }, [filtered, viewMode])
 
-  // Empty state
   if (articles.length === 0) {
     return (
-      <div className="py-24 text-center px-4 sm:px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="flex flex-col items-center"
-        >
-          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-amber-100 to-orange-100 dark:from-[#2A3547] dark:to-[#2A3547] flex items-center justify-center mb-6">
-            <Bookmark className="w-9 h-9 text-amber-600" />
+      <div className="px-4 py-24 text-center sm:px-6">
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-stone-100 dark:bg-[#1E2533]">
+            <Bookmark className="h-9 w-9 text-stone-500 dark:text-[#8A95A7]" />
           </div>
           <h2 className="text-xl font-semibold text-stone-800 dark:text-[#E8E3DA]">Your library is empty</h2>
-          <p className="text-stone-400 dark:text-[#6B7585] text-sm mt-2 max-w-xs mx-auto leading-relaxed">
-            Save articles while reading to build your personal reading list.
+          <p className="mx-auto mt-2 max-w-xs text-sm leading-6 text-stone-400 dark:text-[#6B7585]">
+            Save articles while reading to build a personal shelf you can return to later.
           </p>
           <Link
             href="/discover"
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-amber-500 hover:bg-amber-400 px-6 py-2.5 text-sm font-semibold text-white transition-colors"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-stone-900 px-6 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 dark:bg-[#F0EDE6] dark:text-[#0D1117]"
           >
-            <Compass className="w-4 h-4" />
+            <Compass className="h-4 w-4" />
             Browse topics
           </Link>
         </motion.div>
@@ -296,107 +271,92 @@ export function BookmarksClient({ initialArticles }: { initialArticles: Bookmark
   }
 
   return (
-    <div>
-      {/* Stats */}
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="mx-4 sm:mx-6 mb-6 grid grid-cols-3 gap-3"
-      >
-        {[
-          { value: articles.length, label: "saved" },
-          { value: readCount, label: "read" },
-          { value: `${unreadMins}m`, label: "left to read" },
-        ].map(({ value, label }) => (
-          <div key={label} className="flex flex-col gap-0.5 rounded-2xl bg-white dark:bg-[#161C26] border border-stone-200 dark:border-[#1E2A3A] px-4 py-3">
-            <span className="text-2xl font-bold text-stone-900 dark:text-[#F0EDE6]">{value}</span>
-            <span className="text-xs text-stone-400 dark:text-[#6B7585]">{label}</span>
+    <div className="py-8">
+      <div className="flex flex-wrap items-end justify-between gap-4 border-b border-stone-200/80 pb-4 dark:border-[#1E2A3A]">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-400 dark:text-[#6B7585]">
+            Saved reading
+          </p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-stone-900 dark:text-[#F0EDE6]">
+            Library overview
+          </h2>
+        </div>
+        <div className="flex flex-wrap gap-5">
+          <div>
+            <div className="text-lg font-semibold text-stone-900 dark:text-[#F0EDE6]">{articles.length}</div>
+            <div className="mt-1 text-[11px] uppercase tracking-[0.14em] text-stone-400 dark:text-[#6B7585]">Saved</div>
           </div>
-        ))}
-      </motion.div>
+          <div>
+            <div className="text-lg font-semibold text-stone-900 dark:text-[#F0EDE6]">{readCount}</div>
+            <div className="mt-1 text-[11px] uppercase tracking-[0.14em] text-stone-400 dark:text-[#6B7585]">Read</div>
+          </div>
+          <div>
+            <div className="text-lg font-semibold text-stone-900 dark:text-[#F0EDE6]">{unreadMins}m</div>
+            <div className="mt-1 text-[11px] uppercase tracking-[0.14em] text-stone-400 dark:text-[#6B7585]">Unread time</div>
+          </div>
+        </div>
+      </div>
 
-      {/* Controls */}
-      <div className="px-4 sm:px-6 mb-5 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-0.5 flex-1 min-w-0">
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
+        <div className="flex min-w-0 flex-1 gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           <button
             onClick={() => setActiveTopicId(null)}
-            className={`flex-shrink-0 text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-150
-              ${!activeTopicId
-                ? "bg-stone-900 dark:bg-[#F0EDE6] text-white dark:text-[#0D1117]"
-                : "bg-stone-100 dark:bg-[#1E2533] text-stone-500 dark:text-[#B8C0CC] hover:bg-stone-200 dark:hover:bg-[#252F3F]"}`}
+            className={`shrink-0 rounded-full border px-3.5 py-1.5 text-[13px] font-medium transition-colors ${!activeTopicId ? "border-stone-300 bg-stone-900 text-white dark:border-[#E8A838] dark:bg-[#F0EDE6] dark:text-[#0D1117]" : "border-stone-200/80 bg-white/80 text-stone-500 hover:border-stone-300 hover:text-stone-800 dark:border-[#1E2A3A] dark:bg-[#121925] dark:text-[#8A95A7] dark:hover:border-[#2A3547] dark:hover:text-[#F0EDE6]"}`}
           >
             All
           </button>
-          {allTopics.map((t) => (
+          {allTopics.map((topic) => (
             <button
-              key={t.id}
-              onClick={() => setActiveTopicId(t.id === activeTopicId ? null : t.id)}
-              className={`flex-shrink-0 flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-150
-                ${activeTopicId === t.id
-                  ? "bg-amber-500 text-white"
-                  : "bg-stone-100 dark:bg-[#1E2533] text-stone-500 dark:text-[#B8C0CC] hover:bg-stone-200 dark:hover:bg-[#252F3F]"}`}
+              key={topic.id}
+              onClick={() => setActiveTopicId(topic.id === activeTopicId ? null : topic.id)}
+              className={`shrink-0 rounded-full border px-3.5 py-1.5 text-[13px] font-medium transition-colors ${activeTopicId === topic.id ? "border-stone-300 bg-stone-900 text-white dark:border-[#E8A838] dark:bg-[#F0EDE6] dark:text-[#0D1117]" : "border-stone-200/80 bg-white/80 text-stone-500 hover:border-stone-300 hover:text-stone-800 dark:border-[#1E2A3A] dark:bg-[#121925] dark:text-[#8A95A7] dark:hover:border-[#2A3547] dark:hover:text-[#F0EDE6]"}`}
             >
-              <span>{t.icon}</span>
-              {t.name}
+              {topic.icon ? `${topic.icon} ` : ""}{topic.name}
             </button>
           ))}
         </div>
 
-        {/* View mode toggle */}
-        <div className="flex-shrink-0 flex items-center rounded-lg border border-stone-200 dark:border-[#1E2A3A] overflow-hidden">
+        <div className="flex items-center gap-2">
           <button
             onClick={() => setViewMode("grouped")}
-            title="Group by topic"
-            className={`flex items-center justify-center w-7 h-7 transition-colors ${
-              viewMode === "grouped"
-                ? "bg-stone-900 dark:bg-[#F0EDE6] text-white dark:text-[#0D1117]"
-                : "text-stone-400 dark:text-[#6B7585] hover:text-stone-600 dark:hover:text-[#B8C0CC] hover:bg-stone-50 dark:hover:bg-[#1E2533]"
-            }`}
+            className={`rounded-full border px-3 py-1.5 text-[13px] font-medium transition-colors ${viewMode === "grouped" ? "border-stone-300 bg-stone-900 text-white dark:border-[#E8A838] dark:bg-[#F0EDE6] dark:text-[#0D1117]" : "border-stone-200/80 bg-white text-stone-500 hover:border-stone-300 hover:text-stone-800 dark:border-[#1E2A3A] dark:bg-[#161C26] dark:text-[#8A95A7] dark:hover:border-[#2D3B4F] dark:hover:text-[#F0EDE6]"}`}
           >
-            <LayoutList className="w-3.5 h-3.5" />
+            Grouped
           </button>
           <button
             onClick={() => setViewMode("list")}
-            title="Flat list"
-            className={`flex items-center justify-center w-7 h-7 transition-colors ${
-              viewMode === "list"
-                ? "bg-stone-900 dark:bg-[#F0EDE6] text-white dark:text-[#0D1117]"
-                : "text-stone-400 dark:text-[#6B7585] hover:text-stone-600 dark:hover:text-[#B8C0CC] hover:bg-stone-50 dark:hover:bg-[#1E2533]"
-            }`}
+            className={`rounded-full border px-3 py-1.5 text-[13px] font-medium transition-colors ${viewMode === "list" ? "border-stone-300 bg-stone-900 text-white dark:border-[#E8A838] dark:bg-[#F0EDE6] dark:text-[#0D1117]" : "border-stone-200/80 bg-white text-stone-500 hover:border-stone-300 hover:text-stone-800 dark:border-[#1E2A3A] dark:bg-[#161C26] dark:text-[#8A95A7] dark:hover:border-[#2D3B4F] dark:hover:text-[#F0EDE6]"}`}
           >
-            <List className="w-3.5 h-3.5" />
+            List
+          </button>
+          <button
+            onClick={() => setSort((current) => (current === "newest" ? "oldest" : "newest"))}
+            className="inline-flex items-center gap-1.5 rounded-full border border-stone-200/80 bg-white px-3 py-1.5 text-[13px] font-medium text-stone-500 transition-colors hover:border-stone-300 hover:text-stone-800 dark:border-[#1E2A3A] dark:bg-[#161C26] dark:text-[#8A95A7] dark:hover:border-[#2D3B4F] dark:hover:text-[#F0EDE6]"
+          >
+            <Filter className="h-3.5 w-3.5" />
+            {sort === "newest" ? "Newest" : "Oldest"}
           </button>
         </div>
-
-        <button
-          onClick={() => setSort((s) => (s === "newest" ? "oldest" : "newest"))}
-          className="flex-shrink-0 flex items-center gap-1.5 text-xs font-medium text-stone-500 dark:text-[#B8C0CC] hover:text-stone-800 dark:hover:text-[#E8E3DA] bg-stone-100 dark:bg-[#1E2533] hover:bg-stone-200 dark:hover:bg-[#252F3F] px-3 py-1.5 rounded-full transition-all"
-        >
-          <Filter className="w-3 h-3" />
-          {sort === "newest" ? "Newest" : "Oldest"}
-        </button>
       </div>
 
-      {/* Articles */}
-      <div className="px-4 sm:px-6 pb-10">
+      <div className="mt-6">
         <AnimatePresence mode="popLayout">
           {!grouped ? (
-            <motion.div key="flat" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col gap-3">
-              {filtered.map((a, i) => (
-                <LibraryCard
-                  key={a.id}
-                  article={a}
-                  index={i}
+            <motion.div key="flat" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-1">
+              {filtered.map((article, index) => (
+                <LibraryRow
+                  key={article.id}
+                  article={article}
+                  index={index}
                   onReadChange={handleReadChange}
                   onBookmarkRemove={handleBookmarkRemove}
                 />
               ))}
             </motion.div>
           ) : (
-            <motion.div key="grouped" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col gap-8">
-              {grouped.map((group, gi) => {
-                const baseIndex = grouped.slice(0, gi).reduce((sum, g) => sum + g.articles.length, 0)
+            <motion.div key="grouped" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
+              {grouped.map((group, groupIndex) => {
+                const baseIndex = grouped.slice(0, groupIndex).reduce((sum, current) => sum + current.articles.length, 0)
                 return (
                   <TopicSection
                     key={group.topic.id}

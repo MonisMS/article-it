@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { ExternalLink } from "lucide-react"
 import { BookmarkButton } from "@/components/bookmark-button"
 import { ReadButton } from "@/components/read-button"
@@ -122,12 +123,14 @@ export function ArticleCard({
       </div>
 
       {showImage && (
-        <div className={`${isEditorial ? "mt-1 hidden h-[92px] w-[92px] rounded-2xl sm:block" : "mt-0.5 h-[72px] w-[72px] rounded-[6px]"} shrink-0 overflow-hidden bg-stone-100 dark:bg-[#1E2533]`}>
-          <img
+        <div className={`${isEditorial ? "relative mt-1 hidden h-[92px] w-[92px] rounded-2xl sm:block" : "relative mt-0.5 h-[72px] w-[72px] rounded-[6px]"} shrink-0 overflow-hidden bg-stone-100 dark:bg-[#1E2533]`}>
+          <Image
             src={article.imageUrl!}
             alt=""
+            fill
+            sizes={isEditorial ? "92px" : "72px"}
             onError={() => setImgError(true)}
-            className="h-full w-full object-cover"
+            className="object-cover"
           />
         </div>
       )}

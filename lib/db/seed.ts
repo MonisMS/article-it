@@ -325,7 +325,7 @@ async function seed() {
   console.log("🌱 Seeding topics...")
 
   // Insert topics (skip if already exists via slug unique constraint)
-  const topicRecords = await Promise.all(
+  await Promise.all(
     TOPICS.map((t) =>
       db
         .insert(schema.topics)

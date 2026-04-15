@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server"
 import { headers } from "next/headers"
 import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
-import { rssSources, rssSourceTopics, userTopics, topics } from "@/lib/db/schema"
-import { eq, inArray } from "drizzle-orm"
+import { rssSources, rssSourceTopics, userTopics } from "@/lib/db/schema"
+import { eq } from "drizzle-orm"
 import { createId } from "@paralleldrive/cuid2"
 
 export const maxDuration = 60

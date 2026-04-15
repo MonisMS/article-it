@@ -14,23 +14,25 @@ export function AdminTabs() {
   const pathname = usePathname()
 
   return (
-    <div className="flex gap-1 border-b border-stone-200 dark:border-[#1E2A3A] mb-8">
+    <div className="mb-8 mt-5 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+      <div className="inline-flex min-w-full gap-2 border-b border-stone-200/80 pb-3 dark:border-[#1E2A3A]">
       {TABS.map(({ href, label }) => {
         const active = pathname.startsWith(href)
         return (
           <Link
             key={href}
             href={href}
-            className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors -mb-px ${
+            className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
               active
-                ? "border-amber-500 text-stone-900 dark:text-[#F0EDE6]"
-                : "border-transparent text-stone-500 dark:text-[#6B7585] hover:text-stone-900 dark:hover:text-[#F0EDE6]"
+                ? "border-stone-300 bg-stone-900 text-white dark:border-amber-500/30 dark:bg-amber-500 dark:text-[#0D1117]"
+                : "border-transparent text-stone-500 hover:border-stone-200 hover:bg-stone-50 hover:text-stone-900 dark:text-[#6B7585] dark:hover:border-[#1E2A3A] dark:hover:bg-[#161C26] dark:hover:text-[#F0EDE6]"
             }`}
           >
             {label}
           </Link>
         )
       })}
+      </div>
     </div>
   )
 }

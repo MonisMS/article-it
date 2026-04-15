@@ -2,12 +2,10 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { AnimatePresence, motion } from "framer-motion"
 import { ChevronDown, ExternalLink, History, Loader2, Mail } from "lucide-react"
-import { motion, AnimatePresence } from "framer-motion"
-import type { DigestLogRow, DigestLogArticle } from "@/lib/db/queries/history"
+import type { DigestLogArticle, DigestLogRow } from "@/lib/db/queries/history"
 import { monthLabel } from "@/lib/utils"
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function formatSentAt(date: Date): string {
   return new Date(date).toLocaleDateString("en-US", {
@@ -26,10 +24,8 @@ function groupByMonth(logs: DigestLogRow[]): { month: string; logs: DigestLogRow
     if (!map.has(key)) map.set(key, [])
     map.get(key)!.push(log)
   }
-  return Array.from(map.entries()).map(([month, logs]) => ({ month, logs }))
+  return Array.from(map.entries()).map(([month, groupedLogs]) => ({ month, logs: groupedLogs }))
 }
-
-// ─── Single digest row ────────────────────────────────────────────────────────
 
 function DigestRow({ log, index }: { log: DigestLogRow; index: number }) {
   const [open, setOpen] = useState(false)
@@ -38,7 +34,11 @@ function DigestRow({ log, index }: { log: DigestLogRow; index: number }) {
   const [error, setError] = useState<string | null>(null)
 
   async function toggle() {
-    if (open) { setOpen(false); return }
+    if (open) {
+      setOpen(false)
+      return
+    }
+
     setOpen(true)
     if (articles !== null) return
 
@@ -59,93 +59,87 @@ function DigestRow({ log, index }: { log: DigestLogRow; index: number }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.04, duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="rounded-2xl bg-white dark:bg-[#161C26] border border-stone-200 dark:border-[#1E2A3A] overflow-hidden hover:border-stone-300 dark:hover:border-[#2D3B4F] hover:shadow-sm transition-all duration-200"
+      transition={{ delay: index * 0.03, duration: 0.28 }}
+      className="rounded-[1.4rem] border border-stone-200/80 bg-white/80 dark:border-[#1E2A3A] dark:bg-[#121925]/75"
     >
-      {/* Header button */}
       <button
         onClick={toggle}
-        className="w-full flex items-center gap-4 px-5 py-4 hover:bg-stone-50 dark:hover:bg-[#1E2533] transition-colors text-left"
+        className="flex w-full items-center gap-4 px-5 py-4 text-left transition-colors hover:bg-stone-50/70 dark:hover:bg-[#161F2B]"
       >
-        {/* Icon */}
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 dark:from-[#2A3547] dark:to-[#2A3547] flex items-center justify-center text-xl flex-shrink-0">
-          {log.topic.icon ?? "📰"}
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-stone-100 text-xl dark:bg-[#1E2533]">
+          {log.topic.icon ?? "*"}
         </div>
 
-        {/* Text */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
             <p className="text-sm font-semibold text-stone-900 dark:text-[#F0EDE6]">{log.topic.name}</p>
-            <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
+            <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.12em] ${
               isSent
-                ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                : "bg-red-50 text-red-600 border border-red-200"
+                ? "bg-stone-100 text-stone-600 dark:bg-[#1E2533] dark:text-[#B8C0CC]"
+                : "bg-red-50 text-red-600 dark:bg-red-950/20 dark:text-red-300"
             }`}>
               {isSent ? "Sent" : "Failed"}
             </span>
           </div>
-          <p className="text-xs text-stone-400 dark:text-[#6B7585] mt-0.5">{formatSentAt(log.sentAt)}</p>
+          <p className="mt-1 text-xs text-stone-400 dark:text-[#6B7585]">{formatSentAt(log.sentAt)}</p>
         </div>
 
-        {/* Right side */}
-        <div className="flex items-center gap-3 flex-shrink-0">
-          <span className="text-xs text-stone-400 dark:text-[#6B7585] hidden sm:block">{log.articleCount} articles</span>
-          <motion.div
-            animate={{ rotate: open ? 180 : 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <ChevronDown className="w-4 h-4 text-stone-400 dark:text-[#6B7585]" />
+        <div className="flex items-center gap-3 shrink-0">
+          <span className="hidden text-[11px] uppercase tracking-[0.14em] text-stone-400 dark:text-[#6B7585] sm:block">
+            {log.articleCount} articles
+          </span>
+          <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }}>
+            <ChevronDown className="h-4 w-4 text-stone-400 dark:text-[#6B7585]" />
           </motion.div>
         </div>
       </button>
 
-      {/* Expanded articles */}
       <AnimatePresence initial={false}>
         {open && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
+            transition={{ duration: 0.22 }}
             className="overflow-hidden"
           >
-            <div className="border-t border-stone-100 dark:border-[#1E2A3A]/60 px-5 py-4">
+            <div className="border-t border-stone-100 px-5 py-4 dark:border-[#1E2A3A]">
               {loading && (
-                <div className="flex items-center gap-2 text-sm text-stone-400 dark:text-[#6B7585] py-2">
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Loading articles…
+                <div className="flex items-center gap-2 py-2 text-sm text-stone-400 dark:text-[#6B7585]">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Loading articles...
                 </div>
               )}
-              {error && <p className="text-sm text-red-500 py-2">{error}</p>}
+              {error && <p className="py-2 text-sm text-red-500">{error}</p>}
               {articles?.length === 0 && (
-                <p className="text-sm text-stone-400 dark:text-[#6B7585] py-2">No articles recorded for this digest.</p>
+                <p className="py-2 text-sm text-stone-400 dark:text-[#6B7585]">No articles recorded for this digest.</p>
               )}
               {articles && articles.length > 0 && (
-                <ul className="space-y-2.5">
-                  {articles.map((a, i) => (
+                <ul className="space-y-2">
+                  {articles.map((article, articleIndex) => (
                     <motion.li
-                      key={a.id}
+                      key={article.id}
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.03, duration: 0.25 }}
-                      className="flex items-start justify-between gap-4 rounded-xl p-2.5 hover:bg-stone-50 dark:hover:bg-[#1E2533] transition-colors group"
+                      transition={{ delay: articleIndex * 0.02, duration: 0.2 }}
+                      className="group flex items-start justify-between gap-4 rounded-xl px-2 py-2 transition-colors hover:bg-stone-50 dark:hover:bg-[#161F2B]"
                     >
                       <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium text-stone-800 dark:text-[#E8E3DA] line-clamp-1 group-hover:text-amber-700 transition-colors">
-                          {a.title}
+                        <p className="line-clamp-1 text-sm font-medium text-stone-800 transition-colors group-hover:text-stone-900 dark:text-[#E8E3DA] dark:group-hover:text-[#F0EDE6]">
+                          {article.title}
                         </p>
-                        <p className="text-xs text-stone-400 dark:text-[#6B7585] mt-0.5">{a.sourceName}</p>
+                        <p className="mt-0.5 text-xs text-stone-400 dark:text-[#6B7585]">{article.sourceName}</p>
                       </div>
                       <a
-                        href={a.url}
+                        href={article.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-shrink-0 flex items-center justify-center w-7 h-7 rounded-lg text-stone-300 dark:text-[#6B7585] hover:text-amber-600 hover:bg-amber-50 transition-colors"
+                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-stone-300 transition-colors hover:bg-stone-100 hover:text-stone-600 dark:text-[#6B7585] dark:hover:bg-[#1E2533] dark:hover:text-[#C8C4BC]"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <ExternalLink className="w-3.5 h-3.5" />
+                        <ExternalLink className="h-3.5 w-3.5" />
                       </a>
                     </motion.li>
                   ))}
@@ -158,8 +152,6 @@ function DigestRow({ log, index }: { log: DigestLogRow; index: number }) {
     </motion.div>
   )
 }
-
-// ─── Main export ──────────────────────────────────────────────────────────────
 
 export function HistoryClient({
   logs,
@@ -174,28 +166,22 @@ export function HistoryClient({
   totalDigests: number
   totalArticles: number
 }) {
-
   if (logs.length === 0) {
     return (
-      <div className="py-24 text-center px-4 sm:px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="flex flex-col items-center"
-        >
-          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-amber-100 to-orange-100 dark:from-[#2A3547] dark:to-[#2A3547] flex items-center justify-center mb-6">
-            <History className="w-9 h-9 text-amber-600" />
+      <div className="px-4 py-24 text-center sm:px-6">
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-stone-100 dark:bg-[#1E2533]">
+            <History className="h-9 w-9 text-stone-500 dark:text-[#8A95A7]" />
           </div>
           <h2 className="text-xl font-semibold text-stone-800 dark:text-[#E8E3DA]">No digests yet</h2>
-          <p className="text-stone-400 dark:text-[#6B7585] text-sm mt-2 max-w-xs mx-auto leading-relaxed">
-            Once your first digest is sent, it'll appear here with everything that was inside.
+          <p className="mx-auto mt-2 max-w-xs text-sm leading-6 text-stone-400 dark:text-[#6B7585]">
+            Once your first digest is sent, it will appear here with everything that was inside.
           </p>
           <Link
             href="/profile?tab=digests"
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-amber-500 hover:bg-amber-400 px-6 py-2.5 text-sm font-semibold text-white transition-colors"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-stone-900 px-6 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 dark:bg-[#F0EDE6] dark:text-[#0D1117]"
           >
-            <Mail className="w-4 h-4" />
+            <Mail className="h-4 w-4" />
             Set up digest
           </Link>
         </motion.div>
@@ -206,55 +192,57 @@ export function HistoryClient({
   const groups = groupByMonth(logs)
 
   return (
-    <div className="px-4 sm:px-6 pb-10">
-      {/* Stats — always visible, show all-time totals */}
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="grid grid-cols-2 gap-3 mb-8"
-      >
-        <div className="rounded-2xl bg-white dark:bg-[#161C26] border border-stone-200 dark:border-[#1E2A3A] px-5 py-4">
-          <p className="text-2xl font-bold text-stone-900 dark:text-[#F0EDE6]">{totalDigests}</p>
-          <p className="text-xs text-stone-400 dark:text-[#6B7585] mt-0.5">digests sent</p>
+    <div className="py-8">
+      <div className="flex flex-wrap items-end justify-between gap-4 border-b border-stone-200/80 pb-4 dark:border-[#1E2A3A]">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-400 dark:text-[#6B7585]">
+            Archive
+          </p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-stone-900 dark:text-[#F0EDE6]">
+            Delivery summary
+          </h2>
         </div>
-        <div className="rounded-2xl bg-white dark:bg-[#161C26] border border-stone-200 dark:border-[#1E2A3A] px-5 py-4">
-          <p className="text-2xl font-bold text-stone-900 dark:text-[#F0EDE6]">{totalArticles}</p>
-          <p className="text-xs text-stone-400 dark:text-[#6B7585] mt-0.5">articles delivered</p>
+        <div className="flex flex-wrap gap-5">
+          <div>
+            <div className="text-lg font-semibold text-stone-900 dark:text-[#F0EDE6]">{totalDigests}</div>
+            <div className="mt-1 text-[11px] uppercase tracking-[0.14em] text-stone-400 dark:text-[#6B7585]">Digests</div>
+          </div>
+          <div>
+            <div className="text-lg font-semibold text-stone-900 dark:text-[#F0EDE6]">{totalArticles}</div>
+            <div className="mt-1 text-[11px] uppercase tracking-[0.14em] text-stone-400 dark:text-[#6B7585]">Articles</div>
+          </div>
         </div>
-      </motion.div>
+      </div>
 
-      {/* Timeline grouped by month */}
-      <div className="flex flex-col gap-8">
-        {groups.map(({ month, logs: groupLogs }) => (
-          <div key={month}>
-            <div className="flex items-center gap-3 mb-4">
-              <span className="text-xs font-semibold text-stone-400 dark:text-[#6B7585] uppercase tracking-widest">{month}</span>
-              <div className="flex-1 h-px bg-stone-100 dark:bg-[#1E2A3A]/60" />
+      <div className="mt-6 space-y-8">
+        {groups.map(({ month, logs: monthLogs }) => (
+          <section key={month}>
+            <div className="mb-4 flex items-center gap-3">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-400 dark:text-[#6B7585]">{month}</span>
+              <div className="h-px flex-1 bg-stone-200/70 dark:bg-[#1E2A3A]" />
             </div>
-            <div className="flex flex-col gap-2.5">
-              {groupLogs.map((log, i) => (
-                <DigestRow key={log.id} log={log} index={i} />
+            <div className="space-y-2.5">
+              {monthLogs.map((log, index) => (
+                <DigestRow key={log.id} log={log} index={index} />
               ))}
             </div>
-          </div>
+          </section>
         ))}
       </div>
 
-      {/* Pagination */}
-      <div className="flex items-center justify-between mt-10 pt-6 border-t border-stone-100 dark:border-[#1E2A3A]/60">
+      <div className="mt-10 flex items-center justify-between border-t border-stone-200/80 pt-6 dark:border-[#1E2A3A]">
         <a
           href={`/history?page=${Math.max(0, page - 1)}`}
-          className={`rounded-xl border border-stone-200 dark:border-[#1E2A3A] bg-white dark:bg-[#161C26] px-5 py-2 text-sm font-medium text-stone-500 dark:text-[#B8C0CC] hover:border-stone-300 dark:hover:border-[#2D3B4F] hover:bg-stone-50 dark:hover:bg-[#1E2533] transition-all shadow-sm ${page === 0 ? "pointer-events-none opacity-30" : ""}`}
+          className={`rounded-xl border border-stone-200/80 bg-white px-5 py-2 text-sm font-medium text-stone-600 transition-colors hover:border-stone-300 hover:bg-stone-50 dark:border-[#1E2A3A] dark:bg-[#161C26] dark:text-[#B8C0CC] dark:hover:border-[#2D3B4F] dark:hover:bg-[#1E2533] ${page === 0 ? "pointer-events-none opacity-30" : ""}`}
         >
-          ← Previous
+          &larr; Previous
         </a>
         <span className="text-sm text-stone-400 dark:text-[#6B7585]">Page {page + 1}</span>
         <a
           href={`/history?page=${page + 1}`}
-          className={`rounded-xl border border-stone-200 dark:border-[#1E2A3A] bg-white dark:bg-[#161C26] px-5 py-2 text-sm font-medium text-stone-500 dark:text-[#B8C0CC] hover:border-stone-300 dark:hover:border-[#2D3B4F] hover:bg-stone-50 dark:hover:bg-[#1E2533] transition-all shadow-sm ${!hasMore ? "pointer-events-none opacity-30" : ""}`}
+          className={`rounded-xl border border-stone-200/80 bg-white px-5 py-2 text-sm font-medium text-stone-600 transition-colors hover:border-stone-300 hover:bg-stone-50 dark:border-[#1E2A3A] dark:bg-[#161C26] dark:text-[#B8C0CC] dark:hover:border-[#2D3B4F] dark:hover:bg-[#1E2533] ${!hasMore ? "pointer-events-none opacity-30" : ""}`}
         >
-          Next →
+          Next &rarr;
         </a>
       </div>
     </div>

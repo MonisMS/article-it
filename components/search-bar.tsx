@@ -1,14 +1,16 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { useState, useEffect } from "react"
 import { Search } from "lucide-react"
 
 export function SearchBar({ initialValue = "" }: { initialValue?: string }) {
   const router = useRouter()
   const [value, setValue] = useState(initialValue)
 
-  useEffect(() => { setValue(initialValue) }, [initialValue])
+  useEffect(() => {
+    setValue(initialValue)
+  }, [initialValue])
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -19,13 +21,13 @@ export function SearchBar({ initialValue = "" }: { initialValue?: string }) {
 
   return (
     <form onSubmit={handleSubmit} className="relative w-full">
-      <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-stone-400 pointer-events-none" />
+      <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
       <input
         type="text"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder="Search articles..."
-        className="w-full rounded-xl border border-stone-200 dark:border-[#1E2A3A] bg-stone-50 dark:bg-[#1E2533] pl-8 pr-3 py-2 text-sm text-stone-900 dark:text-[#F0EDE6] placeholder:text-stone-400 dark:placeholder:text-[#6B7585] focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-400 focus:bg-white dark:focus:bg-[#252F3F] transition-all"
+        className="w-full rounded-xl border border-stone-200/80 bg-white pl-9 pr-3 py-2.5 text-sm text-stone-900 transition-colors placeholder:text-stone-400 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-500/15 dark:border-[#1E2A3A] dark:bg-[#161C26] dark:text-[#F0EDE6] dark:placeholder:text-[#6B7585]"
       />
     </form>
   )
@@ -35,7 +37,9 @@ export function SearchBarHero({ initialValue = "" }: { initialValue?: string }) 
   const router = useRouter()
   const [value, setValue] = useState(initialValue)
 
-  useEffect(() => { setValue(initialValue) }, [initialValue])
+  useEffect(() => {
+    setValue(initialValue)
+  }, [initialValue])
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -46,23 +50,15 @@ export function SearchBarHero({ initialValue = "" }: { initialValue?: string }) 
 
   return (
     <form onSubmit={handleSubmit} className="relative w-full">
-      <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400 pointer-events-none" />
+      <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-stone-400" />
       <input
         autoFocus
         type="text"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder="Search articles, topics, sources…"
-        className="w-full rounded-2xl border border-stone-200 dark:border-[#1E2A3A] bg-white dark:bg-[#161C26] pl-12 pr-5 py-4 text-base text-stone-900 dark:text-[#F0EDE6] placeholder:text-stone-400 dark:placeholder:text-[#6B7585] focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-400 shadow-sm hover:border-stone-300 dark:hover:border-[#2D3B4F] transition-all"
+        placeholder="Search articles, topics, and sources"
+        className="w-full rounded-[1.35rem] border border-stone-200/80 bg-white pl-12 pr-4 py-3.5 text-[15px] text-stone-900 transition-colors placeholder:text-stone-400 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-500/15 dark:border-[#1E2A3A] dark:bg-[#161C26] dark:text-[#F0EDE6] dark:placeholder:text-[#6B7585]"
       />
-      {value && (
-        <button
-          type="submit"
-          className="absolute right-3 top-1/2 -translate-y-1/2 bg-amber-500 hover:bg-amber-400 text-white text-xs font-semibold px-3.5 py-1.5 rounded-xl transition-colors"
-        >
-          Search
-        </button>
-      )}
     </form>
   )
 }

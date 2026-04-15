@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import {
   BookOpen,
@@ -100,7 +100,6 @@ function StepIndicator({ current }: { current: 1 | 2 }) {
 // ─── Frequency option ─────────────────────────────────────────────────────────
 
 function FrequencyOption({
-  value,
   label,
   description,
   icon: Icon,
@@ -259,10 +258,10 @@ function DigestPreviewCard({
       {/* Mock article list */}
       <div className="px-4 pb-4 pt-3 space-y-2.5">
         {[
-          { w: "w-4/5", label: "Top article from your feed" },
-          { w: "w-3/5", label: "Curated just for you" },
-          { w: "w-2/3", label: "Hand-picked this week" },
-        ].map(({ w, label }, i) => (
+          { label: "Top article from your feed" },
+          { label: "Curated just for you" },
+          { label: "Hand-picked this week" },
+        ].map(({ label }, i) => (
           <div key={i} className="flex items-center gap-2.5">
             <div className="w-1 h-1 rounded-full bg-amber-500/50 flex-shrink-0" />
             <div className="flex-1 h-3 rounded-full bg-white/[0.06] flex items-center pl-2">
@@ -289,13 +288,15 @@ export default function SchedulePage() {
   const [frequency, setFrequency] = useState<"daily" | "weekly">("weekly")
   const [dayOfWeek, setDayOfWeek] = useState(1) // Monday
   const [hour, setHour] = useState(9)
-  const [timezone, setTimezone] = useState("UTC")
+  const [timezone] = useState(() => {
+    try {
+      return detectTimezone()
+    } catch {
+      return "UTC"
+    }
+  })
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState("")
-
-  useEffect(() => {
-    setTimezone(detectTimezone())
-  }, [])
 
   async function handleFinish() {
     setSaving(true)

@@ -1,12 +1,12 @@
 import type { Metadata } from "next"
-import { searchArticles } from "@/lib/db/queries/articles"
+import Link from "next/link"
+import { Search } from "lucide-react"
 import { ArticleCard, type ArticleCardData } from "@/components/article-card"
 import { SearchBarHero } from "@/components/search-bar"
-import { Search, Sparkles } from "lucide-react"
-import Link from "next/link"
+import { searchArticles } from "@/lib/db/queries/articles"
 
 export const metadata: Metadata = {
-  title: "Search — ArticleIt",
+  title: "Search - ArticleIt",
   description: "Search across all articles in your feed.",
 }
 
@@ -29,102 +29,104 @@ export default async function SearchPage({ searchParams }: Props) {
   const articles = query.length >= 2 ? await searchArticles(query, page) : []
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="mx-auto max-w-5xl px-4 pb-10 pt-8 sm:px-6">
+      <header className="border-b border-stone-200/80 pb-8 dark:border-[#1E2A3A]">
+        <div className="max-w-3xl">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-stone-400 dark:text-[#6B7585]">
+            Search
+          </p>
+          <h1 className="mt-3 text-3xl font-semibold tracking-tight text-stone-900 dark:text-[#F0EDE6] sm:text-[2.4rem]">
+            Search your reading universe
+          </h1>
+          <p className="mt-3 text-[15px] leading-7 text-stone-600 dark:text-[#B8C0CC] sm:text-base">
+            Find articles across the topics and sources already shaping your feed.
+          </p>
+        </div>
 
-      {/* Header + search input */}
-      <div className="px-4 sm:px-6 pt-8 pb-6 border-b border-stone-200 dark:border-[#1E2A3A] bg-gradient-to-b from-stone-50 dark:from-[#161C26]/50 to-white dark:to-[#0D1117]">
-
-        {/* Idle hero — only when no query; adds its own height, doesn't shift the search bar */}
-        {!query && (
-          <div className="text-center mb-7">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-100 to-orange-100 dark:from-[#2A3547] dark:to-[#2A3547] mb-5">
-              <Search className="w-6 h-6 text-amber-600" />
-            </div>
-            <h1 className="text-3xl font-bold text-stone-900 dark:text-[#F0EDE6] tracking-tight">Search</h1>
-            <p className="text-stone-400 dark:text-[#6B7585] text-sm mt-2">Find articles across all the topics you follow.</p>
-          </div>
-        )}
-
-        {/* Search bar — centered when idle, full-width when showing results */}
-        <div className={query ? "" : "max-w-xl mx-auto"}>
+        <div className="mt-6 max-w-2xl">
           <SearchBarHero initialValue={query} />
         </div>
 
-        {/* Suggestions — only when idle */}
         {!query && (
-          <div className="max-w-xl mx-auto mt-5">
-            <p className="text-xs text-stone-400 dark:text-[#6B7585] mb-2.5 flex items-center gap-1.5">
-              <Sparkles className="w-3 h-3" />
-              Try searching for
+          <div className="mt-5 max-w-2xl">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-stone-400 dark:text-[#6B7585]">
+              Try one of these
             </p>
-            <div className="flex flex-wrap gap-2">
-              {SUGGESTIONS.map((s) => (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {SUGGESTIONS.map((suggestion) => (
                 <Link
-                  key={s}
-                  href={`/search?q=${encodeURIComponent(s)}`}
-                  className="text-xs font-medium text-stone-600 dark:text-[#B8C0CC] bg-white dark:bg-[#161C26] border border-stone-200 dark:border-[#1E2A3A] hover:border-amber-300 hover:text-amber-700 px-3 py-1.5 rounded-full transition-all"
+                  key={suggestion}
+                  href={`/search?q=${encodeURIComponent(suggestion)}`}
+                  className="rounded-full border border-stone-200/80 bg-white px-3 py-1.5 text-[13px] font-medium text-stone-600 transition-colors hover:border-stone-300 hover:text-stone-900 dark:border-[#1E2A3A] dark:bg-[#161C26] dark:text-[#B8C0CC] dark:hover:border-[#2D3B4F] dark:hover:text-[#F0EDE6]"
                 >
-                  {s}
+                  {suggestion}
                 </Link>
               ))}
             </div>
           </div>
         )}
-      </div>
+      </header>
 
-      {/* Results area */}
-      <div className="px-4 sm:px-6 py-8">
-
-        {/* Query too short */}
+      <div className="py-8">
         {query && query.length < 2 && (
-          <p className="text-sm text-stone-400 dark:text-[#6B7585] text-center py-12">Enter at least 2 characters.</p>
+          <p className="py-12 text-center text-sm text-stone-400 dark:text-[#6B7585]">
+            Enter at least 2 characters.
+          </p>
         )}
 
-        {/* Results */}
         {query.length >= 2 && (
           <>
             {articles.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-20 text-center">
-                <div className="w-16 h-16 rounded-2xl bg-stone-100 dark:bg-[#1E2533] flex items-center justify-center mb-5">
-                  <Search className="w-7 h-7 text-stone-400 dark:text-[#6B7585]" />
+              <div className="py-20 text-center">
+                <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-stone-100 dark:bg-[#1E2533]">
+                  <Search className="h-7 w-7 text-stone-400 dark:text-[#6B7585]" />
                 </div>
                 <h2 className="text-lg font-semibold text-stone-800 dark:text-[#E8E3DA]">No results</h2>
-                <p className="mt-2 text-sm text-stone-400 dark:text-[#6B7585] max-w-xs">
-                  Nothing matched &ldquo;{query}&rdquo;. Try different keywords or browse topics instead.
+                <p className="mx-auto mt-2 max-w-xs text-sm leading-6 text-stone-400 dark:text-[#6B7585]">
+                  Nothing matched &ldquo;{query}&rdquo;. Try a broader phrase or browse your topics instead.
                 </p>
                 <Link
                   href="/discover"
-                  className="mt-5 text-sm font-semibold text-amber-600 hover:text-amber-700 transition-colors"
+                  className="mt-5 inline-flex text-sm font-medium text-stone-700 underline underline-offset-4 transition-colors hover:text-stone-900 dark:text-[#B8C0CC] dark:hover:text-[#F0EDE6]"
                 >
-                  Browse all topics →
+                  Browse topics &rarr;
                 </Link>
               </div>
             ) : (
               <>
-                <p className="text-sm text-stone-400 dark:text-[#6B7585] mb-5">
-                  {articles.length === 20 ? "20+" : articles.length} result{articles.length === 1 ? "" : "s"} for{" "}
-                  <span className="font-semibold text-stone-700 dark:text-[#C8C4BC]">&ldquo;{query}&rdquo;</span>
-                </p>
+                <div className="flex items-end justify-between gap-4 border-b border-stone-200/80 pb-4 dark:border-[#1E2A3A]">
+                  <div>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-400 dark:text-[#6B7585]">
+                      Results
+                    </p>
+                    <h2 className="mt-2 text-2xl font-semibold tracking-tight text-stone-900 dark:text-[#F0EDE6]">
+                      Matches for &ldquo;{query}&rdquo;
+                    </h2>
+                  </div>
+                  <span className="text-[11px] uppercase tracking-[0.14em] text-stone-400 dark:text-[#6B7585]">
+                    {articles.length === 20 ? "20+ results" : `${articles.length} result${articles.length === 1 ? "" : "s"}`}
+                  </span>
+                </div>
 
-                <div className="grid sm:grid-cols-2 gap-4">
+                <div className="mt-3 grid gap-2 sm:grid-cols-2">
                   {articles.map((article) => (
                     <ArticleCard key={article.id} article={article as ArticleCardData} />
                   ))}
                 </div>
 
-                <div className="flex items-center justify-between mt-10 pt-6 border-t border-stone-100 dark:border-[#1E2A3A]/60">
+                <div className="mt-10 flex items-center justify-between border-t border-stone-200/80 pt-6 dark:border-[#1E2A3A]">
                   <Link
                     href={`/search?q=${encodeURIComponent(query)}&page=${Math.max(0, page - 1)}`}
-                    className={`rounded-xl border border-stone-200 dark:border-[#1E2A3A] bg-white dark:bg-[#161C26] px-5 py-2 text-sm font-medium text-stone-500 dark:text-[#B8C0CC] hover:border-stone-300 dark:hover:border-[#2D3B4F] hover:bg-stone-50 dark:hover:bg-[#1E2533] transition-all shadow-sm ${page === 0 ? "pointer-events-none opacity-30" : ""}`}
+                    className={`rounded-xl border border-stone-200/80 bg-white px-5 py-2 text-sm font-medium text-stone-600 transition-colors hover:border-stone-300 hover:bg-stone-50 dark:border-[#1E2A3A] dark:bg-[#161C26] dark:text-[#B8C0CC] dark:hover:border-[#2D3B4F] dark:hover:bg-[#1E2533] ${page === 0 ? "pointer-events-none opacity-30" : ""}`}
                   >
-                    ← Previous
+                    &larr; Previous
                   </Link>
                   <span className="text-sm text-stone-400 dark:text-[#6B7585]">Page {page + 1}</span>
                   <Link
                     href={`/search?q=${encodeURIComponent(query)}&page=${page + 1}`}
-                    className={`rounded-xl border border-stone-200 dark:border-[#1E2A3A] bg-white dark:bg-[#161C26] px-5 py-2 text-sm font-medium text-stone-500 dark:text-[#B8C0CC] hover:border-stone-300 dark:hover:border-[#2D3B4F] hover:bg-stone-50 dark:hover:bg-[#1E2533] transition-all shadow-sm ${articles.length < 20 ? "pointer-events-none opacity-30" : ""}`}
+                    className={`rounded-xl border border-stone-200/80 bg-white px-5 py-2 text-sm font-medium text-stone-600 transition-colors hover:border-stone-300 hover:bg-stone-50 dark:border-[#1E2A3A] dark:bg-[#161C26] dark:text-[#B8C0CC] dark:hover:border-[#2D3B4F] dark:hover:bg-[#1E2533] ${articles.length < 20 ? "pointer-events-none opacity-30" : ""}`}
                   >
-                    Next →
+                    Next &rarr;
                   </Link>
                 </div>
               </>

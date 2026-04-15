@@ -13,22 +13,21 @@ function useCountUp(target: number, duration = 1400, active: boolean) {
   const [count, setCount] = useState(0)
 
   useEffect(() => {
-    if (!active || target === 0) {
-      setCount(target)
-      return
-    }
-    let start: number
+    if (!active || target === 0) return
+    let start: number | null = null
+    let rafId = 0
     const step = (ts: number) => {
-      if (!start) start = ts
+      if (start === null) start = ts
       const progress = Math.min((ts - start) / duration, 1)
       const eased = 1 - Math.pow(1 - progress, 3)
       setCount(Math.floor(eased * target))
-      if (progress < 1) requestAnimationFrame(step)
+      if (progress < 1) rafId = requestAnimationFrame(step)
     }
-    requestAnimationFrame(step)
+    rafId = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(rafId)
   }, [active, target, duration])
 
-  return count
+  return active ? count : target
 }
 
 function StatCard({ value, suffix, label }: typeof STATS[number]) {

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { ChevronDown, Trash2, Loader2, Pause, Play, Plus } from "lucide-react"
+import { ChevronDown, Loader2, Pause, Play, Plus, Trash2 } from "lucide-react"
 import { DigestPreviewModal } from "@/components/digest-preview-modal"
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
@@ -36,13 +36,17 @@ const TIMEZONES = [
 ]
 
 function detectTimezone(): string {
-  try { return Intl.DateTimeFormat().resolvedOptions().timeZone } catch { return "UTC" }
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone
+  } catch {
+    return "UTC"
+  }
 }
 
 function formatSummary(frequency: string, dayOfWeek: number, hour: number): string {
   const timeLabel = HOURS[hour]?.label ?? `${hour}:00`
-  if (frequency === "daily") return `Daily · ${timeLabel}`
-  return `Weekly ${DAYS[dayOfWeek]} · ${timeLabel}`
+  if (frequency === "daily") return `Daily / ${timeLabel}`
+  return `Weekly ${DAYS[dayOfWeek]} / ${timeLabel}`
 }
 
 type Topic = { id: string; name: string; icon: string | null }
@@ -58,14 +62,12 @@ type ScheduleRow = {
 type TopicState = {
   topicId: string
   isFollowing: boolean
-  // schedule values
   frequency: "daily" | "weekly"
   dayOfWeek: number
   hour: number
   timezone: string
   isActive: boolean
   hasSchedule: boolean
-  // ui state
   isExpanded: boolean
   isDirty: boolean
   saving: boolean
@@ -76,18 +78,18 @@ type TopicState = {
 }
 
 function buildState(topics: Topic[], schedules: ScheduleRow[], followedIds: string[]): TopicState[] {
-  const scheduleMap = new Map(schedules.map((s) => [s.topicId, s]))
-  return topics.map((t) => {
-    const s = scheduleMap.get(t.id)
+  const scheduleMap = new Map(schedules.map((schedule) => [schedule.topicId, schedule]))
+  return topics.map((topic) => {
+    const schedule = scheduleMap.get(topic.id)
     return {
-      topicId: t.id,
-      isFollowing: followedIds.includes(t.id),
-      frequency: (s?.frequency as "daily" | "weekly") ?? "weekly",
-      dayOfWeek: s?.dayOfWeek ?? 1,
-      hour: s?.hour ?? 9,
-      timezone: s?.timezone ?? detectTimezone(),
-      isActive: s?.isActive ?? true,
-      hasSchedule: !!s,
+      topicId: topic.id,
+      isFollowing: followedIds.includes(topic.id),
+      frequency: (schedule?.frequency as "daily" | "weekly") ?? "weekly",
+      dayOfWeek: schedule?.dayOfWeek ?? 1,
+      hour: schedule?.hour ?? 9,
+      timezone: schedule?.timezone ?? detectTimezone(),
+      isActive: schedule?.isActive ?? true,
+      hasSchedule: !!schedule,
       isExpanded: false,
       isDirty: false,
       saving: false,
@@ -111,24 +113,24 @@ export function SettingsSchedules({
   const [rows, setRows] = useState<TopicState[]>(() => buildState(topics, initialSchedules, followedIds))
 
   function patch(topicId: string, update: Partial<TopicState>) {
-    setRows((prev) => prev.map((r) => r.topicId === topicId ? { ...r, ...update } : r))
+    setRows((prev) => prev.map((row) => (row.topicId === topicId ? { ...row, ...update } : row)))
   }
 
   function edit(topicId: string, update: Partial<Pick<TopicState, "frequency" | "dayOfWeek" | "hour" | "timezone">>) {
     setRows((prev) =>
-      prev.map((r) => r.topicId === topicId ? { ...r, ...update, isDirty: true, saved: false, error: null } : r)
+      prev.map((row) => (row.topicId === topicId ? { ...row, ...update, isDirty: true, saved: false, error: null } : row))
     )
   }
 
   async function save(topicId: string) {
-    const row = rows.find((r) => r.topicId === topicId)
+    const row = rows.find((item) => item.topicId === topicId)
     if (!row) return
+
     if (!row.isFollowing) {
-      const confirmed = window.confirm(
-        "You are not following this topic yet. Do you want to set up a digest for it anyway?"
-      )
+      const confirmed = window.confirm("You are not following this topic yet. Do you want to set up a digest for it anyway?")
       if (!confirmed) return
     }
+
     patch(topicId, { saving: true, error: null })
     const res = await fetch("/api/user/schedule", {
       method: "POST",
@@ -141,6 +143,7 @@ export function SettingsSchedules({
         timezone: row.timezone,
       }),
     })
+
     if (res.ok) {
       patch(topicId, { saving: false, saved: true, isDirty: false, hasSchedule: true, isActive: true })
     } else {
@@ -155,6 +158,7 @@ export function SettingsSchedules({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ topicId }),
     })
+
     if (res.ok) {
       patch(topicId, { deleting: false, hasSchedule: false, isExpanded: false, saved: false, isDirty: false })
     } else {
@@ -163,7 +167,7 @@ export function SettingsSchedules({
   }
 
   async function togglePause(topicId: string) {
-    const row = rows.find((r) => r.topicId === topicId)
+    const row = rows.find((item) => item.topicId === topicId)
     if (!row) return
     const newActive = !row.isActive
     patch(topicId, { toggling: true })
@@ -172,180 +176,174 @@ export function SettingsSchedules({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ topicIds: [topicId], isActive: newActive }),
     })
-    patch(topicId, { toggling: false, isActive: res.ok ? newActive : row.isActive, error: res.ok ? null : "Failed to update." })
+    patch(topicId, {
+      toggling: false,
+      isActive: res.ok ? newActive : row.isActive,
+      error: res.ok ? null : "Failed to update.",
+    })
   }
 
   return (
     <div className="divide-y divide-stone-100 dark:divide-[#1E2A3A]">
       {rows.map((row) => {
-        const topic = topics.find((t) => t.id === row.topicId)
+        const topic = topics.find((item) => item.id === row.topicId)
         if (!topic) return null
 
         return (
-          <div key={row.topicId}>
-            {/* ── Row header ──────────────────────────────── */}
-            <div className="flex items-center gap-3 py-3.5">
-              {/* Topic label */}
-              <div className="flex items-center gap-2 min-w-0 flex-1">
-                <span className="text-lg leading-none flex-shrink-0">{topic.icon ?? "📄"}</span>
-                <span className="text-sm font-medium text-stone-800 dark:text-[#F0EDE6] truncate">{topic.name}</span>
-                  {!row.isFollowing && (
-                    <span className="ml-1 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-amber-700 dark:bg-amber-500/15 dark:text-amber-300">
-                      Not following
-                    </span>
-                  )}
+          <div key={row.topicId} className="py-4">
+            <div className="flex items-start gap-3">
+              <div className="flex min-w-0 flex-1 items-start gap-3">
+                <span className="mt-0.5 text-lg leading-none">{topic.icon ?? "*"}</span>
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="truncate text-sm font-medium text-stone-800 dark:text-[#F0EDE6]">{topic.name}</span>
+                    {!row.isFollowing && (
+                      <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-amber-700 dark:bg-amber-500/15 dark:text-amber-300">
+                        Not following
+                      </span>
+                    )}
+                  </div>
+                  <p className={`mt-1 text-xs ${row.hasSchedule ? "text-stone-500 dark:text-[#B8C0CC]" : "text-stone-400 dark:text-[#6B7585]"}`}>
+                    {row.hasSchedule ? formatSummary(row.frequency, row.dayOfWeek, row.hour) : "No digest schedule yet"}
+                  </p>
+                </div>
               </div>
 
-              {/* Schedule summary / status */}
-              <div className="flex items-center gap-2 flex-shrink-0">
+              <div className="flex shrink-0 items-center gap-2">
                 {row.hasSchedule ? (
                   <>
-                    <span className={`text-xs tabular-nums ${row.isActive ? "text-stone-500 dark:text-[#B8C0CC]" : "text-stone-300 dark:text-[#3A4557] line-through"}`}>
-                      {formatSummary(row.frequency, row.dayOfWeek, row.hour)}
-                    </span>
                     {!row.isActive && (
-                      <span className="text-xs font-medium text-stone-400 dark:text-[#6B7585] bg-stone-100 dark:bg-[#1E2533] px-1.5 py-0.5 rounded-full">
+                      <span className="rounded-full bg-stone-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-stone-500 dark:bg-[#1E2533] dark:text-[#8A95A7]">
                         Paused
                       </span>
                     )}
-                    {/* Pause / delete */}
                     <button
                       onClick={() => togglePause(row.topicId)}
                       disabled={row.toggling}
-                      className="p-1.5 rounded-md text-stone-300 dark:text-[#3A4557] hover:text-stone-500 dark:hover:text-[#6B7585] hover:bg-stone-100 dark:hover:bg-[#1E2533] transition-colors disabled:opacity-40"
+                      className="flex h-8 w-8 items-center justify-center rounded-md text-stone-400 transition-colors hover:bg-stone-100 hover:text-stone-600 disabled:opacity-40 dark:text-[#6B7585] dark:hover:bg-[#1E2533] dark:hover:text-[#B8C0CC]"
                       title={row.isActive ? "Pause digest" : "Resume digest"}
                     >
-                      {row.toggling
-                        ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                        : row.isActive
-                        ? <Pause className="w-3.5 h-3.5" />
-                        : <Play className="w-3.5 h-3.5" />
-                      }
+                      {row.toggling ? (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      ) : row.isActive ? (
+                        <Pause className="h-3.5 w-3.5" />
+                      ) : (
+                        <Play className="h-3.5 w-3.5" />
+                      )}
                     </button>
                     <button
                       onClick={() => remove(row.topicId)}
                       disabled={row.deleting}
-                      className="p-1.5 rounded-md text-stone-300 dark:text-[#3A4557] hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors disabled:opacity-40"
+                      className="flex h-8 w-8 items-center justify-center rounded-md text-stone-400 transition-colors hover:bg-red-50 hover:text-red-500 disabled:opacity-40 dark:text-[#6B7585] dark:hover:bg-red-950/20"
                       title="Remove schedule"
                     >
-                      {row.deleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+                      {row.deleting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
                     </button>
-                    {/* Expand toggle */}
                     <button
                       onClick={() => patch(row.topicId, { isExpanded: !row.isExpanded, saved: false })}
-                      className="flex items-center gap-1 px-2.5 py-1 rounded-lg border border-stone-200 dark:border-[#1E2A3A] text-xs font-medium text-stone-500 dark:text-[#6B7585] hover:border-stone-300 dark:hover:border-[#2D3B4F] hover:text-stone-700 dark:hover:text-[#B8C0CC] transition-colors"
+                      className="inline-flex items-center gap-1 rounded-full border border-stone-200/80 px-3 py-1.5 text-[13px] font-medium text-stone-500 transition-colors hover:border-stone-300 hover:text-stone-800 dark:border-[#1E2A3A] dark:text-[#8A95A7] dark:hover:border-[#2D3B4F] dark:hover:text-[#F0EDE6]"
                     >
                       Edit
-                      <ChevronDown className={`w-3 h-3 transition-transform duration-150 ${row.isExpanded ? "rotate-180" : ""}`} />
+                      <ChevronDown className={`h-3 w-3 transition-transform ${row.isExpanded ? "rotate-180" : ""}`} />
                     </button>
                   </>
                 ) : (
                   <button
                     onClick={() => patch(row.topicId, { isExpanded: true })}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-dashed border-stone-300 dark:border-[#2D3B4F] text-xs font-medium text-stone-400 dark:text-[#6B7585] hover:border-amber-400 dark:hover:border-amber-600 hover:text-amber-600 dark:hover:text-amber-500 transition-colors"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-stone-300 px-3 py-1.5 text-[13px] font-medium text-stone-500 transition-colors hover:border-stone-400 hover:text-stone-800 dark:border-[#2D3B4F] dark:text-[#8A95A7] dark:hover:border-[#E8A838] dark:hover:text-[#F0EDE6]"
                   >
-                    <Plus className="w-3 h-3" />
+                    <Plus className="h-3.5 w-3.5" />
                     Set schedule
                   </button>
                 )}
               </div>
             </div>
 
-            {/* ── Expanded edit panel ──────────────────── */}
             {row.isExpanded && (
-              <div className="pb-5 pl-7">
-                <div className="rounded-xl border border-stone-100 dark:border-[#1E2A3A] bg-stone-50 dark:bg-[#0D1117] p-4 space-y-4">
+              <div className="ml-8 mt-4 rounded-[1.25rem] border border-stone-200/80 bg-stone-50/80 p-4 dark:border-[#1E2A3A] dark:bg-[#0D1117]">
+                <div className="flex flex-wrap items-start gap-x-8 gap-y-4">
+                  <div>
+                    <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-stone-400 dark:text-[#6B7585]">Frequency</p>
+                    <div className="flex gap-1.5">
+                      {(["daily", "weekly"] as const).map((frequency) => (
+                        <button
+                          key={frequency}
+                          onClick={() => edit(row.topicId, { frequency })}
+                          className={`rounded-full border px-3 py-1.5 text-[13px] font-medium capitalize transition-colors ${
+                            row.frequency === frequency
+                              ? "border-stone-300 bg-stone-900 text-white dark:border-[#E8A838] dark:bg-[#F0EDE6] dark:text-[#0D1117]"
+                              : "border-stone-200/80 bg-white text-stone-500 hover:border-stone-300 hover:text-stone-800 dark:border-[#1E2A3A] dark:bg-[#161C26] dark:text-[#8A95A7] dark:hover:border-[#2D3B4F] dark:hover:text-[#F0EDE6]"
+                          }`}
+                        >
+                          {frequency}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
 
-                  {/* Frequency */}
-                  <div className="flex flex-wrap items-start gap-x-8 gap-y-3">
+                  {row.frequency === "weekly" && (
                     <div>
-                      <p className="text-xs font-medium text-stone-400 dark:text-[#6B7585] mb-2">Frequency</p>
-                      <div className="flex gap-1.5">
-                        {(["daily", "weekly"] as const).map((f) => (
+                      <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-stone-400 dark:text-[#6B7585]">Day</p>
+                      <div className="flex flex-wrap gap-1">
+                        {DAYS.map((day, index) => (
                           <button
-                            key={f}
-                            onClick={() => edit(row.topicId, { frequency: f })}
-                            className={`rounded-lg border px-3 py-1.5 text-xs font-medium capitalize transition-all active:scale-95 ${
-                              row.frequency === f
-                                ? "border-stone-800 dark:border-[#F0EDE6] bg-stone-800 dark:bg-[#F0EDE6] text-white dark:text-[#0D1117]"
-                                : "border-stone-200 dark:border-[#1E2A3A] text-stone-500 dark:text-[#6B7585] hover:border-stone-400 dark:hover:border-[#2D3B4F]"
+                            key={day}
+                            onClick={() => edit(row.topicId, { dayOfWeek: index })}
+                            className={`rounded-md border px-2.5 py-1.5 text-xs font-medium transition-colors ${
+                              row.dayOfWeek === index
+                                ? "border-stone-300 bg-stone-900 text-white dark:border-[#E8A838] dark:bg-[#F0EDE6] dark:text-[#0D1117]"
+                                : "border-stone-200/80 bg-white text-stone-500 hover:border-stone-300 hover:text-stone-800 dark:border-[#1E2A3A] dark:bg-[#161C26] dark:text-[#8A95A7] dark:hover:border-[#2D3B4F] dark:hover:text-[#F0EDE6]"
                             }`}
                           >
-                            {f}
+                            {day}
                           </button>
                         ))}
                       </div>
                     </div>
+                  )}
+                </div>
 
-                    {/* Day — weekly only */}
-                    {row.frequency === "weekly" && (
-                      <div>
-                        <p className="text-xs font-medium text-stone-400 dark:text-[#6B7585] mb-2">Day</p>
-                        <div className="flex gap-1">
-                          {DAYS.map((day, i) => (
-                            <button
-                              key={day}
-                              onClick={() => edit(row.topicId, { dayOfWeek: i })}
-                              className={`rounded-md border px-2 py-1.5 text-xs font-medium transition-all active:scale-95 ${
-                                row.dayOfWeek === i
-                                  ? "border-stone-800 dark:border-[#F0EDE6] bg-stone-800 dark:bg-[#F0EDE6] text-white dark:text-[#0D1117]"
-                                  : "border-stone-200 dark:border-[#1E2A3A] text-stone-500 dark:text-[#6B7585] hover:border-stone-400 dark:hover:border-[#2D3B4F]"
-                              }`}
-                            >
-                              {day}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Time + Timezone */}
-                  <div className="flex flex-wrap gap-4">
-                    <div>
-                      <p className="text-xs font-medium text-stone-400 dark:text-[#6B7585] mb-2">Time</p>
-                      <select
-                        value={row.hour}
-                        onChange={(e) => edit(row.topicId, { hour: Number(e.target.value) })}
-                        className="rounded-lg border border-stone-200 dark:border-[#1E2A3A] bg-white dark:bg-[#161C26] px-3 py-1.5 text-xs text-stone-700 dark:text-[#C8C4BC] outline-none focus:border-stone-400 dark:focus:border-[#2D3B4F] transition-colors"
-                      >
-                        {HOURS.map(({ value, label }) => (
-                          <option key={value} value={value}>{label}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <p className="text-xs font-medium text-stone-400 dark:text-[#6B7585] mb-2">Timezone</p>
-                      <select
-                        value={row.timezone}
-                        onChange={(e) => edit(row.topicId, { timezone: e.target.value })}
-                        className="rounded-lg border border-stone-200 dark:border-[#1E2A3A] bg-white dark:bg-[#161C26] px-3 py-1.5 text-xs text-stone-700 dark:text-[#C8C4BC] outline-none focus:border-stone-400 dark:focus:border-[#2D3B4F] transition-colors"
-                      >
-                        {!TIMEZONES.includes(row.timezone) && (
-                          <option value={row.timezone}>{row.timezone}</option>
-                        )}
-                        {TIMEZONES.map((tz) => (
-                          <option key={tz} value={tz}>{tz}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Actions */}
-                  <div className="flex items-center gap-3 pt-1">
-                    <button
-                      onClick={() => save(row.topicId)}
-                      disabled={row.saving}
-                      className="flex items-center gap-1.5 rounded-lg bg-stone-800 dark:bg-[#F0EDE6] px-4 py-2 text-xs font-semibold text-white dark:text-[#0D1117] hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 transition-all"
+                <div className="mt-4 flex flex-wrap gap-4">
+                  <div>
+                    <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-stone-400 dark:text-[#6B7585]">Time</p>
+                    <select
+                      value={row.hour}
+                      onChange={(e) => edit(row.topicId, { hour: Number(e.target.value) })}
+                      className="rounded-lg border border-stone-200/80 bg-white px-3 py-2 text-sm text-stone-700 outline-none transition-colors focus:border-amber-400 dark:border-[#1E2A3A] dark:bg-[#161C26] dark:text-[#C8C4BC]"
                     >
-                      {row.saving && <Loader2 className="w-3 h-3 animate-spin" />}
-                      {row.saving ? "Saving…" : "Save"}
-                    </button>
-                    <DigestPreviewModal topicId={row.topicId} topicName={topic.name} topicIcon={topic.icon} />
-                    {row.saved && <span className="text-xs font-medium text-green-600 dark:text-green-400">Saved ✓</span>}
-                    {row.error && <span className="text-xs text-red-500">{row.error}</span>}
+                      {HOURS.map(({ value, label }) => (
+                        <option key={value} value={value}>{label}</option>
+                      ))}
+                    </select>
                   </div>
+
+                  <div>
+                    <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-stone-400 dark:text-[#6B7585]">Timezone</p>
+                    <select
+                      value={row.timezone}
+                      onChange={(e) => edit(row.topicId, { timezone: e.target.value })}
+                      className="rounded-lg border border-stone-200/80 bg-white px-3 py-2 text-sm text-stone-700 outline-none transition-colors focus:border-amber-400 dark:border-[#1E2A3A] dark:bg-[#161C26] dark:text-[#C8C4BC]"
+                    >
+                      {!TIMEZONES.includes(row.timezone) && <option value={row.timezone}>{row.timezone}</option>}
+                      {TIMEZONES.map((timezone) => (
+                        <option key={timezone} value={timezone}>{timezone}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="mt-4 flex flex-wrap items-center gap-3">
+                  <button
+                    onClick={() => save(row.topicId)}
+                    disabled={row.saving}
+                    className="flex items-center gap-1.5 rounded-lg bg-stone-900 px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-[#F0EDE6] dark:text-[#0D1117]"
+                  >
+                    {row.saving && <Loader2 className="h-3 w-3 animate-spin" />}
+                    {row.saving ? "Saving..." : "Save"}
+                  </button>
+                  <DigestPreviewModal topicId={row.topicId} topicName={topic.name} topicIcon={topic.icon} />
+                  {row.saved && <span className="text-xs font-medium text-green-600 dark:text-green-400">Saved</span>}
+                  {row.error && <span className="text-xs text-red-500">{row.error}</span>}
                 </div>
               </div>
             )}

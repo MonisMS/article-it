@@ -1,6 +1,6 @@
 import { db } from "@/lib/db"
 import { readArticles } from "@/lib/db/schema"
-import { eq, gte, sql } from "drizzle-orm"
+import { eq, sql } from "drizzle-orm"
 
 export type StreakData = {
   currentStreak: number

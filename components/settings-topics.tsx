@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { X, Plus, Loader2, Zap } from "lucide-react"
+import { Loader2, Plus, X, Zap } from "lucide-react"
 
 type Topic = { id: string; name: string; slug: string; icon: string | null }
 
@@ -32,8 +32,8 @@ export function SettingsTopics({
     setSaved(false)
   }
 
-  const followedTopics = allTopics.filter((t) => followed.has(t.id))
-  const availableTopics = allTopics.filter((t) => !followed.has(t.id))
+  const followedTopics = allTopics.filter((topic) => followed.has(topic.id))
+  const availableTopics = allTopics.filter((topic) => !followed.has(topic.id))
 
   async function save() {
     if (followed.size === 0) return
@@ -46,8 +46,8 @@ export function SettingsTopics({
         body: JSON.stringify({ topicIds: Array.from(followed) }),
       })
       if (res.status === 403) {
-        const { error: msg } = await res.json()
-        setError(msg)
+        const { error: message } = await res.json()
+        setError(message)
         return
       }
       if (!res.ok) throw new Error("Failed to save")
@@ -61,26 +61,41 @@ export function SettingsTopics({
 
   return (
     <div className="space-y-6">
+      <div className="border-b border-app-border-subtle pb-4">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-app-text-subtle">Topics</p>
+        <h3 className="mt-2 text-lg font-semibold text-app-text">Your reading profile</h3>
+        <p className="mt-2 text-sm leading-6 text-app-text-muted">
+          Choose the subjects that define your feed. Keep the list intentional and easy to maintain.
+        </p>
+      </div>
+
       <div>
-        <p className="text-xs font-semibold text-app-text-subtle uppercase tracking-widest mb-3">Following</p>
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-app-text-subtle">Following</p>
+          <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-app-text-subtle">
+            {followedTopics.length} topic{followedTopics.length === 1 ? "" : "s"}
+          </span>
+        </div>
+
         {followedTopics.length === 0 ? (
-          <p className="text-sm text-app-text-subtle italic">No topics yet — add some below.</p>
+          <p className="rounded-xl border border-app-border-subtle bg-app-bg px-4 py-3 text-sm text-app-text-subtle">
+            No topics yet. Add a few below to shape your feed.
+          </p>
         ) : (
-          <div className="rounded-xl border border-app-border-subtle bg-app-bg">
+          <div className="rounded-[1.25rem] border border-app-border-subtle bg-app-bg">
             <div className="divide-y divide-app-border-subtle">
-              {followedTopics.map((t) => (
-                <div key={t.id} className="flex items-center gap-3 px-4 py-3">
-                  <span className="text-lg leading-none w-6 shrink-0">{t.icon ?? "📄"}</span>
+              {followedTopics.map((topic) => (
+                <div key={topic.id} className="flex items-center gap-3 px-4 py-3.5">
+                  <span className="w-7 shrink-0 text-lg leading-none">{topic.icon ?? "*"}</span>
                   <div className="min-w-0 flex-1">
-                    <div className="text-sm font-medium text-app-text truncate">{t.name}</div>
-                    <div className="text-xs text-app-text-subtle">Following</div>
+                    <div className="text-sm font-medium text-app-text">{topic.name}</div>
                   </div>
                   <button
-                    onClick={() => remove(t.id)}
-                    className="flex items-center gap-1.5 rounded-lg border border-app-border px-2.5 py-1.5 text-xs font-medium text-app-text-muted hover:bg-app-hover transition-colors"
-                    aria-label={`Remove ${t.name}`}
+                    onClick={() => remove(topic.id)}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-app-border px-2.5 py-1.5 text-xs font-medium text-app-text-muted transition-colors hover:bg-app-hover"
+                    aria-label={`Remove ${topic.name}`}
                   >
-                    <X className="w-3.5 h-3.5" />
+                    <X className="h-3.5 w-3.5" />
                     Remove
                   </button>
                 </div>
@@ -92,20 +107,20 @@ export function SettingsTopics({
 
       {availableTopics.length > 0 && (
         <div>
-          <p className="text-xs font-semibold text-app-text-subtle uppercase tracking-widest mb-3">Discover more</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {availableTopics.map((t) => (
+          <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-app-text-subtle">Add more</p>
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            {availableTopics.map((topic) => (
               <button
-                key={t.id}
-                onClick={() => add(t.id)}
-                className="flex items-center justify-between gap-3 rounded-xl border border-app-border bg-app-bg px-4 py-3 text-left hover:bg-app-hover transition-colors"
+                key={topic.id}
+                onClick={() => add(topic.id)}
+                className="flex items-center justify-between gap-3 rounded-xl border border-app-border bg-app-bg px-4 py-3 text-left transition-colors hover:bg-app-hover"
               >
-                <span className="flex items-center gap-2 min-w-0">
-                  <span className="text-lg leading-none w-6 shrink-0">{t.icon ?? "📄"}</span>
-                  <span className="text-sm font-medium text-app-text truncate">{t.name}</span>
+                <span className="flex min-w-0 items-center gap-2.5">
+                  <span className="w-6 shrink-0 text-lg leading-none">{topic.icon ?? "*"}</span>
+                  <span className="truncate text-sm font-medium text-app-text">{topic.name}</span>
                 </span>
                 <span className="flex items-center gap-1.5 text-xs font-medium text-app-text-muted">
-                  <Plus className="w-3.5 h-3.5" />
+                  <Plus className="h-3.5 w-3.5" />
                   Add
                 </span>
               </button>
@@ -114,28 +129,27 @@ export function SettingsTopics({
         </div>
       )}
 
-      <div className="flex items-center gap-3 pt-1 border-t border-app-border-subtle">
+      <div className="flex items-center gap-3 border-t border-app-border-subtle pt-2">
         <button
           onClick={save}
           disabled={saving || followed.size === 0}
-          className="flex items-center gap-2 rounded-lg bg-app-accent text-white text-sm font-semibold px-5 py-2 hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 rounded-lg bg-app-accent px-5 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {saving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-          {saving ? "Saving…" : "Save changes"}
+          {saving && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+          {saving ? "Saving..." : "Save changes"}
         </button>
-        {saved && <span className="text-sm text-app-accent font-medium">Saved ✓</span>}
+        {saved && <span className="text-sm font-medium text-app-accent">Saved</span>}
         {error && (
           error.includes("Upgrade") ? (
             <span className="flex items-center gap-1.5 text-sm text-amber-600">
-              <Zap className="w-3.5 h-3.5 shrink-0" />
+              <Zap className="h-3.5 w-3.5 shrink-0" />
               {error.split(".")[0]}.{" "}
-              <Link href="/upgrade" className="underline underline-offset-2 font-medium">Upgrade to Pro</Link>
+              <Link href="/upgrade" className="font-medium underline underline-offset-2">Upgrade to Pro</Link>
             </span>
           ) : (
             <span className="text-sm text-red-500">{error}</span>
           )
         )}
-        <span className="ml-auto text-xs text-app-text-subtle">{followed.size} topic{followed.size === 1 ? "" : "s"}</span>
       </div>
     </div>
   )

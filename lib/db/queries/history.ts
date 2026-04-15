@@ -1,6 +1,6 @@
 import { db } from "@/lib/db"
 import { digestLogs, digestLogArticles } from "@/lib/db/schema"
-import { and, eq, desc, count, sum } from "drizzle-orm"
+import { and, eq, count, sum } from "drizzle-orm"
 
 const PAGE_SIZE = 20
 

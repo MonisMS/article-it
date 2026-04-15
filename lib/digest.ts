@@ -1,5 +1,5 @@
 import { db } from "@/lib/db"
-import { digestSchedules, digestLogs, digestLogArticles, articles, articleTopics, readArticles, userTopics } from "@/lib/db/schema"
+import { digestSchedules, digestLogs, digestLogArticles, articles, articleTopics, readArticles } from "@/lib/db/schema"
 import { and, eq, gte, desc, sql, countDistinct } from "drizzle-orm"
 import { resend } from "@/lib/resend"
 import { buildDigestEmail } from "@/lib/email/digest-template"

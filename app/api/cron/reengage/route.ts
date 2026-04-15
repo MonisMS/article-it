@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { user } from "@/lib/db/schema/auth"
 import { readArticles, userTopics, topics, articleTopics } from "@/lib/db/schema"
-import { and, eq, lt, isNull, or, gte, sql, count } from "drizzle-orm"
+import { and, eq, lt, isNull, or, sql, count } from "drizzle-orm"
 import { resend } from "@/lib/resend"
 import { buildReengageEmail } from "@/lib/email/reengage-template"
 
