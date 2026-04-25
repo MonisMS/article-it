@@ -11,7 +11,7 @@ export async function GET(req: Request) {
   const q = searchParams.get("q")?.trim() ?? ""
   const page = Math.max(0, Number(searchParams.get("page") ?? 0))
 
-  if (q.length < 2) {
+  if (q.length < 2 || q.length > 200) {
     return NextResponse.json({ data: { articles: [], topics: [] }, error: null })
   }
 

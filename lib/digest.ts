@@ -116,6 +116,11 @@ async function sendDigest(
   },
   now: Date
 ) {
+  if (!schedule.user.email) {
+    console.warn(`[digest] User ${schedule.user.id} has no email — skipping`)
+    return false
+  }
+
   // Articles since last digest (or last 7 days if never sent)
   const since = schedule.lastSentAt
     ? schedule.lastSentAt
@@ -151,6 +156,8 @@ async function sendDigest(
 
   if (rows.length === 0) {
     console.log(`[digest] No new articles for ${schedule.user.email} / ${schedule.topic.name} — skipping`)
+    // Still advance lastSentAt so the next digest doesn't accumulate stale articles
+    await db.update(digestSchedules).set({ lastSentAt: now }).where(eq(digestSchedules.id, schedule.id))
     return false
   }
 
@@ -179,7 +186,7 @@ async function sendDigest(
   })
 
   await resend.emails.send({
-    from: "ArticleIt <digest@m0nis.com>",
+    from: process.env.EMAIL_FROM_DIGEST ?? "ArticleIt <digest@m0nis.com>",
     to: schedule.user.email,
     subject,
     html,

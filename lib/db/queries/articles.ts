@@ -57,9 +57,7 @@ export async function getArticlesForUser(
       sql`EXISTS (
         SELECT 1 FROM ${articleTopics}
         WHERE ${articleTopics.articleId} = ${articles.id}
-        AND   ${articleTopics.topicId}   IN ${sql.raw(
-          `('${filterTopicIds.join("','")}')`
-        )}
+        AND   ${inArray(articleTopics.topicId, filterTopicIds)}
       )`
     )
     // Blend recency with source quality: high-quality sources get up to +12h
@@ -179,7 +177,7 @@ export async function getArticlesCountForUser(userId: string, topicSlug?: string
       sql`EXISTS (
         SELECT 1 FROM ${articleTopics}
         WHERE ${articleTopics.articleId} = ${articles.id}
-        AND   ${articleTopics.topicId} IN ${sql.raw(`('${filterTopicIds.join("','")}')`)}
+        AND   ${inArray(articleTopics.topicId, filterTopicIds)}
       )`
     )
 
@@ -303,18 +301,18 @@ export async function searchFeedForUser(userId: string, query: string, page = 0)
         EXISTS (
           SELECT 1 FROM ${articleTopics}
           WHERE ${articleTopics.articleId} = ${articles.id}
-          AND ${articleTopics.topicId} IN ${sql.raw(`('${followedTopicIds.join("','")}')`)}
+          AND ${inArray(articleTopics.topicId, followedTopicIds)}
         )
         AND (
           ${tsVector} @@ ${tsQuery}
           OR ${rssSources.name} ILIKE ${`%${query}%`}
           OR EXISTS (
             SELECT 1
-            FROM article_topics at2
-            INNER JOIN topics t2 ON t2.id = at2.topic_id
-            WHERE at2.article_id = ${articles.id}
-            AND at2.topic_id IN ${sql.raw(`('${followedTopicIds.join("','")}')`)}
-            AND t2.name ILIKE ${`%${query}%`}
+            FROM ${articleTopics}
+            INNER JOIN ${topics} ON ${topics.id} = ${articleTopics.topicId}
+            WHERE ${articleTopics.articleId} = ${articles.id}
+            AND ${inArray(articleTopics.topicId, followedTopicIds)}
+            AND ${topics.name} ILIKE ${`%${query}%`}
           )
         )
       `
@@ -398,7 +396,7 @@ export async function getDailyQueue(userId: string): Promise<ArticleWithMeta[]> 
       sql`EXISTS (
         SELECT 1 FROM ${articleTopics}
         WHERE ${articleTopics.articleId} = ${articles.id}
-        AND   ${articleTopics.topicId}   IN ${sql.raw(`('${userTopicIds.join("','")}')`)}
+        AND   ${inArray(articleTopics.topicId, userTopicIds)}
       )
       AND NOT EXISTS (
         SELECT 1 FROM ${readArticles}

@@ -3,7 +3,7 @@ import Link from "next/link"
 import type { Metadata } from "next"
 import { db } from "@/lib/db"
 import { user, userTopics, articles, articleTopics, rssSources } from "@/lib/db/schema"
-import { eq, desc, sql } from "drizzle-orm"
+import { eq, desc, sql, inArray } from "drizzle-orm"
 import { initials } from "@/lib/utils"
 import { BookOpen } from "lucide-react"
 
@@ -57,7 +57,7 @@ export default async function PublicProfilePage({ params }: Props) {
         sql`EXISTS (
           SELECT 1 FROM ${articleTopics}
           WHERE ${articleTopics.articleId} = ${articles.id}
-          AND   ${articleTopics.topicId} IN ${sql.raw(`('${topicIds.join("','")}')`)}
+          AND   ${inArray(articleTopics.topicId, topicIds)}
         )
         AND ${articles.publishedAt} > NOW() - INTERVAL '14 days'`
       )

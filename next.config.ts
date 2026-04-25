@@ -7,16 +7,11 @@ const nextConfig: NextConfig = {
     cpus: 4,
   },
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "**",
-      },
-      {
-        protocol: "http",
-        hostname: "**",
-      },
-    ],
+    // RSS article images come from thousands of CDNs — domain whitelisting isn't
+    // feasible for an aggregator. HTTP is dropped; SVG execution is blocked.
+    remotePatterns: [{ protocol: "https", hostname: "**" }],
+    dangerouslyAllowSVG: false,
+    contentDispositionType: "attachment",
   },
 };
 

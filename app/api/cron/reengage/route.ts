@@ -8,7 +8,7 @@ import { buildReengageEmail } from "@/lib/email/reengage-template"
 
 export const maxDuration = 300
 
-const FROM = "ArticleIt <digest@m0nis.com>"
+const FROM = process.env.EMAIL_FROM_DIGEST ?? "ArticleIt <digest@m0nis.com>"
 
 export async function GET(req: Request) {
   const authHeader = req.headers.get("authorization")

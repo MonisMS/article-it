@@ -48,7 +48,7 @@ export async function POST(req: Request) {
       .join("\n")
 
     const { error } = await resend.emails.send({
-      from: "Curio Beta <noreply@m0nis.com>",
+      from: process.env.EMAIL_FROM_AUTH ?? "Curio Beta <noreply@m0nis.com>",
       to: adminEmail,
       subject,
       text,

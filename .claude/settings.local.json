@@ -99,7 +99,10 @@
       "WebFetch(domain:www.skydo.com)",
       "WebFetch(domain:www.karboncard.com)",
       "Bash(sed -n '1,25p' /home/monis/article-it/lib/db/schema/auth.ts)",
-      "Bash(sed -n '60,80p' /home/monis/article-it/lib/auth.ts)"
+      "Bash(sed -n '60,80p' /home/monis/article-it/lib/auth.ts)",
+      "Bash(grep -rn \"sql.raw\\\\|sql\\\\`\" /home/monis/article-it/app/api --include=\"*.ts\")",
+      "Bash(git -C /home/monis/article-it log --all --full-history -- .env.local)",
+      "Bash(node_modules/.bin/tsc --noEmit)"
     ]
   }
 }

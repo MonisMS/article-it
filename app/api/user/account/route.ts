@@ -12,15 +12,13 @@ export async function DELETE() {
   const userId = sessionData.user.id
 
   try {
-    // Explicitly delete auth-owned tables first so the user row deletion
-    // succeeds even if the DB-level cascade constraint was never applied
-    // (e.g. pnpm db:push not yet run after schema was updated).
-    // Order matters: sessions and accounts reference user, so they go first.
-    await db.delete(sessionTable).where(eq(sessionTable.userId, userId))
-    await db.delete(account).where(eq(account.userId, userId))
-    // Deleting the user row cascades to all product tables (bookmarks,
-    // user_topics, digest_schedules, read_articles, etc.)
-    await db.delete(user).where(eq(user.id, userId))
+    await db.transaction(async (tx) => {
+      // Sessions and accounts reference user via FK — delete them first.
+      // All three run in one transaction so a partial failure rolls back cleanly.
+      await tx.delete(sessionTable).where(eq(sessionTable.userId, userId))
+      await tx.delete(account).where(eq(account.userId, userId))
+      await tx.delete(user).where(eq(user.id, userId))
+    })
 
     return NextResponse.json({ data: { ok: true }, error: null })
   } catch (e) {

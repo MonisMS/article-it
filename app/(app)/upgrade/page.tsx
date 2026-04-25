@@ -3,6 +3,7 @@ import Link from "next/link"
 import { headers } from "next/headers"
 import { ArrowLeft, Check } from "lucide-react"
 import { auth } from "@/lib/auth"
+import { WaitlistButton } from "@/components/waitlist-button"
 
 export const metadata: Metadata = {
   title: "Upgrade to Pro - Curio",
@@ -110,14 +111,16 @@ export default async function UpgradePage() {
           </ul>
 
           <div className="mt-6 border-t border-stone-200/80 pt-5 dark:border-[#1E2A3A]">
-            <div className="rounded-xl border border-stone-200/80 bg-white px-4 py-3.5 dark:border-[#1E2A3A] dark:bg-[#161C26]">
-              <p className="text-xs font-semibold text-stone-900 dark:text-[#F0EDE6]">Launch notification</p>
-              <p className="mt-1 text-xs leading-5 text-stone-500 dark:text-[#8A95A7]">
-                {email
-                  ? `We will email ${email} when Pro is available.`
-                  : "We will notify you when Pro is available."}
-              </p>
-            </div>
+            {email ? (
+              <WaitlistButton email={email} />
+            ) : (
+              <Link
+                href="/sign-in"
+                className="flex w-full items-center justify-center rounded-xl bg-amber-500 px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+              >
+                Sign in to join waitlist
+              </Link>
+            )}
           </div>
         </section>
       </div>

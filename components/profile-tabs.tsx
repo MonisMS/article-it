@@ -103,7 +103,7 @@ export function ProfileTabs({
         {activeTab === "topics" && (
           <div className="space-y-4">
             <div className="rounded-[1.75rem] border border-stone-200/80 bg-white p-5 dark:border-lp-border dark:bg-lp-surface">
-              <SettingsTopics allTopics={allTopics} followedIds={followedIds} />
+              <SettingsTopics allTopics={allTopics} followedIds={followedIds} plan={plan} />
             </div>
             <div className="rounded-[1.75rem] border border-stone-200/80 bg-white p-5 dark:border-lp-border dark:bg-lp-surface">
               <SettingsOpmlImport />

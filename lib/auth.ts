@@ -12,7 +12,7 @@ import { resend } from "@/lib/resend"
 import { buildOtpEmail } from "@/lib/email/otp-template"
 import { buildResetPasswordEmail } from "@/lib/email/reset-password-template"
 
-const FROM = "ArticleIt <noreply@m0nis.com>"
+const FROM = process.env.EMAIL_FROM_AUTH ?? "ArticleIt <noreply@m0nis.com>"
 
 export const auth = betterAuth({
   baseURL: process.env.NEXT_PUBLIC_APP_URL,

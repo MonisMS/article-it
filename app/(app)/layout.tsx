@@ -7,6 +7,8 @@ import { db } from "@/lib/db"
 import { userTopics } from "@/lib/db/schema"
 import { eq } from "drizzle-orm"
 
+export const dynamic = "force-dynamic"
+
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   let session
   try {
