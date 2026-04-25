@@ -3,6 +3,7 @@ import Link from "next/link"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
 import { Search } from "lucide-react"
+import { TopicIcon } from "@/components/topic-icon"
 import { ArticleCard, type ArticleCardData } from "@/components/article-card"
 import { SearchBarHero } from "@/components/search-bar"
 import { auth } from "@/lib/auth"
@@ -100,7 +101,7 @@ export default async function SearchPage({ searchParams }: Props) {
                       href={`/dashboard?topic=${topic.slug}`}
                       className="inline-flex items-center gap-1 rounded-full border border-stone-200/80 bg-white px-3 py-1.5 text-[13px] font-medium text-stone-600 transition-colors hover:border-stone-300 hover:text-stone-900 dark:border-[#2D3B4F] dark:bg-[#0D1117] dark:text-[#B8C0CC] dark:hover:border-[#E8A838] dark:hover:text-[#F0EDE6]"
                     >
-                      <span>{topic.icon ?? "*"}</span>
+                      <TopicIcon slug={topic.slug} size={12} className="shrink-0 opacity-70" />
                       <span>{topic.name}</span>
                     </Link>
                   ))}

@@ -8,6 +8,7 @@ import { getArticlesByTopicSlug } from "@/lib/db/queries/articles"
 import { Nav } from "@/components/nav"
 import { Footer } from "@/components/footer"
 import { ArrowRight, BookOpen, Rss } from "lucide-react"
+import { TopicIcon } from "@/components/topic-icon"
 
 const TOPIC_GRADIENTS = [
   "from-violet-500 to-purple-600",
@@ -100,8 +101,8 @@ export default async function TopicPage({ params }: Props) {
         {/* Hero */}
         <div className={`relative w-full rounded-2xl mb-10 overflow-hidden bg-gradient-to-br ${gradient}`}>
           <div className="px-8 py-12 flex flex-col items-center text-center">
-            <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-4xl mb-4">
-              {topic.icon}
+            <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-white mb-4">
+              <TopicIcon slug={topic.slug} size={32} />
             </div>
             <h1 className="text-3xl font-bold text-white">
               {topic.name} Articles

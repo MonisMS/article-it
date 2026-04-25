@@ -4,6 +4,7 @@ import { useMemo, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Bookmark, Clock, Compass, ExternalLink, Filter } from "lucide-react"
+import { TopicIcon } from "@/components/topic-icon"
 import { AnimatePresence, motion } from "framer-motion"
 import { BookmarkButton } from "@/components/bookmark-button"
 import { ReadButton } from "@/components/read-button"
@@ -72,8 +73,9 @@ function LibraryRow({
         <div className="flex flex-wrap items-center gap-1.5 text-[11px] uppercase tracking-[0.14em] text-stone-400 dark:text-[#6B7585]">
           {primaryTopic && (
             <>
-              <span className="font-semibold text-stone-500 dark:text-[#8A95A7]">
-                {primaryTopic.icon ? `${primaryTopic.icon} ` : ""}{primaryTopic.name}
+              <span className="inline-flex items-center gap-1 font-semibold text-stone-500">
+                <TopicIcon slug={primaryTopic.slug} size={11} className="opacity-70" />
+                {primaryTopic.name}
               </span>
               <span className="text-stone-200 dark:text-[#2A3547]">&bull;</span>
             </>
@@ -163,7 +165,7 @@ function TopicSection({
     <section>
       <div className="mb-3 flex items-end justify-between gap-4 border-b border-stone-200/70 pb-3 dark:border-[#1E2A3A]">
         <div className="flex items-center gap-2.5">
-          <span className="text-lg leading-none">{topic.icon ?? "*"}</span>
+          <span className="flex items-center text-stone-500"><TopicIcon slug={topic.slug} size={16} /></span>
           <h3 className="text-base font-semibold text-stone-800 dark:text-[#F0EDE6]">{topic.name}</h3>
         </div>
         <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-stone-400 dark:text-[#6B7585]">
@@ -311,7 +313,7 @@ export function BookmarksClient({ initialArticles }: { initialArticles: Bookmark
               onClick={() => setActiveTopicId(topic.id === activeTopicId ? null : topic.id)}
               className={`shrink-0 rounded-full border px-3.5 py-1.5 text-[13px] font-medium transition-colors ${activeTopicId === topic.id ? "border-stone-300 bg-stone-900 text-white dark:border-[#E8A838] dark:bg-[#F0EDE6] dark:text-[#0D1117]" : "border-stone-200/80 bg-white/80 text-stone-500 hover:border-stone-300 hover:text-stone-800 dark:border-[#1E2A3A] dark:bg-[#121925] dark:text-[#8A95A7] dark:hover:border-[#2A3547] dark:hover:text-[#F0EDE6]"}`}
             >
-              {topic.icon ? `${topic.icon} ` : ""}{topic.name}
+              <span className="flex items-center gap-1.5"><TopicIcon slug={topic.slug} size={12} className="shrink-0 opacity-70" />{topic.name}</span>
             </button>
           ))}
         </div>

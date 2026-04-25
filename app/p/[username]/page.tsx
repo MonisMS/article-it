@@ -6,6 +6,7 @@ import { user, userTopics, articles, articleTopics, rssSources } from "@/lib/db/
 import { eq, desc, sql, inArray } from "drizzle-orm"
 import { initials } from "@/lib/utils"
 import { BookOpen } from "lucide-react"
+import { TopicIcon } from "@/components/topic-icon"
 
 type Props = { params: Promise<{ username: string }> }
 
@@ -116,7 +117,7 @@ export default async function PublicProfilePage({ params }: Props) {
                 key={topic.id}
                 className="inline-flex items-center gap-1.5 bg-white dark:bg-[#161C26] border border-stone-200 dark:border-[#1E2A3A] rounded-full px-3 py-1.5 text-sm font-medium text-stone-700 dark:text-[#B8C0CC]"
               >
-                {topic.icon && <span>{topic.icon}</span>}
+                <TopicIcon slug={topic.slug} size={13} className="shrink-0 text-stone-400" />
                 {topic.name}
               </span>
             ))}

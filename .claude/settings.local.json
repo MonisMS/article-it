@@ -103,7 +103,8 @@
       "Bash(grep -rn \"sql.raw\\\\|sql\\\\`\" /home/monis/article-it/app/api --include=\"*.ts\")",
       "Bash(git -C /home/monis/article-it log --all --full-history -- .env.local)",
       "Bash(node_modules/.bin/tsc --noEmit)",
-      "Bash(node_modules/.bin/vitest run *)"
+      "Bash(node_modules/.bin/vitest run *)",
+      "Bash(node *)"
     ]
   }
 }

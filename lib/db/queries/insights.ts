@@ -10,7 +10,7 @@ export type ReadingInsightsData = {
   topTopicIcon: string | null
   mostReadSourceName: string | null
   ignoredTopics: { id: string; name: string; icon: string | null; slug: string }[]
-  topicReadCounts: { topicId: string; name: string; icon: string | null; count: number }[]
+  topicReadCounts: { topicId: string; name: string; slug: string; icon: string | null; count: number }[]
 }
 
 export async function getReadingInsights(userId: string): Promise<ReadingInsightsData> {
@@ -52,6 +52,7 @@ export async function getReadingInsights(userId: string): Promise<ReadingInsight
       .select({
         topicId: articleTopics.topicId,
         name: topics.name,
+        slug: topics.slug,
         icon: topics.icon,
         count: count(readArticles.articleId),
       })
@@ -59,7 +60,7 @@ export async function getReadingInsights(userId: string): Promise<ReadingInsight
       .innerJoin(articleTopics, eq(articleTopics.articleId, readArticles.articleId))
       .innerJoin(topics, eq(topics.id, articleTopics.topicId))
       .where(and(eq(readArticles.userId, userId), gte(readArticles.readAt, thirtyDaysAgo)))
-      .groupBy(articleTopics.topicId, topics.name, topics.icon)
+      .groupBy(articleTopics.topicId, topics.name, topics.slug, topics.icon)
       .orderBy(desc(count(readArticles.articleId))),
 
     // Most-read source in last 30 days
@@ -105,6 +106,7 @@ export async function getReadingInsights(userId: string): Promise<ReadingInsight
     topicReadCounts: topicCounts.map((t) => ({
       topicId: t.topicId,
       name: t.name,
+      slug: t.slug,
       icon: t.icon,
       count: t.count,
     })),

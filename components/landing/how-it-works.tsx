@@ -35,6 +35,14 @@ const PREVIEW_ARTICLES: LandingArticleCardData[] = [
     readTime: "4 min",
   },
   {
+    topic: "AI",
+    title: "What model providers aren't telling you about benchmarks",
+    description: "The gap between lab scores and production reality — and how to close it.",
+    source: "Inference Weekly",
+    published: "Yesterday",
+    readTime: "5 min",
+  },
+  {
     topic: "Engineering",
     title: "A weekly reading system that actually sticks",
     description: "A lightweight workflow: save, skim, read, and close the loop.",
@@ -100,15 +108,22 @@ export function HowItWorks() {
 
               {step === "01" && (
                 <PreviewFrame>
-                  <div className="flex flex-wrap gap-2">
-                    {["AI", "React", "Startups", "Design", "Security"].map((t) => (
-                      <span
-                        key={t}
-                        className="rounded-full bg-app-surface-hover px-3 py-1.5 text-xs font-semibold text-app-text-muted shadow-xs shadow-black/5"
-                      >
-                        {t}
-                      </span>
-                    ))}
+                  <div className="space-y-4">
+                    <div className="flex flex-wrap gap-2">
+                      {["AI", "React", "Startups", "Design", "Security", "DevOps", "Cloud"].map((t) => (
+                        <span
+                          key={t}
+                          className="rounded-full bg-app-surface-hover px-3 py-1.5 text-xs font-semibold text-app-text-muted shadow-xs shadow-black/5"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="border-t border-app-border pt-3 flex items-center justify-between text-xs">
+                      <span className="text-app-text-subtle">211 curated sources</span>
+                      <span className="font-semibold text-app-accent">Updated daily</span>
+                    </div>
+                    <LandingArticleCard article={PREVIEW_ARTICLES[0]} />
                   </div>
                 </PreviewFrame>
               )}
@@ -116,7 +131,8 @@ export function HowItWorks() {
               {step === "02" && (
                 <PreviewFrame>
                   <div className="grid gap-3">
-                    <LandingArticleCard article={PREVIEW_ARTICLES[0]} />
+                    <LandingArticleCard article={PREVIEW_ARTICLES[1]} />
+                    <LandingArticleCard article={PREVIEW_ARTICLES[2]} />
                   </div>
                 </PreviewFrame>
               )}
@@ -141,7 +157,7 @@ export function HowItWorks() {
                       ))}
                     </div>
                     <div className="mt-5">
-                      <LandingArticleCard article={PREVIEW_ARTICLES[1]} />
+                      <LandingArticleCard article={PREVIEW_ARTICLES[0]} />
                     </div>
                   </div>
                 </PreviewFrame>

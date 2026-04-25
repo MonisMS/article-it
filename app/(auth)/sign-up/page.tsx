@@ -128,7 +128,7 @@ export default function SignUpPage() {
                   placeholder="Your name"
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="h-12.5 rounded-xl border border-[#d8d8d3] !bg-white px-4 text-[15px] shadow-none placeholder:text-[#b0b0aa] transition-all duration-200 focus-visible:!bg-white focus-visible:border-app-accent focus-visible:ring-[3px] focus-visible:ring-app-accent/12"
+                  className="h-12.5 rounded-xl border border-[#d8d8d3] !bg-white !text-[#111111] px-4 text-[15px] shadow-none placeholder:text-[#b0b0aa] transition-all duration-200 focus-visible:!bg-white focus-visible:border-app-accent focus-visible:ring-[3px] focus-visible:ring-app-accent/12"
                 />
               </div>
 
@@ -144,7 +144,7 @@ export default function SignUpPage() {
                   placeholder="you@example.com"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="h-12.5 rounded-xl border border-[#d8d8d3] !bg-white px-4 text-[15px] shadow-none placeholder:text-[#b0b0aa] transition-all duration-200 focus-visible:!bg-white focus-visible:border-app-accent focus-visible:ring-[3px] focus-visible:ring-app-accent/12"
+                  className="h-12.5 rounded-xl border border-[#d8d8d3] !bg-white !text-[#111111] px-4 text-[15px] shadow-none placeholder:text-[#b0b0aa] transition-all duration-200 focus-visible:!bg-white focus-visible:border-app-accent focus-visible:ring-[3px] focus-visible:ring-app-accent/12"
                 />
               </div>
 
@@ -161,7 +161,7 @@ export default function SignUpPage() {
                   placeholder="At least 8 characters"
                   value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  className="h-12.5 rounded-xl border border-[#d8d8d3] !bg-white px-4 text-[15px] shadow-none placeholder:text-[#b0b0aa] transition-all duration-200 focus-visible:!bg-white focus-visible:border-app-accent focus-visible:ring-[3px] focus-visible:ring-app-accent/12"
+                  className="h-12.5 rounded-xl border border-[#d8d8d3] !bg-white !text-[#111111] px-4 text-[15px] shadow-none placeholder:text-[#b0b0aa] transition-all duration-200 focus-visible:!bg-white focus-visible:border-app-accent focus-visible:ring-[3px] focus-visible:ring-app-accent/12"
                 />
               </div>
 

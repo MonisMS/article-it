@@ -55,7 +55,9 @@ function FloatingCards() {
           key={a.title}
           initial={{ opacity: 0, y: 18, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
+          whileHover={{ scale: 1.05, y: -6, zIndex: 20 }}
           transition={{ duration: 0.55, delay }}
+          style={{ zIndex: 1 }}
           className={className}
         >
           <motion.div

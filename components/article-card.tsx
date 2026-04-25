@@ -6,6 +6,7 @@ import Image from "next/image"
 import { ExternalLink } from "lucide-react"
 import { BookmarkButton } from "@/components/bookmark-button"
 import { ReadButton } from "@/components/read-button"
+import { TopicIcon } from "@/components/topic-icon"
 import { readingTime, timeAgo } from "@/lib/utils"
 
 type Topic = { id: string; name: string; icon: string | null; slug: string }
@@ -51,8 +52,9 @@ export function ArticleCard({
         <div className="flex flex-wrap items-center gap-1.5 text-[11px] uppercase tracking-[0.14em] text-stone-400 dark:text-[#6B7585]">
           {primaryTopic && (
             <>
-              <span className="font-semibold text-stone-500 dark:text-[#8A95A7]">
-                {primaryTopic.icon ? `${primaryTopic.icon} ` : ""}{primaryTopic.name}
+              <span className="inline-flex items-center gap-1 font-semibold text-stone-500">
+                <TopicIcon slug={primaryTopic.slug} size={12} className="text-stone-400" />
+                {primaryTopic.name}
               </span>
               <span className="text-stone-200 dark:text-[#2A3547]">&bull;</span>
             </>

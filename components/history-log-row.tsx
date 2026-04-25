@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { ChevronDown, ChevronUp, ExternalLink, Loader2 } from "lucide-react"
+import { TopicIcon } from "@/components/topic-icon"
 import type { DigestLogRow, DigestLogArticle } from "@/lib/db/queries/history"
 
 function formatDate(date: Date): string {
@@ -47,7 +48,9 @@ export function HistoryLogRow({ log }: { log: DigestLogRow }) {
         className="w-full flex items-center justify-between px-5 py-4 hover:bg-app-hover transition-colors text-left"
       >
         <div className="flex items-center gap-3">
-          <span className="text-xl">{log.topic.icon ?? "📰"}</span>
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-app-accent-light text-app-accent">
+            <TopicIcon slug={log.topic.slug} size={16} />
+          </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
               <p className="text-sm font-medium text-app-text">{log.topic.name}</p>

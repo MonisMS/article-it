@@ -8,7 +8,7 @@ export default async function AdminAssignmentsPage() {
     db.query.topics.findMany({
       where: eq(topics.isActive, true),
       orderBy: asc(topics.name),
-      columns: { id: true, name: true, icon: true },
+      columns: { id: true, name: true, slug: true, icon: true },
     }),
     db.query.rssSources.findMany({
       orderBy: asc(rssSources.name),
@@ -16,7 +16,7 @@ export default async function AdminAssignmentsPage() {
       with: {
         rssSourceTopics: {
           with: {
-            topic: { columns: { id: true, name: true, icon: true } },
+            topic: { columns: { id: true, name: true, slug: true, icon: true } },
           },
         },
       },

@@ -1,6 +1,7 @@
 "use client"
 
 import { useRouter, useSearchParams } from "next/navigation"
+import { TopicIcon } from "@/components/topic-icon"
 
 type Topic = {
   id: string
@@ -40,7 +41,7 @@ export function TopicFilter({ topics }: { topics: Topic[] }) {
           className={`shrink-0 rounded-full border px-3.5 py-1.5 text-[13px] font-medium transition-colors ${active === topic.slug ? "border-stone-300 bg-stone-900 text-white dark:border-[#E8A838] dark:bg-[#F0EDE6] dark:text-[#0D1117]" : "border-stone-200/80 bg-white/80 text-stone-500 hover:border-stone-300 hover:text-stone-800 dark:border-[#1E2A3A] dark:bg-[#121925] dark:text-[#8A95A7] dark:hover:border-[#2A3547] dark:hover:text-[#F0EDE6]"}`}
         >
           <span className="flex items-center gap-1.5">
-            {topic.icon && <span className="text-sm leading-none">{topic.icon}</span>}
+            <TopicIcon slug={topic.slug} size={13} className="shrink-0 opacity-70" />
             <span>{topic.name}</span>
           </span>
         </button>

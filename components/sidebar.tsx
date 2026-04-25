@@ -17,11 +17,9 @@ import {
   ChevronsLeft,
   ChevronUp,
   CreditCard,
-  Flag,
 } from "lucide-react"
 import { signOut } from "@/lib/auth-client"
-import { ThemeToggle } from "@/components/theme-toggle"
-import { Badge } from "@/components/ui/badge"
+import { BetaBadge } from "@/components/ui/beta-badge"
 import { initials } from "@/lib/utils"
 
 const PRIMARY_NAV = [
@@ -35,7 +33,6 @@ const PRIMARY_NAV = [
 const SECONDARY_NAV = [
   { href: "/suggest", icon: Lightbulb, label: "Suggest a topic" },
   { href: "/profile", icon: User, label: "Profile" },
-  { href: "/beta", icon: Flag, label: "Beta feedback" },
 ]
 
 type Props = {
@@ -114,10 +111,12 @@ export function Sidebar({ user, isAdmin, variant = "desktop", onRequestClose }: 
     href,
     icon: Icon,
     label,
+    beta,
   }: {
     href: string
     icon: React.ComponentType<{ className?: string }>
     label: string
+    beta?: boolean
   }) => {
     const active = isItemActive(pathname, href)
 
@@ -129,13 +128,14 @@ export function Sidebar({ user, isAdmin, variant = "desktop", onRequestClose }: 
         title={collapsed ? label : undefined}
         className={navItemClass(active)}
       >
-        <Icon className={`h-4.5 w-4.5 shrink-0 ${active ? "text-[#9D5C09] dark:text-app-accent" : "text-[#8A8173] group-hover:text-[#5B5245] dark:text-app-text-subtle dark:group-hover:text-app-text"}`} />
+        <Icon className={`h-4.5 w-4.5 shrink-0 ${active ? "text-[#9D5C09]" : "text-[#8A8173] group-hover:text-[#5B5245]"}`} />
         {!collapsed && (
-          <span className={`truncate text-[14px] ${active ? "font-semibold" : "font-medium"}`}>
+          <span className={`flex flex-1 items-center gap-2 truncate text-[14px] ${active ? "font-semibold" : "font-medium"}`}>
             {label}
+            {beta && <BetaBadge />}
           </span>
         )}
-        {collapsed && <span className={tooltipClass}>{label}</span>}
+        {collapsed && <span className={tooltipClass}>{label}{beta ? " (Beta)" : ""}</span>}
       </Link>
     )
   }
@@ -152,11 +152,8 @@ export function Sidebar({ user, isAdmin, variant = "desktop", onRequestClose }: 
                 <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#EFE8DB] text-[#7A5A2A] dark:bg-app-surface-hover dark:text-app-accent">
                   <BookOpen className="h-5 w-5" />
                 </span>
-                <span className="flex items-center gap-2 text-[14px] font-semibold text-[#2C2417] dark:text-[#EAE4D8]">
+                <span className="text-[14px] font-semibold text-[#2C2417]">
                   Curio
-                  <Badge variant="secondary" className="h-5 px-2 text-[0.65rem]">
-                    Beta
-                  </Badge>
                 </span>
               </Link>
 
@@ -247,9 +244,6 @@ export function Sidebar({ user, isAdmin, variant = "desktop", onRequestClose }: 
                 <ChevronUp className={`h-4 w-4 shrink-0 text-[#8A8173] transition-transform duration-200 dark:text-[#9EA9B8] ${userMenuOpen ? "rotate-0" : "rotate-180"}`} />
               </button>
 
-              <div className="shrink-0">
-                <ThemeToggle />
-              </div>
             </div>
           </div>
         ) : (
@@ -281,7 +275,6 @@ export function Sidebar({ user, isAdmin, variant = "desktop", onRequestClose }: 
               <span className={tooltipClass}>Account</span>
             </button>
 
-            <ThemeToggle />
           </div>
         )}
       </div>

@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { Loader2, Plus, X, Zap } from "lucide-react"
+import { TopicIcon } from "@/components/topic-icon"
 
 type Topic = { id: string; name: string; slug: string; icon: string | null }
 
@@ -111,7 +112,7 @@ export function SettingsTopics({
             <div className="divide-y divide-app-border-subtle">
               {followedTopics.map((topic) => (
                 <div key={topic.id} className="flex items-center gap-3 px-4 py-3.5">
-                  <span className="w-7 shrink-0 text-lg leading-none">{topic.icon ?? "*"}</span>
+                  <span className="flex w-7 shrink-0 items-center justify-center text-app-accent"><TopicIcon slug={topic.slug} size={16} /></span>
                   <div className="min-w-0 flex-1">
                     <div className="text-sm font-medium text-app-text">{topic.name}</div>
                   </div>
@@ -142,7 +143,7 @@ export function SettingsTopics({
                 className="flex items-center justify-between gap-3 rounded-xl border border-app-border bg-app-bg px-4 py-3 text-left transition-colors hover:bg-app-hover disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <span className="flex min-w-0 items-center gap-2.5">
-                  <span className="w-6 shrink-0 text-lg leading-none">{topic.icon ?? "*"}</span>
+                  <span className="flex w-6 shrink-0 items-center justify-center text-app-text-muted"><TopicIcon slug={topic.slug} size={15} /></span>
                   <span className="truncate text-sm font-medium text-app-text">{topic.name}</span>
                 </span>
                 <span className="flex items-center gap-1.5 text-xs font-medium text-app-text-muted">

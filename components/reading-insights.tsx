@@ -3,6 +3,7 @@
 import Link from "next/link"
 import type { ReactNode } from "react"
 import { AlertCircle } from "lucide-react"
+import { TopicIcon } from "@/components/topic-icon"
 import type { ReadingInsightsData } from "@/lib/db/queries/insights"
 
 export function ReadingInsights({
@@ -78,7 +79,7 @@ export function ReadingInsights({
               <div className="mt-4 divide-y divide-stone-100 dark:divide-lp-border">
                 {topicsThisMonth.map((topic) => (
                   <div key={topic.topicId} className="flex items-center gap-3 py-3.5">
-                    <span className="w-7 shrink-0 text-lg leading-none">{topic.icon ?? "*"}</span>
+                    <span className="flex w-7 shrink-0 items-center justify-center text-app-accent"><TopicIcon slug={topic.slug} size={15} /></span>
                     <div className="min-w-0 flex-1">
                       <div className="text-sm font-medium text-stone-800 dark:text-lp-text">{topic.name}</div>
                     </div>
@@ -140,7 +141,7 @@ export function ReadingInsights({
                     href={`/discover?topic=${topic.slug}`}
                     className="block rounded-lg px-2 py-1.5 text-sm text-stone-600 transition-colors hover:bg-stone-50 hover:text-stone-900 dark:text-lp-text-muted dark:hover:bg-lp-elevated dark:hover:text-lp-text"
                   >
-                    {topic.icon && <span className="mr-2">{topic.icon}</span>}
+                    <TopicIcon slug={topic.slug} size={13} className="mr-1.5 shrink-0 text-stone-400" />
                     {topic.name}
                   </Link>
                 ))}
@@ -171,7 +172,7 @@ export function ReadingInsights({
                 href={`/discover?topic=${topic.slug}`}
                 className="flex items-center gap-1.5 rounded-full border border-stone-200 bg-white px-3 py-1 text-xs font-medium text-stone-600 transition-colors hover:bg-stone-50 hover:text-stone-800 dark:border-lp-border dark:bg-lp-surface dark:text-lp-text-muted dark:hover:bg-lp-elevated dark:hover:text-lp-text"
               >
-                {topic.icon && <span>{topic.icon}</span>}
+                <TopicIcon slug={topic.slug} size={12} className="shrink-0 text-stone-400" />
                 {topic.name}
               </Link>
             ))}

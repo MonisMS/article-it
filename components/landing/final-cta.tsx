@@ -28,13 +28,14 @@ export function FinalCta() {
             Start reading. Let the good writing find you.
           </p>
 
-          <div className="mt-10">
+          <div className="mt-10 flex flex-col items-center gap-3">
             <Link
               href="/sign-up"
               className="group inline-flex items-center gap-2 rounded-2xl bg-app-accent px-8 py-4 text-base font-semibold text-white shadow-sm shadow-black/10 hover:opacity-95 transition-all"
             >
               Start reading for free →
             </Link>
+            <p className="text-xs text-app-text-subtle">Free forever for up to 5 topics. No credit card required.</p>
           </div>
         </motion.div>
       </div>
@@ -59,7 +60,15 @@ export function FinalCta() {
       {/* ── Section 3: Tiny copyright ─────────────────────────── */}
       <div className="px-4 sm:px-6 pb-8">
         <div className="mx-auto max-w-6xl text-center text-xs text-app-text-subtle">
-          © 2026 Curio — Built for focused reading
+          © 2026 Curio — Built for focused reading · Built with ❤️ by{" "}
+          <a
+            href="https://m0nis.com"
+            target="_blank"
+            rel="noreferrer"
+            className="hover:text-app-text transition-colors underline underline-offset-2"
+          >
+            Monis
+          </a>
         </div>
       </div>
     </section>

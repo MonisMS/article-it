@@ -4,6 +4,7 @@ import { redirect } from "next/navigation"
 import { headers } from "next/headers"
 import { eq } from "drizzle-orm"
 import { Rss } from "lucide-react"
+import { TopicIcon } from "@/components/topic-icon"
 import Link from "next/link"
 import { auth } from "@/lib/auth"
 import { isAdmin as isAdminEmail } from "@/lib/admin"
@@ -248,7 +249,7 @@ export default async function DashboardPage({ searchParams }: Props) {
                         className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-stone-200/80 bg-stone-50/70 px-3 py-1.5 text-[13px] text-stone-600 transition-colors hover:border-stone-300 hover:text-stone-900 dark:border-[#1E2A3A] dark:bg-[#121925] dark:text-[#B8C0CC] dark:hover:border-[#2A3547] dark:hover:text-[#F0EDE6]"
                         title={`Filter by ${item.name}`}
                       >
-                        {item.icon && <span className="leading-none">{item.icon}</span>}
+                        <TopicIcon slug={item.slug} size={12} className="shrink-0 opacity-60" />
                         <span className="max-w-[10rem] truncate">{item.name}</span>
                       </Link>
                     ))}
@@ -311,7 +312,7 @@ function FeaturedRead({ article }: { article: ArticleCardData }) {
           {primaryTopic && (
             <>
               <span className="font-semibold text-stone-500 dark:text-[#8A95A7]">
-                {primaryTopic.icon ? `${primaryTopic.icon} ` : ""}{primaryTopic.name}
+                <TopicIcon slug={primaryTopic.slug} size={11} className="mr-1 shrink-0 opacity-70" />{primaryTopic.name}
               </span>
               <span className="text-stone-200 dark:text-[#2A3547]">&bull;</span>
             </>

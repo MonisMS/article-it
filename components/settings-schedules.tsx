@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { ChevronDown, Loader2, Pause, Play, Plus, Trash2 } from "lucide-react"
+import { TopicIcon } from "@/components/topic-icon"
 import { DigestPreviewModal } from "@/components/digest-preview-modal"
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
@@ -49,7 +50,7 @@ function formatSummary(frequency: string, dayOfWeek: number, hour: number): stri
   return `Weekly ${DAYS[dayOfWeek]} / ${timeLabel}`
 }
 
-type Topic = { id: string; name: string; icon: string | null }
+type Topic = { id: string; name: string; slug: string; icon: string | null }
 type ScheduleRow = {
   topicId: string
   frequency: string
@@ -187,7 +188,9 @@ export function SettingsSchedules({
           <div key={row.topicId} className="py-4">
             <div className="flex items-start gap-3">
               <div className="flex min-w-0 flex-1 items-start gap-3">
-                <span className="mt-0.5 text-lg leading-none">{topic.icon ?? "*"}</span>
+                <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-app-accent-light text-app-accent">
+                  <TopicIcon slug={topic.slug} size={15} />
+                </div>
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="truncate text-sm font-medium text-stone-800 dark:text-[#F0EDE6]">{topic.name}</span>

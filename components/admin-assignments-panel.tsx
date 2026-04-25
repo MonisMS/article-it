@@ -2,8 +2,9 @@
 
 import { useState } from "react"
 import { Plus, X } from "lucide-react"
+import { TopicIcon } from "@/components/topic-icon"
 
-type Topic = { id: string; name: string; icon: string | null }
+type Topic = { id: string; name: string; slug: string; icon: string | null }
 type Source = {
   id: string
   name: string
@@ -72,8 +73,8 @@ export function AdminAssignmentsPanel({
 
             <div className="flex flex-wrap gap-2">
               {source.assignedTopics.map((t) => (
-                <span key={t.id} className="flex items-center gap-1.5 rounded-full bg-stone-100 dark:bg-[#1E2533] px-3 py-1.5 text-xs font-medium text-stone-700 dark:text-[#B8C0CC]">
-                  <span>{t.icon}</span>
+                <span key={t.id} className="flex items-center gap-1.5 rounded-full bg-stone-100 px-3 py-1.5 text-xs font-medium text-stone-700">
+                  <TopicIcon slug={t.slug} size={12} className="text-stone-500" />
                   {t.name}
                   <button
                     onClick={() => unassign(source.id, t.id)}
@@ -102,9 +103,9 @@ export function AdminAssignmentsPanel({
                         <button
                           key={t.id}
                           onClick={() => assign(source.id, t.id)}
-                          className="flex w-full items-center gap-2 px-3 py-2 text-sm text-stone-700 dark:text-[#C8C4BC] hover:bg-stone-50 dark:hover:bg-[#1E2533] transition-colors"
+                          className="flex w-full items-center gap-2 px-3 py-2 text-sm text-stone-700 hover:bg-stone-50 transition-colors"
                         >
-                          <span>{t.icon}</span>
+                          <TopicIcon slug={t.slug} size={14} className="text-stone-400" />
                           {t.name}
                         </button>
                       ))

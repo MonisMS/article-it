@@ -133,7 +133,7 @@ function SignInForm() {
                   placeholder="you@example.com"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="h-12.5 rounded-xl px-4 !bg-white border border-app-border shadow-(--shadow-xs) placeholder:text-gray-400 transition-all duration-200 ease-out focus-visible:!bg-white focus-visible:border-app-accent focus-visible:ring-[3px] focus-visible:ring-app-accent/15"
+                  className="h-12.5 rounded-xl px-4 !bg-white !text-gray-900 border border-app-border shadow-(--shadow-xs) placeholder:text-gray-400 transition-all duration-200 ease-out focus-visible:!bg-white focus-visible:border-app-accent focus-visible:ring-[3px] focus-visible:ring-app-accent/15"
                 />
               </div>
 
@@ -154,7 +154,7 @@ function SignInForm() {
                   placeholder="Your password"
                   value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  className="h-12.5 rounded-xl px-4 !bg-white border border-app-border shadow-(--shadow-xs) placeholder:text-gray-400 transition-all duration-200 ease-out focus-visible:!bg-white focus-visible:border-app-accent focus-visible:ring-[3px] focus-visible:ring-app-accent/15"
+                  className="h-12.5 rounded-xl px-4 !bg-white !text-gray-900 border border-app-border shadow-(--shadow-xs) placeholder:text-gray-400 transition-all duration-200 ease-out focus-visible:!bg-white focus-visible:border-app-accent focus-visible:ring-[3px] focus-visible:ring-app-accent/15"
                 />
               </div>
 

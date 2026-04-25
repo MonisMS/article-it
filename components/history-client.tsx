@@ -4,6 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { AnimatePresence, motion } from "framer-motion"
 import { ChevronDown, ExternalLink, History, Loader2, Mail } from "lucide-react"
+import { TopicIcon } from "@/components/topic-icon"
 import type { DigestLogArticle, DigestLogRow } from "@/lib/db/queries/history"
 import { monthLabel } from "@/lib/utils"
 
@@ -68,8 +69,8 @@ function DigestRow({ log, index }: { log: DigestLogRow; index: number }) {
         onClick={toggle}
         className="flex w-full items-center gap-4 px-5 py-4 text-left transition-colors hover:bg-stone-50/70 dark:hover:bg-[#161F2B]"
       >
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-stone-100 text-xl dark:bg-[#1E2533]">
-          {log.topic.icon ?? "*"}
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-app-accent-light text-app-accent">
+          <TopicIcon slug={log.topic.slug} size={18} />
         </div>
 
         <div className="min-w-0 flex-1">
