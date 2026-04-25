@@ -8,7 +8,7 @@ export function ColdStartNudge({ topicCount }: { topicCount: number }) {
   return (
     <div>
       <p className="text-sm text-stone-500 dark:text-[#8A95A7]">
-        Follow <span className="font-medium text-stone-700 dark:text-[#B8C0CC]">{needed} more</span> topic{needed === 1 ? "" : "s"} for a richer stream.
+        Add <span className="font-medium text-stone-700 dark:text-[#B8C0CC]">{needed} more topic{needed === 1 ? "" : "s"}</span> — the ranking gets sharper the more signals it has to work with.
       </p>
       <Link
         href="/discover"

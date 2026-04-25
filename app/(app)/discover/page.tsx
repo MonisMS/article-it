@@ -106,6 +106,8 @@ export default async function DiscoverPage({ searchParams }: Props) {
             <div className="mt-10 flex items-center justify-center gap-4">
               <Link
                 href={`/discover?topic=${topicSlug}&page=${Math.max(0, page - 1)}`}
+                aria-disabled={page === 0}
+                tabIndex={page === 0 ? -1 : undefined}
                 className={`rounded-xl border border-stone-200/80 bg-white px-5 py-2 text-sm font-medium text-stone-600 transition-colors hover:border-stone-300 hover:bg-stone-50 dark:border-[#1E2A3A] dark:bg-[#161C26] dark:text-[#B8C0CC] dark:hover:border-[#2D3B4F] dark:hover:bg-[#1E2533] ${page === 0 ? "pointer-events-none opacity-40" : ""}`}
               >
                 &larr; Previous
@@ -113,6 +115,8 @@ export default async function DiscoverPage({ searchParams }: Props) {
               <span className="text-sm text-stone-400 dark:text-[#6B7585]">Page {page + 1}</span>
               <Link
                 href={`/discover?topic=${topicSlug}&page=${page + 1}`}
+                aria-disabled={articles.length < 20}
+                tabIndex={articles.length < 20 ? -1 : undefined}
                 className={`rounded-xl border border-stone-200/80 bg-white px-5 py-2 text-sm font-medium text-stone-600 transition-colors hover:border-stone-300 hover:bg-stone-50 dark:border-[#1E2A3A] dark:bg-[#161C26] dark:text-[#B8C0CC] dark:hover:border-[#2D3B4F] dark:hover:bg-[#1E2533] ${articles.length < 20 ? "pointer-events-none opacity-40" : ""}`}
               >
                 Next &rarr;

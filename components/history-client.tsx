@@ -136,6 +136,7 @@ function DigestRow({ log, index }: { log: DigestLogRow; index: number }) {
                         href={article.url}
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label="Open article"
                         className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-stone-300 transition-colors hover:bg-stone-100 hover:text-stone-600 dark:text-[#6B7585] dark:hover:bg-[#1E2533] dark:hover:text-[#C8C4BC]"
                         onClick={(e) => e.stopPropagation()}
                       >
@@ -233,6 +234,8 @@ export function HistoryClient({
       <div className="mt-10 flex items-center justify-between border-t border-stone-200/80 pt-6 dark:border-[#1E2A3A]">
         <a
           href={`/history?page=${Math.max(0, page - 1)}`}
+          aria-disabled={page === 0}
+          tabIndex={page === 0 ? -1 : undefined}
           className={`rounded-xl border border-stone-200/80 bg-white px-5 py-2 text-sm font-medium text-stone-600 transition-colors hover:border-stone-300 hover:bg-stone-50 dark:border-[#1E2A3A] dark:bg-[#161C26] dark:text-[#B8C0CC] dark:hover:border-[#2D3B4F] dark:hover:bg-[#1E2533] ${page === 0 ? "pointer-events-none opacity-30" : ""}`}
         >
           &larr; Previous
@@ -240,6 +243,8 @@ export function HistoryClient({
         <span className="text-sm text-stone-400 dark:text-[#6B7585]">Page {page + 1}</span>
         <a
           href={`/history?page=${page + 1}`}
+          aria-disabled={!hasMore}
+          tabIndex={!hasMore ? -1 : undefined}
           className={`rounded-xl border border-stone-200/80 bg-white px-5 py-2 text-sm font-medium text-stone-600 transition-colors hover:border-stone-300 hover:bg-stone-50 dark:border-[#1E2A3A] dark:bg-[#161C26] dark:text-[#B8C0CC] dark:hover:border-[#2D3B4F] dark:hover:bg-[#1E2533] ${!hasMore ? "pointer-events-none opacity-30" : ""}`}
         >
           Next &rarr;

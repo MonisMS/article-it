@@ -186,6 +186,8 @@ export default async function DashboardPage({ searchParams }: Props) {
                 <nav className="mt-10 flex items-center justify-between gap-6 border-t border-stone-200/80 pt-6 dark:border-[#1E2A3A]">
                   <a
                     href={`/dashboard?${topic ? `topic=${topic}&` : ""}page=${Math.max(0, page - 1)}`}
+                    aria-disabled={page === 0}
+                    tabIndex={page === 0 ? -1 : undefined}
                     className={`text-sm text-stone-500 transition-colors hover:text-stone-800 dark:text-[#8A95A7] dark:hover:text-[#F0EDE6] ${page === 0 ? "pointer-events-none opacity-40" : ""}`}
                   >
                     &larr; Previous
@@ -195,6 +197,8 @@ export default async function DashboardPage({ searchParams }: Props) {
                   </span>
                   <a
                     href={`/dashboard?${topic ? `topic=${topic}&` : ""}page=${page + 1}`}
+                    aria-disabled={(page + 1) * 20 >= totalCount}
+                    tabIndex={(page + 1) * 20 >= totalCount ? -1 : undefined}
                     className={`text-sm text-stone-500 transition-colors hover:text-stone-800 dark:text-[#8A95A7] dark:hover:text-[#F0EDE6] ${(page + 1) * 20 >= totalCount ? "pointer-events-none opacity-40" : ""}`}
                   >
                     Next &rarr;

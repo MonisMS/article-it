@@ -3,6 +3,8 @@ import { db } from "@/lib/db"
 import { topics } from "@/lib/db/schema"
 import { eq } from "drizzle-orm"
 
+export const revalidate = 3600 // regenerate every hour
+
 const SEO_PAGES = [
   "pocket-alternative",
   "feedly-alternative",

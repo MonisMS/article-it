@@ -114,8 +114,8 @@ export function ArticleCard({
             href={article.url}
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="Open article"
             className="flex h-7 w-7 items-center justify-center rounded-md text-stone-400 transition-colors hover:bg-stone-100 hover:text-stone-700 dark:text-[#6B7585] dark:hover:bg-[#1E2533] dark:hover:text-[#F0EDE6]"
-            title="Open article"
           >
             <ExternalLink className="h-3.5 w-3.5" />
           </Link>
