@@ -26,6 +26,17 @@ const TOPICS = [
   { name: "Productivity", slug: "productivity",   icon: "🎯",  description: "Tools, systems, and habits for deep work and efficiency." },
   { name: "Blockchain",   slug: "blockchain",     icon: "⛓️",  description: "Crypto, DeFi, Web3 protocols, and on-chain news." },
   { name: "Data Science", slug: "data-science",   icon: "📊",  description: "Data analysis, statistics, visualization, and ML engineering." },
+  // ── New topics (wave 2) ───────────────────────────────────────────────────
+  { name: "TypeScript",   slug: "typescript",     icon: "🔷",  description: "TypeScript language, type system, and typed JavaScript patterns." },
+  { name: "System Design",slug: "system-design",  icon: "🗺️",  description: "Architecture, distributed systems, scalability, and system design." },
+  { name: "Career",       slug: "career",         icon: "💼",  description: "Career advice, job market, interviewing, and remote work." },
+  { name: "Gaming",       slug: "gaming",         icon: "🎮",  description: "Gaming news, game development, indie games, and industry coverage." },
+  { name: "Health",       slug: "health",         icon: "❤️",  description: "Physical health, fitness, mental wellness, and longevity research." },
+  { name: "Mobile Dev",   slug: "mobile",         icon: "📱",  description: "iOS, Android, React Native, Flutter, and cross-platform development." },
+  { name: "Database",     slug: "database",       icon: "🗄️",  description: "SQL, NoSQL, PostgreSQL, Redis, and database engineering." },
+  { name: "Go",           slug: "golang",         icon: "🐹",  description: "Go language, concurrency patterns, ecosystem, and best practices." },
+  { name: "Rust",         slug: "rust",           icon: "🦀",  description: "Rust language, systems programming, memory safety, and the ecosystem." },
+  { name: "Leadership",   slug: "leadership",     icon: "👥",  description: "Engineering management, people management, and team leadership." },
 ]
 
 // ─── RSS Sources ──────────────────────────────────────────────────────────────
@@ -297,6 +308,97 @@ const SOURCES = [
   { name: "SparkToro Blog",          url: "https://sparktoro.com/blog/feed/",                   topics: ["marketing", "product"] },
   { name: "Marketing Examples",      url: "https://marketingexamples.com/feed.rss",             topics: ["marketing", "startups"] },
 
+
+  // ── TypeScript ────────────────────────────────────────────────────────────
+  { name: "TypeScript Blog",           url: "https://devblogs.microsoft.com/typescript/feed/",           topics: ["typescript", "javascript"] },
+  { name: "Total TypeScript Blog",     url: "https://www.totaltypescript.com/rss.xml",                   topics: ["typescript", "javascript"] },
+  { name: "Matt Pocock Blog",          url: "https://www.mattpocock.com/rss.xml",                        topics: ["typescript"] },
+  { name: "Releases – TypeScript",     url: "https://github.com/microsoft/TypeScript/releases.atom",     topics: ["typescript", "javascript"] },
+  { name: "Dev.to TypeScript",         url: "https://dev.to/feed/tag/typescript",                        topics: ["typescript"] },
+  { name: "Reddit r/typescript",       url: "https://www.reddit.com/r/typescript/top.rss?t=day",         topics: ["typescript"] },
+  { name: "Lobste.rs TypeScript",      url: "https://lobste.rs/t/typescript.rss",                        topics: ["typescript", "javascript"] },
+
+  // ── System Design ─────────────────────────────────────────────────────────
+  { name: "ByteByteGo Blog",           url: "https://blog.bytebytego.com/feed",                          topics: ["system-design", "devops"] },
+  { name: "High Scalability",          url: "http://highscalability.com/blog/category/all/feed.xml",     topics: ["system-design", "devops"] },
+  { name: "Martin Fowler (Design)",    url: "https://martinfowler.com/feed.atom",                        topics: ["system-design", "devops"] },
+  { name: "Architecture Notes",        url: "https://architecturenotes.co/rss",                          topics: ["system-design"] },
+  { name: "Dev.to System Design",      url: "https://dev.to/feed/tag/systemdesign",                      topics: ["system-design"] },
+  { name: "Reddit r/ExperiencedDevs", url: "https://www.reddit.com/r/ExperiencedDevs/top.rss?t=day",    topics: ["system-design", "career"] },
+
+  // ── Career ────────────────────────────────────────────────────────────────
+  { name: "The Pragmatic Engineer (Career)", url: "https://newsletter.pragmaticengineer.com/feed",       topics: ["career", "devops"] },
+  { name: "Levels.fyi Blog",           url: "https://www.levels.fyi/blog/rss.xml",                      topics: ["career", "finance"] },
+  { name: "Gergely Orosz Substack",    url: "https://newsletter.pragmaticengineer.com/feed",             topics: ["career"] },
+  { name: "Reddit r/cscareerquestions",url: "https://www.reddit.com/r/cscareerquestions/top.rss?t=day",  topics: ["career"] },
+  { name: "Reddit r/remotework",       url: "https://www.reddit.com/r/remotework/top.rss?t=day",         topics: ["career", "productivity"] },
+  { name: "Ask HN Jobs",               url: "https://hnrss.org/ask?q=who+is+hiring&points=10",           topics: ["career", "startups"] },
+
+  // ── Gaming ────────────────────────────────────────────────────────────────
+  { name: "Kotaku",                    url: "https://kotaku.com/rss",                                    topics: ["gaming"] },
+  { name: "Rock Paper Shotgun",        url: "https://www.rockpapershotgun.com/feed/news",                topics: ["gaming"] },
+  { name: "Gamasutra",                 url: "https://www.gamedeveloper.com/rss.xml",                     topics: ["gaming"] },
+  { name: "IGN",                       url: "https://feeds.feedburner.com/ign/all",                      topics: ["gaming"] },
+  { name: "Reddit r/gamedev",          url: "https://www.reddit.com/r/gamedev/top.rss?t=day",            topics: ["gaming", "open-source"] },
+  { name: "Reddit r/gaming",           url: "https://www.reddit.com/r/gaming/top.rss?t=day",             topics: ["gaming"] },
+  { name: "YouTube – GDC",             url: "https://www.youtube.com/feeds/videos.xml?channel_id=UC0JB7TSe49lg56u6qH8y_MQ", topics: ["gaming"] },
+
+  // ── Health & Fitness ──────────────────────────────────────────────────────
+  { name: "Examine.com Blog",          url: "https://examine.com/feeds/updates/",                        topics: ["health"] },
+  { name: "Harvard Health Blog",       url: "https://www.health.harvard.edu/blog/feed",                  topics: ["health", "science"] },
+  { name: "Huberman Lab Blog",         url: "https://www.hubermanlab.com/rss",                           topics: ["health", "science"] },
+  { name: "Reddit r/fitness",          url: "https://www.reddit.com/r/fitness/top.rss?t=day",            topics: ["health"] },
+  { name: "Reddit r/longevity",        url: "https://www.reddit.com/r/longevity/top.rss?t=day",          topics: ["health", "science"] },
+  { name: "YouTube – Andrew Huberman", url: "https://www.youtube.com/feeds/videos.xml?channel_id=UC2D2CMWXMOVWx7giW1n3LIg", topics: ["health", "science"] },
+  { name: "YouTube – Peter Attia",     url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCNyl6-FRLGWXkaqTFbZBtHw", topics: ["health"] },
+
+  // ── Mobile Dev ────────────────────────────────────────────────────────────
+  { name: "iOS Dev Weekly",            url: "https://iosdevweekly.com/issues.rss",                       topics: ["mobile"] },
+  { name: "Android Weekly",            url: "https://androidweekly.net/issues/rss",                      topics: ["mobile"] },
+  { name: "Flutter Blog",              url: "https://medium.com/feed/flutter",                           topics: ["mobile", "open-source"] },
+  { name: "React Native Blog",         url: "https://reactnative.dev/blog/rss.xml",                      topics: ["mobile", "javascript"] },
+  { name: "Swift by Sundell",          url: "https://swiftbysundell.com/rss",                            topics: ["mobile"] },
+  { name: "Reddit r/iOSProgramming",   url: "https://www.reddit.com/r/iOSProgramming/top.rss?t=day",    topics: ["mobile"] },
+  { name: "Reddit r/androiddev",       url: "https://www.reddit.com/r/androiddev/top.rss?t=day",        topics: ["mobile"] },
+  { name: "Dev.to Mobile",             url: "https://dev.to/feed/tag/mobile",                            topics: ["mobile"] },
+
+  // ── Database ──────────────────────────────────────────────────────────────
+  { name: "PostgreSQL News",           url: "https://www.postgresql.org/news.rss",                       topics: ["database", "open-source"] },
+  { name: "PlanetMySQL",               url: "https://planet.mysql.com/rss20.xml",                        topics: ["database"] },
+  { name: "Use The Index, Luke",       url: "https://use-the-index-luke.com/blog/feed",                  topics: ["database"] },
+  { name: "DBA Stack Exchange",        url: "https://dba.stackexchange.com/feeds",                       topics: ["database"] },
+  { name: "Redis Blog",                url: "https://redis.io/blog/feed/",                               topics: ["database", "devops"] },
+  { name: "MongoDB Blog",              url: "https://www.mongodb.com/blog/rss",                          topics: ["database"] },
+  { name: "Reddit r/Database",         url: "https://www.reddit.com/r/Database/top.rss?t=day",           topics: ["database"] },
+  { name: "Releases – PostgreSQL",     url: "https://github.com/postgres/postgres/releases.atom",        topics: ["database", "open-source"] },
+
+  // ── Go ────────────────────────────────────────────────────────────────────
+  { name: "Go Blog",                   url: "https://go.dev/blog/feed.atom",                             topics: ["golang", "open-source"] },
+  { name: "Golang Weekly",             url: "https://golangweekly.com/rss/1gh4fg4a",                     topics: ["golang"] },
+  { name: "Dave Cheney Blog",          url: "https://dave.cheney.net/feed",                              topics: ["golang"] },
+  { name: "Reddit r/golang",           url: "https://www.reddit.com/r/golang/top.rss?t=day",             topics: ["golang"] },
+  { name: "Dev.to Go",                 url: "https://dev.to/feed/tag/go",                                topics: ["golang"] },
+  { name: "Lobste.rs Go",              url: "https://lobste.rs/t/go.rss",                                topics: ["golang", "open-source"] },
+  { name: "Releases – Go",             url: "https://github.com/golang/go/releases.atom",                topics: ["golang", "open-source"] },
+  { name: "YouTube – GopherCon",       url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCx9QVEADdfgKhMugHojBpuQ", topics: ["golang"] },
+
+  // ── Rust ──────────────────────────────────────────────────────────────────
+  { name: "Rust Blog",                 url: "https://blog.rust-lang.org/feed.xml",                       topics: ["rust", "open-source"] },
+  { name: "This Week in Rust",         url: "https://this-week-in-rust.org/rss.xml",                     topics: ["rust"] },
+  { name: "Reddit r/rust",             url: "https://www.reddit.com/r/rust/top.rss?t=day",               topics: ["rust"] },
+  { name: "Dev.to Rust",               url: "https://dev.to/feed/tag/rust",                              topics: ["rust"] },
+  { name: "Lobste.rs Rust",            url: "https://lobste.rs/t/rust.rss",                              topics: ["rust", "open-source"] },
+  { name: "Releases – Rust",           url: "https://github.com/rust-lang/rust/releases.atom",           topics: ["rust", "open-source"] },
+  { name: "YouTube – Jon Gjengset",    url: "https://www.youtube.com/feeds/videos.xml?channel_id=UC_iD0xppBwwsrM9DegC5cQQ", topics: ["rust"] },
+
+  // ── Leadership ────────────────────────────────────────────────────────────
+  { name: "Engineering Ladders",       url: "https://newsletter.eng-leadership.com/feed",                topics: ["leadership"] },
+  { name: "Will Larson (Irrational Exuberance)", url: "https://lethain.com/feeds/",                     topics: ["leadership", "startups"] },
+  { name: "Harvard Business Review",   url: "https://hbr.org/rss/editors-picks",                        topics: ["leadership", "career"] },
+  { name: "Manager's Playbook",        url: "https://themanagersplaybook.com/rss",                       topics: ["leadership"] },
+  { name: "Reddit r/ExperiencedDevs (Leadership)", url: "https://www.reddit.com/r/ExperiencedDevs/top.rss?t=day", topics: ["leadership", "career"] },
+  { name: "LeadDev",                   url: "https://leaddev.com/feed",                                  topics: ["leadership", "career"] },
+  { name: "YouTube – Patrick Lencioni", url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCFnITEhWS-WBBO7avUFJiSg", topics: ["leadership"] },
 
   // Atom feeds for key OSS repos. Format: github.com/{owner}/{repo}/releases.atom
   // Tagged to relevant topics so they surface in existing user feeds automatically.

@@ -6,28 +6,29 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Never add `Co-Authored-By: Claude` to commit messages.** Commits are authored by the user only.
 
 ## What This Is
-ArticleIt — a personalized article aggregator. RSS feeds are ingested into Postgres daily. Users pick topics, get a personalized feed ranked by source quality, and receive scheduled email digests via Resend.
+ArticleIt (branded "Curio") — a personalized article aggregator. RSS feeds are ingested into Postgres daily. Users pick topics, get a personalized feed ranked by source quality, and receive scheduled email digests via Resend.
 
 ---
 
 ## Commands
 ```bash
 pnpm dev              # Dev server (localhost:3000)
+pnpm dev:clean        # Clears .next cache then starts dev server
 pnpm build            # Production build
 pnpm lint             # ESLint
 pnpm test             # Run all tests once (use before deploying)
 pnpm test:watch       # Re-run tests on file save (use during development)
 pnpm db:push          # Push Drizzle schema to Neon — use the DIRECT connection string, not pooled
+pnpm db:generate      # Generate Drizzle migration files
 pnpm db:studio        # Open Drizzle Studio in browser
-pnpm db:seed          # Seed 16 topics + 211 RSS sources into DB (idempotent — safe to re-run)
+pnpm db:seed          # Seed 26 topics + 275 RSS sources into DB (idempotent — safe to re-run)
 ```
 
 Always use `pnpm`. Never `npm` or `yarn`.
 
 To manually trigger cron logic locally (dev server must be running):
 ```bash
-# The grep command extracts the value but won't work if the value has quotes.
-# Copy CRON_SECRET from .env.local and paste it directly:
+# Copy CRON_SECRET from .env.local and paste it directly — grep won't work if value has quotes:
 curl -X GET http://localhost:3000/api/cron/ingest \
   -H "Authorization: Bearer <CRON_SECRET>"
 ```
@@ -44,7 +45,8 @@ app/
     discover/       → /discover  (topic grid + ?topic= detail view for auth users)
     bookmarks/      → /bookmarks
     history/        → /history
-    settings/       → /settings
+    profile/        → /profile  (settings hub — tabs: overview, topics, digests, account)
+    settings/       → /settings (redirects to /profile)
     suggest/        → /suggest
     upgrade/        → /upgrade
     admin/          → /admin/* (ADMIN_EMAIL session check — 404 for everyone else)
@@ -126,6 +128,13 @@ Key relations:
 - `bookmarks` — unique on (userId, articleId)
 
 After any schema change: `pnpm db:push` with the **direct** Neon connection string (PgBouncer breaks Drizzle's migration prepared statements).
+
+### Topic icon system
+`lib/topic-icons.ts` maps topic slugs → Lucide icons. `getTopicIcon(slug)` returns the mapped icon or `BookOpen` as fallback. `components/topic-icon.tsx` wraps this as `<TopicIcon slug={...} size={18} className={...} />`. When adding a new topic, add its slug→icon entry in `lib/topic-icons.ts` alongside the seed entry.
+
+### UI components
+- **No dark mode** — `ThemeProvider` has been removed from `app/layout.tsx`. Do not add `dark:` variants.
+- **`<BetaBadge />`** (`components/ui/beta-badge.tsx`) — amber pill shown next to nav items or feature labels marked `beta={true}`. Sidebar's `renderNavItem` accepts `beta?: boolean` on nav config objects.
 
 ### HMAC tokens
 Two separate HMAC-signed URL systems, both using `BETTER_AUTH_SECRET` as the key:
@@ -209,13 +218,18 @@ NODE_OPTIONS=--no-network-family-autoselection  # WSL2 only — local dev fix, n
 
 ## Testing
 
-Test runner: **Vitest** (`vitest.config.ts`). Path alias `@/` configured there.
+Test runner: **Vitest** (`vitest.config.ts`). Path alias `@/` configured there. Globals enabled — no need to import `describe`/`test`/`expect`.
 
 ```
 __tests__/
-  utils.test.ts           # slugify() — pure function
-  digest-schedule.test.ts # isScheduleDue() — pure function
-  cron-auth.test.ts       # /api/cron/ingest auth — mocks @/lib/ingestion
+  utils.test.ts                # slugify() — pure function
+  digest-schedule.test.ts      # isScheduleDue() — pure function
+  cron-auth.test.ts            # /api/cron/ingest auth — mocks @/lib/ingestion
+  cron-digest-auth.test.ts     # /api/cron/digest auth
+  free-tier.test.ts            # 5-topic limit on POST /api/user/topics
+  unsubscribe-token.test.ts    # HMAC unsubscribe token round-trip
+  feedback-token.test.ts       # HMAC feedback token round-trip
+  admin.test.ts                # Admin route auth
 ```
 
 Rules:
@@ -257,11 +271,11 @@ Market positioning: email-first article aggregator for developers/founders/resea
 - Cold-start nudge when user follows <3 topics (`components/cold-start-nudge.tsx`)
 - SEO: robots.ts, sitemap.ts, public topic pages (`/topics/[slug]`), 8 SEO landing pages, JSON-LD, MotionConfig
 - Lapsed user re-engagement email (21-day threshold, 30-day cooldown, `app/api/cron/reengage/`)
-- Extended seed: 16 topics + 211 sources (Reddit, YouTube, HN, Substack, Medium, Lobste.rs, TLDR, Changelog, GitHub Releases)
-- Dark mode — ThemeToggle in sidebar + system preference detection (`components/theme-provider.tsx`, `components/theme-toggle.tsx`)
+- Extended seed: 26 topics + 275 sources (Reddit, YouTube, HN, Substack, Medium, Lobste.rs, TLDR, Changelog, GitHub Releases)
 - "Top source" quality badge on article cards (`components/article-card.tsx`) — shown when `qualityScore >= 0.75`
 - OPML import (`app/api/user/sources/import/route.ts`, `components/settings-opml-import.tsx`) — parses Feedly/Inoreader exports, fuzzy-matches folders to followed topics
 - Shareable reading profile (`app/p/[username]/page.tsx`) — public SSR page with topics + recent articles + sign-up CTA; username/visibility managed via `components/settings-share-profile.tsx`
+- Topic icons — Lucide icon per topic slug via `lib/topic-icons.ts` + `<TopicIcon>` component
 
 ### Remaining
 | # | Feature | Why |
