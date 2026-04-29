@@ -109,7 +109,9 @@
       "Bash(python3 -c \"from PIL import Image; print\\('PIL ok'\\)\")",
       "Bash(npm list *)",
       "Bash(python3 *)",
-      "Bash(fc-list)"
+      "Bash(fc-list)",
+      "mcp__neon__list_projects",
+      "mcp__neon__run_sql"
     ]
   }
 }

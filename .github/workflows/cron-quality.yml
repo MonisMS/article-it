@@ -18,11 +18,13 @@ jobs:
             echo "APP_URL secret not set — skipping."
             exit 0
           fi
-          STATUS=$(curl -sSL -o /dev/null -w "%{http_code}" \
+          BODY_FILE="$(mktemp)"
+          STATUS=$(curl -sSL -o "$BODY_FILE" -w "%{http_code}" \
             -X GET "$APP_URL/api/cron/quality" \
             -H "Authorization: Bearer $CRON_SECRET")
           echo "Response status: $STATUS"
           if [ "${STATUS:0:1}" != "2" ]; then
-            echo "Quality score update failed with status $STATUS"
+            echo "Quality score update failed. Response body:"
+            cat "$BODY_FILE" || true
             exit 1
           fi
