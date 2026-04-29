@@ -26,12 +26,12 @@ export function ShareFeature() {
             <span className="block text-app-text-muted">One link, all your topics.</span>
           </h2>
           <p className="mt-4 text-[15px] leading-relaxed text-app-text-muted max-w-md">
-            Pick a username and get a public page at <span className="font-medium text-app-text">curio.app/p/you</span>. Anyone who visits sees your topics and recent highlights — and can follow the same feed with one click.
+            Pick a username and get a public page at <span className="font-medium text-app-text">/p/your-name</span>. Anyone who visits sees your topics and recent highlights — and can follow the same feed with one click.
           </p>
 
           <div className="mt-8 grid gap-3">
             {[
-              "Your own URL — curio.app/p/username",
+              "Your own shareable URL — /p/username",
               "Shows your topics + recent article highlights",
               "Visitors can follow your exact setup instantly",
             ].map((item) => (
@@ -72,7 +72,7 @@ export function ShareFeature() {
               </div>
               <div className="flex-1 flex items-center gap-1.5 rounded-md bg-app-surface border border-app-border px-3 py-1">
                 <Globe className="h-3 w-3 text-app-text-subtle shrink-0" />
-                <span className="text-xs text-app-text-subtle">curio.app/p/<span className="text-app-accent font-medium">alex</span></span>
+                <span className="text-xs text-app-text-subtle">/p/<span className="text-app-accent font-medium">alex</span></span>
               </div>
               <Link2 className="h-3.5 w-3.5 text-app-text-subtle" />
             </div>

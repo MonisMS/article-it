@@ -53,13 +53,13 @@ export function FeedPreview() {
         <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-end sm:justify-between mb-12">
           <div>
             <p className="text-xs font-semibold tracking-widest uppercase text-app-text-subtle">
-              Live feed preview
+              Your feed
             </p>
             <h2 className="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-app-text">
-              An editorial layout for the web’s best writing.
+              Everything from your topic, ranked and ready.
             </h2>
             <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-app-text-muted">
-              A calm grid that highlights what’s worth your time — with the context you need at a glance.
+              Articles from blogs, Reddit, YouTube, newsletters — all in one place. Source and read time at a glance so you always know what you’re clicking into.
             </p>
           </div>
         </div>

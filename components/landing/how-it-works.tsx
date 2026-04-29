@@ -59,7 +59,7 @@ function PreviewFrame({ children }: { children: React.ReactNode }) {
         <span className="font-semibold tracking-wide uppercase">Preview</span>
         <span className="inline-flex items-center gap-1.5">
           <Clock className="h-3.5 w-3.5" />
-          Calm mode
+          Updated daily
         </span>
       </div>
       <div className="mt-4">{children}</div>

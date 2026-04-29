@@ -48,9 +48,8 @@ export function FinalCta() {
           </Link>
 
           <nav className="flex items-center gap-5 text-xs font-medium text-app-text-muted">
-            <Link href="/sign-up" className="hover:text-app-text transition-colors">Get started</Link>
             <Link href="/discover" className="hover:text-app-text transition-colors">Topics</Link>
-            <Link href="/discover" className="hover:text-app-text transition-colors">Explore topics</Link>
+            <Link href="/sign-up" className="hover:text-app-text transition-colors">Get started</Link>
           </nav>
         </div>
       </div>
