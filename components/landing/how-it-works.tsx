@@ -8,20 +8,20 @@ const STEPS = [
   {
     icon: Sparkles,
     step: "01",
-    title: "Choose what you care about",
-    description: "Pick a few topics. Curio stays quiet — and only pulls from sources that match your interests.",
+    title: "Pick a topic — we cover it completely",
+    description: "Follow AI, React, Startups, or any of 26 topics. We pull from blogs, Reddit, YouTube, HN, and newsletters so you don't have to.",
   },
   {
     icon: Bookmark,
     step: "02",
-    title: "Get a curated feed",
-    description: "A clean, editorial layout with context (source, time, read length) so you can decide fast.",
+    title: "One ranked feed for everything",
+    description: "Every source for your topic, ranked by quality — not recency or virality. Context at a glance: source, read time, when it was published.",
   },
   {
     icon: Mail,
     step: "03",
-    title: "Read on your schedule",
-    description: "Browse anytime, or set an email digest. No spam — just the best articles, at the time you choose.",
+    title: "Never miss anything",
+    description: "Browse your feed or get a digest email at the exact time you choose. Everything from your topics, delivered — no tab-hunting required.",
   },
 ]
 
@@ -76,10 +76,10 @@ export function HowItWorks() {
             How it works
           </p>
           <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-app-text">
-            Start in minutes. Stay focused daily.
+            One topic. Everything on it.
           </h2>
           <p className="mt-3 text-[15px] text-app-text-muted max-w-2xl mx-auto leading-relaxed">
-            A simple flow designed for reading — not for feeding an algorithm.
+            Pick a topic once and stop hunting. Curio handles every source so you only need one tab.
           </p>
         </div>
 
@@ -120,7 +120,7 @@ export function HowItWorks() {
                       ))}
                     </div>
                     <div className="border-t border-app-border pt-3 flex items-center justify-between text-xs">
-                      <span className="text-app-text-subtle">211 curated sources</span>
+                      <span className="text-app-text-subtle">275+ sources wired in</span>
                       <span className="font-semibold text-app-accent">Updated daily</span>
                     </div>
                     <LandingArticleCard article={PREVIEW_ARTICLES[0]} />

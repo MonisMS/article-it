@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 
 const LEFT_QUOTE = "I used to spend 30 minutes\nfinding good articles.\nNow they’re just there."
 
-const SUPPORTING = "Curated from 200+ sources across 12+ topics"
+const SUPPORTING = "275+ sources · 26 topics · Blogs, Reddit, YouTube, HN & newsletters"
 
 function SignInForm() {
   const router = useRouter()

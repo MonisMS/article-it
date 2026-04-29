@@ -19,17 +19,19 @@ export const metadata: Metadata = {
   },
   description:
     "Pick your topics, get the best articles from the web delivered to your inbox on your schedule. A personalized reading digest built for curious people.",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://articleit.com"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://curio-sity.vercel.app"),
   openGraph: {
     title: "Curio — Personalized Article Digests",
     description: "Pick your topics, get the best articles from the web delivered to your inbox on your schedule.",
     type: "website",
     siteName: "Curio",
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Curio" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Curio — Personalized Article Digests",
     description: "Pick your topics, get the best articles from the web delivered to your inbox on your schedule.",
+    images: ["/og.png"],
   },
   robots: {
     index: true,

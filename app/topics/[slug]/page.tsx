@@ -80,11 +80,11 @@ export default async function TopicPage({ params }: Props) {
     description:
       topic.description ??
       `The best ${topic.name} articles from curated sources, delivered to your inbox.`,
-    url: `${process.env.NEXT_PUBLIC_APP_URL ?? "https://articleit.com"}/topics/${slug}`,
+    url: `${process.env.NEXT_PUBLIC_APP_URL ?? "https://curio-sity.vercel.app"}/topics/${slug}`,
     isPartOf: {
       "@type": "WebSite",
       name: "Curio",
-      url: process.env.NEXT_PUBLIC_APP_URL ?? "https://articleit.com",
+      url: process.env.NEXT_PUBLIC_APP_URL ?? "https://curio-sity.vercel.app",
     },
   }
 

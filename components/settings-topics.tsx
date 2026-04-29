@@ -1,33 +1,24 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
-import { Loader2, Plus, X, Zap } from "lucide-react"
+import { Loader2, Plus, X } from "lucide-react"
 import { TopicIcon } from "@/components/topic-icon"
 
 type Topic = { id: string; name: string; slug: string; icon: string | null }
 
-const FREE_LIMIT = 5
-
 export function SettingsTopics({
   allTopics,
   followedIds,
-  plan = "free",
 }: {
   allTopics: Topic[]
   followedIds: string[]
-  plan?: string
 }) {
   const [followed, setFollowed] = useState<Set<string>>(new Set(followedIds))
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const isFree = plan === "free"
-  const atLimit = isFree && followed.size >= FREE_LIMIT
-
   function add(id: string) {
-    if (atLimit) return
     setFollowed((prev) => new Set([...prev, id]))
     setSaved(false)
   }
@@ -54,11 +45,6 @@ export function SettingsTopics({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ topicIds: Array.from(followed) }),
       })
-      if (res.status === 403) {
-        const { error: message } = await res.json()
-        setError(message)
-        return
-      }
       if (!res.ok) throw new Error("Failed to save")
       setSaved(true)
     } catch {
@@ -81,27 +67,10 @@ export function SettingsTopics({
       <div>
         <div className="mb-3 flex items-center justify-between gap-3">
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-app-text-subtle">Following</p>
-          {isFree ? (
-            <span className={`text-[11px] font-semibold uppercase tracking-[0.14em] ${atLimit ? "text-amber-600 dark:text-amber-400" : "text-app-text-subtle"}`}>
-              {followed.size} / {FREE_LIMIT} topics
-            </span>
-          ) : (
-            <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-app-text-subtle">
-              {followedTopics.length} topic{followedTopics.length === 1 ? "" : "s"}
-            </span>
-          )}
+          <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-app-text-subtle">
+            {followedTopics.length} topic{followedTopics.length === 1 ? "" : "s"}
+          </span>
         </div>
-
-        {atLimit && (
-          <div className="mb-4 flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300">
-            <Zap className="mt-0.5 h-4 w-4 shrink-0" />
-            <span>
-              You&apos;ve reached the 5-topic limit on the free plan.{" "}
-              <Link href="/upgrade" className="font-medium underline underline-offset-2">Upgrade to Pro</Link>
-              {" "}for unlimited topics.
-            </span>
-          </div>
-        )}
 
         {followedTopics.length === 0 ? (
           <p className="rounded-xl border border-app-border-subtle bg-app-bg px-4 py-3 text-sm text-app-text-subtle">
@@ -139,8 +108,7 @@ export function SettingsTopics({
               <button
                 key={topic.id}
                 onClick={() => add(topic.id)}
-                disabled={atLimit}
-                className="flex items-center justify-between gap-3 rounded-xl border border-app-border bg-app-bg px-4 py-3 text-left transition-colors hover:bg-app-hover disabled:cursor-not-allowed disabled:opacity-40"
+                className="flex items-center justify-between gap-3 rounded-xl border border-app-border bg-app-bg px-4 py-3 text-left transition-colors hover:bg-app-hover"
               >
                 <span className="flex min-w-0 items-center gap-2.5">
                   <span className="flex w-6 shrink-0 items-center justify-center text-app-text-muted"><TopicIcon slug={topic.slug} size={15} /></span>
@@ -166,17 +134,7 @@ export function SettingsTopics({
           {saving ? "Saving..." : "Save changes"}
         </button>
         {saved && <span className="text-sm font-medium text-app-accent">Saved</span>}
-        {error && (
-          error.includes("Upgrade") ? (
-            <span className="flex items-center gap-1.5 text-sm text-amber-600">
-              <Zap className="h-3.5 w-3.5 shrink-0" />
-              {error.split(".")[0]}.{" "}
-              <Link href="/upgrade" className="font-medium underline underline-offset-2">Upgrade to Pro</Link>
-            </span>
-          ) : (
-            <span className="text-sm text-red-500">{error}</span>
-          )
-        )}
+        {error && <span className="text-sm text-red-500">{error}</span>}
       </div>
     </div>
   )

@@ -37,7 +37,6 @@ export function ProfileTabs({
   insights,
   name,
   email,
-  plan,
   username,
   publicProfile,
   allTopics,
@@ -48,7 +47,6 @@ export function ProfileTabs({
   insights: ReadingInsightsData
   name: string
   email: string
-  plan: string
   username: string | null
   publicProfile: boolean
   allTopics: Topic[]
@@ -103,7 +101,7 @@ export function ProfileTabs({
         {activeTab === "topics" && (
           <div className="space-y-4">
             <div className="rounded-[1.75rem] border border-stone-200/80 bg-white p-5 dark:border-lp-border dark:bg-lp-surface">
-              <SettingsTopics allTopics={allTopics} followedIds={followedIds} plan={plan} />
+              <SettingsTopics allTopics={allTopics} followedIds={followedIds} />
             </div>
             <div className="rounded-[1.75rem] border border-stone-200/80 bg-white p-5 dark:border-lp-border dark:bg-lp-surface">
               <SettingsOpmlImport />
@@ -126,7 +124,7 @@ export function ProfileTabs({
               <SettingsShareProfile initialUsername={username} initialPublic={publicProfile} />
             </div>
             <div className="rounded-[1.75rem] border border-stone-200/80 bg-white p-5 dark:border-lp-border dark:bg-lp-surface">
-              <SettingsAccount name={name} email={email} plan={plan} />
+              <SettingsAccount name={name} email={email} />
             </div>
           </div>
         )}

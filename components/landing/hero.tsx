@@ -96,7 +96,7 @@ export function Hero() {
             className="inline-flex items-center gap-2 rounded-full bg-app-surface px-4 py-2 shadow-xs shadow-black/5 text-xs font-semibold text-app-text-muted"
           >
             <span className="h-1.5 w-1.5 rounded-full bg-app-accent" />
-            Calm, curated reading — free to start
+            Blogs · Reddit · YouTube · HN · Newsletters — one feed
           </motion.p>
 
           <motion.h1
@@ -105,8 +105,8 @@ export function Hero() {
             transition={{ duration: 0.55, delay: 0.06 }}
             className="mt-6 text-5xl sm:text-6xl font-semibold tracking-tight text-app-text leading-[1.05]"
           >
-            Read what matters.
-            <span className="block text-app-text-muted">Skip everything else.</span>
+            Pick a topic.
+            <span className="block text-app-text-muted">Everything&apos;s already here.</span>
           </motion.h1>
 
           <motion.p
@@ -115,8 +115,8 @@ export function Hero() {
             transition={{ duration: 0.55, delay: 0.14 }}
             className="mt-5 text-[16px] sm:text-[17px] leading-relaxed text-app-text-muted max-w-xl"
           >
-            A calm, curated feed of high-quality articles across your interests.
-            No noise. No endless scrolling.
+            Curio pulls from 275+ sources — blogs, Reddit, YouTube, Hacker News, and newsletters.
+            One topic. One feed. No more opening ten tabs to stay current.
           </motion.p>
 
           <motion.div
@@ -141,7 +141,7 @@ export function Hero() {
           </motion.div>
 
           <div className="mt-10 text-xs text-app-text-subtle">
-            Trusted sources. Quality-ranked. Built for focus.
+            275+ sources · 26 topics · Updated daily · Free to start
           </div>
         </div>
 

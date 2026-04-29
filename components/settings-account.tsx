@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Check, Loader2, Pencil, X } from "lucide-react"
 import { signOut } from "@/lib/auth-client"
@@ -9,10 +8,9 @@ import { signOut } from "@/lib/auth-client"
 type Props = {
   name: string
   email: string
-  plan: string
 }
 
-export function SettingsAccount({ name, email, plan }: Props) {
+export function SettingsAccount({ name, email }: Props) {
   const router = useRouter()
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState(name)
@@ -64,15 +62,13 @@ export function SettingsAccount({ name, email, plan }: Props) {
     }
   }
 
-  const isPro = plan === "pro"
-
   return (
     <div className="space-y-6">
       <div className="border-b border-app-border-subtle pb-4">
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-app-text-subtle">Account</p>
         <h3 className="mt-2 text-lg font-semibold text-app-text">Identity and account</h3>
         <p className="mt-2 text-sm leading-6 text-app-text-muted">
-          Keep the essentials together: your name, sign-in email, plan, and account controls.
+          Keep your name, sign-in email, and account controls up to date.
         </p>
       </div>
 
@@ -126,32 +122,6 @@ export function SettingsAccount({ name, email, plan }: Props) {
           <div className="flex items-center justify-between gap-4 px-4 py-4">
             <span className="w-24 shrink-0 text-sm text-app-text-muted">Email</span>
             <span className="ml-4 truncate text-sm text-app-text-muted">{email}</span>
-          </div>
-        </div>
-      </section>
-
-      <section className="rounded-[1.25rem] border border-app-border-subtle bg-app-bg">
-        <div className="border-b border-app-border-subtle px-4 py-3">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-app-text-subtle">Subscription</p>
-        </div>
-        <div className="flex items-center justify-between gap-4 px-4 py-4">
-          <div>
-            <div className="text-sm font-medium text-app-text">Current plan</div>
-            <div className="mt-1 text-xs text-app-text-subtle">Your active subscription tier.</div>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
-              isPro
-                ? "bg-app-accent-light text-app-accent"
-                : "bg-app-hover text-app-text-muted"
-            }`}>
-              {isPro ? "Pro" : "Free"}
-            </span>
-            {!isPro && (
-              <Link href="/upgrade" className="text-xs font-medium text-app-accent transition-opacity hover:opacity-80">
-                Upgrade to Pro &rarr;
-              </Link>
-            )}
           </div>
         </div>
       </section>

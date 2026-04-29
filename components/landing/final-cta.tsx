@@ -21,11 +21,11 @@ export function FinalCta() {
           className="relative z-10 mx-auto max-w-3xl text-center"
         >
           <h2 className="text-4xl sm:text-5xl font-semibold tracking-tight text-app-text leading-tight">
-            Your reading space for the web.
-            <span className="block">Calm by default.</span>
+            Pick a topic.
+            <span className="block">We handle the rest.</span>
           </h2>
           <p className="mt-5 text-[16px] leading-relaxed text-app-text-muted">
-            Start reading. Let the good writing find you.
+            Everything on that topic — blogs, Reddit, YouTube, HN, newsletters — in one ranked feed, updated daily.
           </p>
 
           <div className="mt-10 flex flex-col items-center gap-3">
@@ -35,7 +35,7 @@ export function FinalCta() {
             >
               Start reading for free →
             </Link>
-            <p className="text-xs text-app-text-subtle">Free forever for up to 5 topics. No credit card required.</p>
+            <p className="text-xs text-app-text-subtle">Free to start. No credit card required.</p>
           </div>
         </motion.div>
       </div>
@@ -48,11 +48,9 @@ export function FinalCta() {
           </Link>
 
           <nav className="flex items-center gap-5 text-xs font-medium text-app-text-muted">
-            <Link href="/sign-up" className="hover:text-app-text transition-colors">Product</Link>
-            <Link href="#features" className="hover:text-app-text transition-colors">Features</Link>
+            <Link href="/sign-up" className="hover:text-app-text transition-colors">Get started</Link>
             <Link href="/discover" className="hover:text-app-text transition-colors">Topics</Link>
-            <a href="https://github.com" className="hover:text-app-text transition-colors" target="_blank" rel="noreferrer">GitHub</a>
-            <a href="https://twitter.com" className="hover:text-app-text transition-colors" target="_blank" rel="noreferrer">Twitter</a>
+            <Link href="/discover" className="hover:text-app-text transition-colors">Explore topics</Link>
           </nav>
         </div>
       </div>
@@ -60,7 +58,7 @@ export function FinalCta() {
       {/* ── Section 3: Tiny copyright ─────────────────────────── */}
       <div className="px-4 sm:px-6 pb-8">
         <div className="mx-auto max-w-6xl text-center text-xs text-app-text-subtle">
-          © 2026 Curio — Built for focused reading · Built with ❤️ by{" "}
+          © 2026 Curio · Built with ❤️ by{" "}
           <a
             href="https://m0nis.com"
             target="_blank"

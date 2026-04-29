@@ -1,16 +1,19 @@
 const SOURCES = [
-  "Paper & Ink",
-  "Signal Journal",
-  "Studio Notes",
-  "Field Guide",
-  "Craft Weekly",
-  "Atlas Review",
-  "Longform Digest",
-  "Practical Research",
-  "Quiet Tech",
-  "The Editorial",
-  "Morning Brief",
-  "The Reading Room",
+  "Hacker News",
+  "r/programming",
+  "r/MachineLearning",
+  "YouTube Channels",
+  "Substack Newsletters",
+  "GitHub Releases",
+  "TLDR Newsletter",
+  "Lobste.rs",
+  "The Changelog",
+  "Tech Blogs",
+  "r/webdev",
+  "Morning Brew",
+  "r/startups",
+  "Dev.to",
+  "r/netsec",
 ]
 
 export function SourceMarquee() {
@@ -19,7 +22,7 @@ export function SourceMarquee() {
   return (
     <div className="bg-app-bg py-10 overflow-hidden">
       <p className="text-center text-xs font-semibold text-app-text-subtle tracking-widest uppercase mb-5">
-        Trusted sources
+        We pull from across the web so you don&apos;t have to
       </p>
       <div className="relative">
         <div className="flex gap-3 animate-marquee whitespace-nowrap">

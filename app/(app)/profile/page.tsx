@@ -39,7 +39,6 @@ export default async function ProfilePage({ searchParams }: Props) {
   ])
 
   const followedIds = followed.map((f) => f.topicId)
-  const plan = (session.user as { plan?: string }).plan ?? "free"
   const username = (session.user as { username?: string | null }).username ?? null
   const publicProfile = (session.user as { publicProfile?: boolean }).publicProfile ?? false
 
@@ -48,7 +47,6 @@ export default async function ProfilePage({ searchParams }: Props) {
       <ProfileHero
         name={session.user.name}
         email={session.user.email}
-        plan={plan}
         totalReads={insights.totalReads}
         bookmarkCount={bookmarkCount}
         topicCount={followedIds.length}
@@ -58,7 +56,6 @@ export default async function ProfilePage({ searchParams }: Props) {
         insights={insights}
         name={session.user.name}
         email={session.user.email}
-        plan={plan}
         username={username}
         publicProfile={publicProfile}
         allTopics={allTopics}

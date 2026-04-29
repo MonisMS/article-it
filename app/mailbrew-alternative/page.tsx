@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/mailbrew-alternative" },
   openGraph: {
     title: "Best Mailbrew Alternative — Curio",
-    description: "Mailbrew shut down. Curioivers personalized article digests to your inbox.",
+    description: "Mailbrew shut down. Curio delivers personalized article digests to your inbox.",
   },
 }
 
@@ -30,7 +30,7 @@ const jsonLd = {
       name: "What is the best Mailbrew alternative?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Curioone of the best Mailbrew alternatives. It curates articles from 200+ sources by topic and delivers them on your chosen schedule.",
+        text: "Curio is one of the best Mailbrew alternatives. It curates articles from 275+ sources by topic and delivers them on your chosen schedule.",
       },
     },
   ],
@@ -40,7 +40,7 @@ export default function MailbrewAlternativePage() {
   return (
     <SeoLanding
       h1="The Mailbrew Alternative You've Been Looking For"
-      subheadline="Mailbrew is gone. Curioivers curated article digests from 200+ sources to your inbox — daily, weekly, or on your own schedule."
+      subheadline="Mailbrew is gone. Curio delivers curated article digests from 275+ sources to your inbox — daily, weekly, or on your own schedule."
       ctaText="Replace Mailbrew — free"
       jsonLd={jsonLd}
       features={[

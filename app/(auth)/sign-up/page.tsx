@@ -80,7 +80,7 @@ export default function SignUpPage() {
                 </blockquote>
 
                 <p className="mt-6 text-sm leading-relaxed text-[#666666]">
-                  Curated from 200+ sources across 12+ topics
+                  275+ sources · 26 topics · Blogs, Reddit, YouTube, HN & newsletters
                 </p>
 
                 <p className="mt-10 text-xs text-[#8a8a8a]">
@@ -111,7 +111,7 @@ export default function SignUpPage() {
                 Create your account
               </h1>
               <p className="mt-2 text-[15px] text-[#6f6f6f]">
-                Start reading in a calmer space.
+                Your one-stop feed for every topic you follow.
               </p>
             </div>
 

@@ -231,6 +231,12 @@
   * {
     @apply border-border outline-ring/50;
   }
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  label[for],
+  select {
+    cursor: pointer;
+  }
   input:-webkit-autofill,
   textarea:-webkit-autofill,
   select:-webkit-autofill {

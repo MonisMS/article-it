@@ -6,23 +6,23 @@ import { Bookmark, Mail, ShieldCheck, Sparkles } from "lucide-react"
 const FEATURES = [
   {
     icon: Sparkles,
-    title: "Curated by design",
-    description: "A simple system: topics you choose, sources we vet. No attention bait, no noisy personalization." ,
+    title: "275+ sources, zero tab-switching",
+    description: "Blogs, Reddit, YouTube, HN, Substack, GitHub Releases — all pulled into one feed per topic. You pick the topic; we handle the rest.",
   },
   {
     icon: Mail,
-    title: "Digests, on your time",
-    description: "Daily or weekly at the exact hour you want — the best articles, delivered calmly." ,
+    title: "Digest on your schedule",
+    description: "Daily or weekly at the exact hour you want — the best articles from all your sources, delivered to your inbox.",
   },
   {
     icon: Bookmark,
-    title: "Save what matters",
-    description: "One-click bookmarking and a clean history so you can return when you’re ready." ,
+    title: "Save and come back",
+    description: "One-click bookmarking and a full reading history. Pick up exactly where you left off, across any source or format.",
   },
   {
     icon: ShieldCheck,
-    title: "Quality-ranked sources",
-    description: "A blended ranking that rewards consistently good sources — not clicky headlines." ,
+    title: "Quality-ranked, not click-ranked",
+    description: "Sources earn their rank through real reader signals — bookmarks and reads. No virality bias, no rage-bait bubble.",
   },
 ]
 
@@ -35,10 +35,10 @@ export function BentoFeatures() {
             Features
           </p>
           <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-app-text">
-            Everything you need — nothing that steals attention.
+            Everything about your topic — in one place.
           </h2>
           <p className="mt-3 text-[15px] text-app-text-muted max-w-2xl mx-auto leading-relaxed">
-            A premium reading experience that prioritizes clarity, calmness, and content.
+            Stop hopping between Reddit, YouTube, newsletters, and blogs. Curio does the collecting so you can just read.
           </p>
         </div>
 

@@ -67,6 +67,8 @@ async function ingestSource(source: Source): Promise<number> {
     if (!url) continue
 
     const title       = item.title?.trim() || "Untitled"
+    if (!isEnglishTitle(title)) continue
+
     const description = (item.contentSnippet || item.summary || "").slice(0, 500)
     const imageUrl    = extractImage(item as unknown as Parser.Item & { [key: string]: unknown })
     const publishedAt = parseDate(item.pubDate || item.isoDate)
@@ -99,6 +101,16 @@ async function ingestSource(source: Source): Promise<number> {
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
+
+// Reject titles that are primarily non-Latin script (CJK, Arabic, Hebrew, Thai…)
+const NON_LATIN_RE = /[　-鿿가-힯؀-ۿ֐-׿฀-๿]/
+
+function isEnglishTitle(title: string): boolean {
+  const meaningful = title.replace(/\s+/g, "")
+  if (!meaningful.length) return true
+  const nonLatin = (meaningful.match(NON_LATIN_RE) ?? []).length
+  return nonLatin / meaningful.length < 0.2
+}
 
 function parseDate(dateStr?: string): Date {
   if (!dateStr) return new Date()

@@ -20,7 +20,7 @@ const jsonLd = {
       "@type": "WebApplication",
       name: "Curio",
       description: "Personalized article email digest service. Choose topics, get quality-ranked articles in your inbox.",
-      url: "https://articleit.com",
+      url: process.env.NEXT_PUBLIC_APP_URL ?? "https://curio-sity.vercel.app",
       applicationCategory: "NewsApplication",
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
     },

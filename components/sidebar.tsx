@@ -16,7 +16,6 @@ import {
   Search,
   ChevronsLeft,
   ChevronUp,
-  CreditCard,
 } from "lucide-react"
 import { signOut } from "@/lib/auth-client"
 import { BetaBadge } from "@/components/ui/beta-badge"
@@ -215,10 +214,6 @@ export function Sidebar({ user, isAdmin, variant = "desktop", onRequestClose }: 
           <div className="relative" ref={userMenuRef}>
             {userMenuOpen && (
               <div className={menuPanelClass} role="menu" aria-label="User menu">
-                <Link href="/upgrade" className={menuItemClass} role="menuitem" onClick={() => setUserMenuOpen(false)}>
-                  <CreditCard className="h-4 w-4 text-[#8A8173] dark:text-[#9EA9B8]" />
-                  Billing
-                </Link>
                 <button type="button" onClick={handleSignOut} className={menuItemClass} role="menuitem">
                   <LogOut className="h-4 w-4 text-[#8A8173] dark:text-[#9EA9B8]" />
                   Sign out
@@ -250,10 +245,6 @@ export function Sidebar({ user, isAdmin, variant = "desktop", onRequestClose }: 
           <div className="relative flex flex-col items-center gap-2" ref={userMenuRef}>
             {userMenuOpen && (
               <div className={`${menuPanelClass} left-1/2 w-55 -translate-x-1/2`} role="menu" aria-label="User menu">
-                <Link href="/upgrade" className={menuItemClass} role="menuitem" onClick={() => setUserMenuOpen(false)}>
-                  <CreditCard className="h-4 w-4 text-[#8A8173] dark:text-[#9EA9B8]" />
-                  Billing
-                </Link>
                 <button type="button" onClick={handleSignOut} className={menuItemClass} role="menuitem">
                   <LogOut className="h-4 w-4 text-[#8A8173] dark:text-[#9EA9B8]" />
                   Sign out

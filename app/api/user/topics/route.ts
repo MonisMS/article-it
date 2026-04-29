@@ -35,14 +35,6 @@ export async function POST(req: Request) {
   }
 
   const userId = session.user.id
-  const plan = (session.user as { plan?: string }).plan ?? "free"
-
-  if (plan === "free" && parsed.data.topicIds.length > 5) {
-    return NextResponse.json(
-      { data: null, error: "Free plan is limited to 5 topics. Upgrade to Pro for unlimited topics." },
-      { status: 403 }
-    )
-  }
 
   // Delete existing and re-insert — clean replace
   await db.delete(userTopics).where(eq(userTopics.userId, userId))

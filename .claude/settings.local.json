@@ -104,7 +104,12 @@
       "Bash(git -C /home/monis/article-it log --all --full-history -- .env.local)",
       "Bash(node_modules/.bin/tsc --noEmit)",
       "Bash(node_modules/.bin/vitest run *)",
-      "Bash(node *)"
+      "Bash(node *)",
+      "Bash(convert --version)",
+      "Bash(python3 -c \"from PIL import Image; print\\('PIL ok'\\)\")",
+      "Bash(npm list *)",
+      "Bash(python3 *)",
+      "Bash(fc-list)"
     ]
   }
 }

@@ -186,7 +186,7 @@ async function sendDigest(
   })
 
   await resend.emails.send({
-    from: process.env.EMAIL_FROM_DIGEST ?? "ArticleIt <digest@m0nis.com>",
+    from: process.env.EMAIL_FROM_DIGEST ?? "Curio <digest@m0nis.com>",
     to: schedule.user.email,
     subject,
     html,

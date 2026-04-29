@@ -6,48 +6,52 @@ import { SourceMarquee } from "@/components/landing/source-marquee"
 import { FeedPreview } from "@/components/landing/feed-preview"
 import { BentoFeatures } from "@/components/landing/bento-features"
 import { CalmReading } from "@/components/landing/calm-reading"
+import { ShareFeature } from "@/components/landing/share-feature"
 import { FinalCta } from "@/components/landing/final-cta"
 import { Nav } from "@/components/nav"
 
 export const metadata: Metadata = {
-  title: "Curio — Calm, Curated Reading",
+  title: "Curio — One place for every topic you follow",
   description:
-    "Read what matters. Skip everything else. A calm, curated feed of high-quality articles across your interests — no noise, no endless scrolling.",
+    "Pick a topic. Curio pulls from blogs, Reddit, YouTube, Hacker News, and newsletters so you never have to hunt across the web again. 275+ sources, 26 topics, updated daily.",
   openGraph: {
-    title: "Curio — Calm, Curated Reading",
-    description: "A calm, curated feed of high-quality articles across your interests — no noise, no endless scrolling.",
+    title: "Curio — One place for every topic you follow",
+    description: "Pick a topic once. Curio pulls from blogs, Reddit, YouTube, HN, and newsletters — so you never need to hunt across the web again.",
   },
   alternates: {
     canonical: "/",
   },
 }
 
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://curio-sity.vercel.app"
+
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
     {
       "@type": "WebApplication",
-      "@id": "https://articleit.com/#webapp",
+      "@id": `${APP_URL}/#webapp`,
       name: "Curio",
       description:
-        "A calm, curated reading platform. Pick topics, get quality-ranked articles from curated sources in a clean feed — with optional email digests.",
-      url: "https://articleit.com",
+        "One place for every topic you follow. Pick topics, get quality-ranked articles from 275+ sources — blogs, Reddit, YouTube, Hacker News, and newsletters — in a clean feed with optional email digests.",
+      url: APP_URL,
       applicationCategory: "NewsApplication",
       operatingSystem: "Web",
       offers: {
         "@type": "Offer",
         price: "0",
         priceCurrency: "USD",
-        description: "Free tier available",
+        description: "Free to start, no credit card required",
       },
       featureList: [
         "Personalized article feed",
         "Email digest on custom schedule",
         "Quality-ranked sources",
-        "12+ curated topics",
-        "200+ RSS sources",
+        "26 curated topics",
+        "275+ RSS sources",
         "Reading streak tracking",
         "Bookmark articles",
+        "Shareable public reading list",
       ],
     },
     {
@@ -58,7 +62,7 @@ const jsonLd = {
           name: "What is Curio?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Curio is a personalized article aggregator that pulls from 200+ curated RSS sources, ranks articles by source quality, and delivers a daily or weekly digest to your inbox.",
+            text: "Curio is a personalized article aggregator that pulls from 275+ sources across blogs, Reddit, YouTube, Hacker News, and newsletters. It ranks articles by source quality and delivers a daily or weekly digest to your inbox.",
           },
         },
         {
@@ -66,7 +70,7 @@ const jsonLd = {
           name: "Is Curio free?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Yes. Curio has a free tier that lets you follow up to 5 topics and receive email digests. No credit card required.",
+            text: "Yes. Curio is free to start — no credit card required. Pick topics and get email digests at no cost.",
           },
         },
         {
@@ -82,7 +86,7 @@ const jsonLd = {
           name: "How often are articles updated?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Curio ingests articles daily at 06:00 UTC from 200+ RSS sources across 12+ topics.",
+            text: "Curio ingests articles daily at 06:00 UTC from 275+ RSS sources across 26 topics including technology, AI, startups, science, design, and more.",
           },
         },
       ],
@@ -105,6 +109,7 @@ export default function LandingPage() {
         <FeedPreview />
         <BentoFeatures />
         <CalmReading />
+        <ShareFeature />
         <FinalCta />
       </div>
     </MotionProvider>
