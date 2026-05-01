@@ -18,7 +18,7 @@ jobs:
             echo "APP_URL secret not set — skipping."
             exit 0
           fi
-          echo "APP_URL: $APP_URL"
+          echo "APP_URL sha256: $(echo -n "$APP_URL" | sha256sum)"
           echo "CRON_SECRET length: ${#CRON_SECRET}"
           echo "CRON_SECRET sha256: $(echo -n "$CRON_SECRET" | sha256sum)"
           BODY_FILE="$(mktemp)"
