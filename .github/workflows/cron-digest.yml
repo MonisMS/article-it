@@ -18,6 +18,9 @@ jobs:
             echo "APP_URL secret not set — skipping."
             exit 0
           fi
+          echo "APP_URL: $APP_URL"
+          echo "CRON_SECRET length: ${#CRON_SECRET}"
+          echo "CRON_SECRET sha256: $(echo -n "$CRON_SECRET" | sha256sum)"
           BODY_FILE="$(mktemp)"
           STATUS=$(curl -sSL -o "$BODY_FILE" -w "%{http_code}" \
             -X GET "$APP_URL/api/cron/digest" \
